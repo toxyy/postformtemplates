@@ -1,0 +1,222 @@
+{% INCLUDE 'overall_header.html' %}
+
+<a id="maincontent"></a>
+
+{% if S_EDIT %}
+
+<script>
+	// <![CDATA[
+	{% if S_ADD_CODE %}
+
+	var image = Array();
+	{% for image in loops.image %}
+	image['{{ image.IMAGE_URL }}'] = Array();
+	image['{{ image.IMAGE_URL }}']['width'] = {{ image.WIDTH }};
+	image['{{ image.IMAGE_URL }}']['height'] = {{ image.HEIGHT }};
+	image['{{ image.IMAGE_URL }}']['order'] = {{ image.ORDER }};
+	{% endfor %}
+
+	function update_image(newimage) {
+		var use_element = image[newimage];
+
+		document.getElementById('add_image_src').src = '{{ ROOT_PATH }}{{ IMG_PATH }}/' + encodeURI(newimage);
+		document.getElementById('add_width').value = use_element['width'];
+		document.getElementById('add_height').value = use_element['height'];
+
+		element = document.getElementById('add_order');
+		for (var i = 0; i < element.length; i++) {
+			if (element.options[i].value == use_element['order']) {
+				document.getElementById('add_order').options.selectedIndex = i;
+			}
+		}
+	}
+
+	{% endif %}
+
+
+	function toggle_select(icon, display, select) {
+		var disp = document.getElementById('order_disp_' + select);
+		var nodisp = document.getElementById('order_no_disp_' + select);
+		disp.disabled = !display;
+		nodisp.disabled = display;
+		if (display) {
+			document.getElementById('order_' + select).selectedIndex = 0;
+			nodisp.className = 'disabled-options';
+			disp.className = '';
+		} else {
+			document.getElementById('order_' + select).selectedIndex = {
+			{
+				S_ORDER_LIST_DISPLAY_COUNT
+			}
+		}
+			;
+			disp.className = 'disabled-options';
+			nodisp.className = '';
+		}
+	}
+
+	// ]]>
+</script>
+
+<a href="{{ U_BACK }}" style="float: {{ S_CONTENT_FLOW_END }};">&laquo; {{ lang('BACK') }}</a>
+
+<h1>{{ lang('TITLE') }}</h1>
+
+<p>{{ lang('EXPLAIN') }}</p>
+
+<form id="acp_icons" method="post" action="{{ U_ACTION }}">
+
+	<fieldset class="tabulated">
+		<legend>{{ lang('TITLE') }}</legend>
+
+		<table class="table1 zebra-table" id="smilies">
+			<thead>
+			<tr>
+				<th colspan="{{ COLSPAN }}">{{ lang('CONFIG') }}</th>
+			</tr>
+			{% if loops.items|length or S_ADD_CODE %}
+			<tr class="row3">
+				<td>{{ lang('ACP_PFT_IMAGE_URL') }}</td>
+				<td>{{ lang('ACP_PFT_IMAGE_LOCATION') }}</td>
+				{% if not S_SMILIES %}
+				<td>{{ lang('ALT_TEXT') }}</td>
+				{% endif %}
+				{% if ID or S_ADD %}
+				<td>{{ lang('ACP_PFT_IMAGE_ORDER') }}</td>
+				{% endif %}
+				{% if S_ADD %}
+				<td>{{ lang('ADD') }} <a href="#" onclick="marklist('smilies', 'add_img', true); return false;">({{
+					lang('MARK_ALL') }})</a></td>
+				{% endif %}
+			</tr>
+			</thead>
+			<tbody>
+			{% for items in loops.items %}
+			<tr>
+
+				<td style="text-align: center;"><img src="{{ items.IMG_SRC }}" alt="{{ items.TEXT_ALT }}"
+													 title="{{ items.TEXT_ALT }}" style="max-width: 160px;"><input
+						type="hidden" name="image[{{ items.IMG }}]" value="1"/></td>
+				<td style="vertical-align: top;">[{{ items.IMG }}]</td>
+				<input type="hidden" name="id[{{ items.IMG }}]" value="{{ items.ID }}"/>
+				{% if ID or S_ADD %}
+				<td><select id="order_{{ items.S_ROW_COUNT }}" name="order[{{ items.IMG }}]">
+					<optgroup id="order_disp_{{ items.S_ROW_COUNT }}" label="{{ lang('DISPLAY_POSTING') }}" {% if not
+							  items.POSTING_CHECKED %}disabled="disabled" class="disabled-options" {% endif %}>{{
+						S_ORDER_LIST_DISPLAY }}
+					</optgroup>
+					<optgroup id="order_no_disp_{{ items.S_ROW_COUNT }}" label="{{ lang('DISPLAY_POSTING_NO') }}" {% if
+							  items.POSTING_CHECKED %}disabled="disabled" class="disabled-options" {% endif %}>{{
+						S_ORDER_LIST_DISPLAY }}
+					</optgroup>
+				</select></td>
+				{% endif %}
+				{% if S_ADD %}
+				<td><input type="checkbox" class="radio" name="add_img[{{ items.IMG }}]" value="1"/></td>
+				{% endif %}
+			</tr>
+			{% endfor %}
+			{% if S_ADD_CODE %}
+			<tr>
+				<th colspan="{{ COLSPAN }}">{{ lang('ADD_SMILEY_CODE') }}</th>
+			</tr>
+			<tr class="row1">
+				<td style="text-align: center;"><select name="add_image" id="add_image"
+														onchange="update_image(this.options[selectedIndex].value);">{{
+					S_IMG_OPTIONS }}</select></td>
+				<td style="vertical-align: top;"><img src="{{ IMG_SRC }}" id="add_image_src" alt="" title=""/></td>
+				<td><select id="order_add_order" name="add_order">
+					<optgroup id="order_disp_add_order" label="{{ lang('DISPLAY_POSTING') }}">{{
+						S_ADD_ORDER_LIST_DISPLAY }}
+					</optgroup>
+					<optgroup id="order_no_disp_add_order" label="{{ lang('DISPLAY_POSTING_NO') }}" disabled="disabled"
+							  class="disabled-options">{{ S_ADD_ORDER_LIST_UNDISPLAY }}
+					</optgroup>
+				</select></td>
+				<td><input type="checkbox" class="radio" name="add_additional_image" value="1"/></td>
+			</tr>
+			{% endif %}
+			{% else %}
+			</thead>
+			<tbody>
+			<tr class="row3">
+				<td colspan="{{ COLSPAN }}">{{ lang('NO_ICONS') }}</td>
+			</tr>
+			{% endif %}
+			</tbody>
+		</table>
+
+		<p class="submit-buttons">
+			<input class="button1" type="submit" id="submit" name="submit" value="{{ lang('SUBMIT') }}"/>&nbsp;
+			<input class="button2" type="reset" id="reset" name="reset" value="{{ lang('RESET') }}"/>
+		</p>
+		{{ S_FORM_TOKEN }}
+	</fieldset>
+</form>
+
+{% else %}
+
+<h1>{{ lang('ACP_PFT_IMAGES') }}</h1>
+
+<p>{{ lang('ACP_PFT_IMAGES_EXPLAIN') }}</p>
+
+{% if NOTICE %}
+<div class="successbox">
+	<h3>{{ lang('NOTIFY') }}</h3>
+	<p>{{ NOTICE }}</p>
+</div>
+{% endif %}
+
+<form id="acp_icons" method="post" action="{{ U_ACTION }}">
+
+	<fieldset class="tabulated">
+
+		<legend>{{ lang('ACP_PFT_IMAGES') }}</legend>
+
+		<table class="table1 zebra-table">
+			<thead>
+			<tr>
+				<th>{{ lang('ACP_PFT_IMAGES') }}</th>
+				<th>{{ lang('IMAGE_URL') }}</th>
+				<th>{{ lang('OPTIONS') }}</th>
+			</tr>
+			</thead>
+			<tbody>
+			{% for items in loops.items %}
+			<tr>
+				<td style="width: 85%; text-align: center;"><img src="{{ items.IMG_SRC }}" width="{{ items.WIDTH }}"
+																 height="{{ items.HEIGHT }}" alt="{{ items.ALT_TEXT }}"
+																 title="{{ items.ALT_TEXT }}"/></td>
+				<td style="text-align: center;">{{ items.ALT_TEXT }}</td>
+				<td class="actions" style="text-align: right;">
+					<span class="up-disabled" style="display:none;">{{ ICON_MOVE_UP_DISABLED }}</span>
+					<span class="up"><a href="{{ items.U_MOVE_UP }}" data-ajax="row_up">{{ ICON_MOVE_UP }}</a></span>
+					<span class="down-disabled" style="display:none;">{{ ICON_MOVE_DOWN_DISABLED }}</span>
+					<span class="down"><a href="{{ items.U_MOVE_DOWN }}"
+										  data-ajax="row_down">{{ ICON_MOVE_DOWN }}</a></span>
+					<a href="{{ items.U_EDIT }}">{{ ICON_EDIT }}</a>
+					<a href="{{ items.U_DELETE }}" data-ajax="row_delete">{{ ICON_DELETE }}</a>
+				</td>
+			</tr>
+			{% else %}
+			<tr class="row3">
+				<td colspan="{{ COLSPAN }}">{{ lang('ACP_NO_ITEMS') }}</td>
+			</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+		<div class="pagination">
+			{% if loops.pagination|length %}
+			{% INCLUDE 'pagination.html' %}
+			{% endif %}
+		</div>
+		<p class="quick">
+			<input class="button2" name="add" type="submit" value="{{ lang('ACP_PFT_ADD_IMAGES') }}"/>
+		</p>
+		{{ S_FORM_TOKEN }}
+	</fieldset>
+</form>
+
+{% endif %}
+
+{% INCLUDE 'overall_footer.html' %}

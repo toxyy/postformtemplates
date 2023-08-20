@@ -1,0 +1,29 @@
+{% INCLUDE 'overall_header.html' %}
+
+<h1>{{ lang('SETTINGS') }}</h1>
+
+<form id="acp_board" method="post" action="{{ U_ACTION }}">
+	<fieldset>
+		<dl>
+			<dt><label for="post_form_templates_add_post">{{ lang('ACP_PFT_ADD_POST')
+				}}</label><br/><br/><span>{{ lang('ACP_PFT_ADD_POST_EXPLAIN') }}</span><br/><br/></dt>
+			<dd><input type="radio" class="radio" name="post_form_templates_add_post" value="1" {% if ACP_PFT_ADD_POST %}checked="checked" {% endif %}/> {{ lang('YES') }} &nbsp;
+				<input type="radio" class="radio" name="post_form_templates_add_post" value="0" {% if not ACP_PFT_ADD_POST %}checked="checked" {% endif %}/> {{ lang('NO') }}</dd>
+		</dl>
+		<dl>
+			<dt><label for="post_form_templates_hide_postfields">{{ lang('ACP_PFT_HIDE_POSTFIELDS')
+				}}</label><br/><br/><span>{{ lang('ACP_PFT_HIDE_POSTFIELDS_EXPLAIN') }}</span><br/><br/></dt>
+			<dd><input type="radio" class="radio" name="post_form_templates_hide_postfields" value="1" {% if ACP_PFT_HIDE_POSTFIELDS %}checked="checked" {% endif %}/> {{ lang('YES') }} &nbsp;
+				<input type="radio" class="radio" name="post_form_templates_hide_postfields" value="0" {% if not ACP_PFT_HIDE_POSTFIELDS %}checked="checked" {% endif %}/> {{ lang('NO') }}</dd>
+		</dl>
+
+		<p class="submit-buttons">
+			<input class="button1" type="submit" id="submit" name="submit" value="{{ lang('SUBMIT') }}" />&nbsp;
+			<input class="button2" type="reset" id="reset" name="reset" value="{{ lang('RESET') }}" />
+		</p>
+
+		{{ S_FORM_TOKEN }}
+	</fieldset>
+</form>
+
+{% INCLUDE 'overall_footer.html' %}

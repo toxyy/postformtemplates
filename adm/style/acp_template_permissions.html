@@ -1,0 +1,398 @@
+{% INCLUDE 'overall_header.html' %}
+
+<a id="maincontent"></a>
+
+{% if S_INTRO %}
+
+<h1>{{ lang('ACP_PERMISSIONS') }}</h1>
+
+{{ lang('ACP_PERMISSIONS_EXPLAIN') }}
+
+{% endif %}
+
+{% if S_SELECT_VICTIM %}
+
+{% if U_BACK %}<a href="{{ U_BACK }}" style="float: {{ S_CONTENT_FLOW_END }};">&laquo; {{ lang('BACK') }}</a>{% endif %}
+
+<h1>{{ lang('TITLE') }}</h1>
+
+<p>{{ lang('EXPLAIN') }}</p>
+
+{% if S_TEMPLATE_NAMES %}
+<p><strong>{{ lang('ACP_PFT_TEMPLATES') }}{{ lang('COLON') }}</strong> {{ TEMPLATE_NAMES }}</p>
+{% endif %}
+
+{% if S_SELECT_TEMPLATE %}
+
+<form id="select_victim" method="post" action="{{ U_ACTION }}">
+
+	<fieldset>
+		<legend>{{ lang('ACP_PFT_LOOK_UP_TEMPLATE') }}</legend>
+		{% if S_TEMPLATE_MULTIPLE %}<p>{{ lang('ACP_PFT_LOOK_UP_TEMPLATES_EXPLAIN') }}</p>{% endif %}
+		<dl>
+			<dt><label for="template">{{ lang('ACP_PFT_LOOK_UP_TEMPLATE') }}{{ lang('COLON') }}</label></dt>
+			<dd><select id="template" name="template_id[]" {% if S_TEMPLATE_MULTIPLE %} multiple="multiple" {% endif %}
+						size="10">{{ S_TEMPLATE_OPTIONS }}</select></dd>
+			{% if S_TEMPLATE_ALL %}
+			<dd><label><input type="checkbox" class="radio" name="all_templates" value="1"/> {{
+				lang('ACP_PFT_ALL_TEMPLATES') }}</label></dd>
+			{% endif %}
+		</dl>
+
+		<p class="quick">
+			{{ S_HIDDEN_FIELDS }}
+			{{ S_FORM_TOKEN }}
+			<input type="submit" name="submit" value="{{ lang('SUBMIT') }}" class="button1"/>
+		</p>
+
+	</fieldset>
+</form>
+
+{% if S_TEMPLATE_MULTIPLE %}
+
+<form id="select_subtemplate" method="post" action="{{ U_ACTION }}">
+
+	<fieldset>
+		<legend>{{ lang('ACP_PFT_LOOK_UP_CATEGORY') }}</legend>
+		<p>{{ lang('ACP_PFT_SELECT_TEMPLATE_SUBTEMPLATE_EXPLAIN') }}</p>
+		<dl>
+			<dt><label for="stemplate">{{ lang('ACP_PFT_LOOK_UP_CATEGORY') }}{{ lang('COLON') }}</label></dt>
+			<dd><select id="stemplate" name="subtemplate_id">{{ S_SUBTEMPLATE_OPTIONS }}</select></dd>
+		</dl>
+
+		<p class="quick">
+			{{ S_HIDDEN_FIELDS }}
+			{{ S_FORM_TOKEN }}
+			<input type="submit" name="submit" value="{{ lang('SUBMIT') }}" class="button1"/>
+		</p>
+
+	</fieldset>
+</form>
+
+{% endif %}
+
+{% elseif S_SELECT_USER and S_CAN_SELECT_USER %}
+
+<form id="select_victim" method="post" action="{{ U_ACTION }}">
+
+	<fieldset>
+		<legend>{{ lang('LOOK_UP_USER') }}</legend>
+		<dl>
+			<dt><label for="username">{{ lang('FIND_USERNAME') }}{{ lang('COLON') }}</label></dt>
+			<dd><input class="text medium" type="text" id="username" name="username[]"/></dd>
+			<dd>[ <a href="{{ U_FIND_USERNAME }}" onclick="find_username(this.href); return false;">{{
+				lang('FIND_USERNAME') }}</a> ]
+			</dd>
+			<dd class="full" style="text-align: left;"><label><input type="checkbox" class="radio" id="anonymous"
+																	 name="user_id[]" value="{{ ANONYMOUS_USER_ID }}"/>
+				{{ lang('SELECT_ANONYMOUS') }}</label></dd>
+		</dl>
+
+		<p class="quick">
+			{{ S_HIDDEN_FIELDS }}
+			{{ S_FORM_TOKEN }}
+			<input type="submit" name="submit" value="{{ lang('SUBMIT') }}" class="button1"/>
+		</p>
+	</fieldset>
+</form>
+
+{% elseif S_SELECT_GROUP and S_CAN_SELECT_GROUP %}
+
+<form id="select_victim" method="post" action="{{ U_ACTION }}">
+
+	<fieldset>
+		<legend>{{ lang('LOOK_UP_GROUP') }}</legend>
+		<dl>
+			<dt><label for="group">{{ lang('LOOK_UP_GROUP') }}{{ lang('COLON') }}</label></dt>
+			<dd><select name="group_id[]" id="group">{{ S_GROUP_OPTIONS }}</select></dd>
+		</dl>
+
+		<p class="quick">
+			{{ S_HIDDEN_FIELDS }}
+			{{ S_FORM_TOKEN }}
+			<input type="submit" name="submit" value="{{ lang('SUBMIT') }}" class="button1"/>
+		</p>
+
+	</fieldset>
+</form>
+
+{% elseif S_SELECT_USERGROUP %}
+
+<div class="column1">
+
+	{% if S_CAN_SELECT_USER %}
+
+	<h1>{{ lang('USERS') }}</h1>
+
+	<form id="users" method="post" action="{{ U_ACTION }}">
+
+		<fieldset>
+			<legend>{{ lang('MANAGE_USERS') }}</legend>
+			<dl>
+				<dd class="full"><select style="width: 100%;" name="user_id[]" multiple="multiple" size="5">{{
+					S_DEFINED_USER_OPTIONS }}</select></dd>
+				{% if S_ALLOW_ALL_SELECT %}
+				<dd class="full" style="text-align: right;"><label><input type="checkbox" class="radio" name="all_users"
+																		  value="1"/> {{ lang('ALL_USERS') }}</label>
+				</dd>
+				{% endif %}
+			</dl>
+		</fieldset>
+
+		<fieldset class="quick">
+			{{ S_HIDDEN_FIELDS }}
+			{{ S_FORM_TOKEN }}
+			<input type="submit" class="button2" name="action[delete]" value="{{ lang('REMOVE_PERMISSIONS') }}"
+				   style="width: 46% !important;"/> &nbsp; <input class="button1" type="submit"
+																  name="submit_edit_options"
+																  value="{{ lang('EDIT_PERMISSIONS') }}"
+																  style="width: 46% !important;"/>
+		</fieldset>
+	</form>
+
+	<form id="add_user" method="post" action="{{ U_ACTION }}">
+
+		<fieldset>
+			<legend>{{ lang('ADD_USERS') }}</legend>
+			<p>{{ lang('USERNAMES_EXPLAIN') }}</p>
+			<dl>
+				<dd class="full"><textarea id="username" name="usernames" rows="5" cols="5"
+										   style="width: 100%; height: 60px;"></textarea></dd>
+				<dd class="full" style="text-align: left;">
+					<div style="float: {{ S_CONTENT_FLOW_END }};">[ <a href="{{ U_FIND_USERNAME }}"
+																	   onclick="find_username(this.href); return false;">{{
+						lang('FIND_USERNAME') }}</a> ]
+					</div>
+					<label><input type="checkbox" class="radio" id="anonymous" name="user_id[]"
+								  value="{{ ANONYMOUS_USER_ID }}"/> {{ lang('SELECT_ANONYMOUS') }}</label></dd>
+			</dl>
+		</fieldset>
+
+		<fieldset class="quick">
+			{{ S_HIDDEN_FIELDS }}
+			{{ S_FORM_TOKEN }}
+			<input class="button1" type="submit" name="submit_add_options" value="{{ lang('ADD_PERMISSIONS') }}"/>
+		</fieldset>
+	</form>
+
+	{% endif %}
+
+</div>
+
+<div class="column2">
+
+	{% if S_CAN_SELECT_GROUP %}
+
+	<h1>{{ lang('USERGROUPS') }}</h1>
+
+	<form id="groups" method="post" action="{{ U_ACTION }}">
+
+		<fieldset>
+			<legend>{{ lang('MANAGE_GROUPS') }}</legend>
+			<dl>
+				<dd class="full"><select style="width: 100%;" name="group_id[]" multiple="multiple" size="5">{{
+					S_DEFINED_GROUP_OPTIONS }}</select></dd>
+				{% if S_ALLOW_ALL_SELECT %}
+				<dd class="full" style="text-align: right;"><label><input type="checkbox" class="radio"
+																		  name="all_groups" value="1"/> {{
+					lang('ALL_GROUPS') }}</label></dd>
+				{% endif %}
+			</dl>
+		</fieldset>
+
+		<fieldset class="quick">
+			{{ S_HIDDEN_FIELDS }}
+			{{ S_FORM_TOKEN }}
+			<input class="button2" type="submit" name="action[delete]" value="{{ lang('REMOVE_PERMISSIONS') }}"
+				   style="width: 46% !important;"/> &nbsp; <input class="button1" type="submit"
+																  name="submit_edit_options"
+																  value="{{ lang('EDIT_PERMISSIONS') }}"
+																  style="width: 46% !important;"/>
+		</fieldset>
+	</form>
+
+	<form id="add_groups" method="post" action="{{ U_ACTION }}">
+
+		<fieldset>
+			<legend>{{ lang('ADD_GROUPS') }}</legend>
+			<dl>
+				<dd class="full"><select name="group_id[]" style="width: 100%; height: 107px;" multiple="multiple">{{
+					S_ADD_GROUP_OPTIONS }}</select></dd>
+			</dl>
+		</fieldset>
+
+		<fieldset class="quick">
+			{{ S_HIDDEN_FIELDS }}
+			{{ S_FORM_TOKEN }}
+			<input type="submit" class="button1" name="submit_add_options" value="{{ lang('ADD_PERMISSIONS') }}"/>
+		</fieldset>
+	</form>
+
+	{% endif %}
+
+</div>
+
+{% elseif S_SELECT_USERGROUP_VIEW %}
+
+<div class="column1">
+
+	<h1>{{ lang('USERS') }}</h1>
+
+	<form id="users" method="post" action="{{ U_ACTION }}">
+
+		<fieldset>
+			<legend>{{ lang('MANAGE_USERS') }}</legend>
+			<dl>
+				<dd class="full"><select style="width: 100%;" name="user_id[]" multiple="multiple" size="5">{{
+					S_DEFINED_USER_OPTIONS }}</select></dd>
+			</dl>
+		</fieldset>
+
+		<fieldset class="quick">
+			{{ S_HIDDEN_FIELDS }}
+			{{ S_FORM_TOKEN }}
+			<input class="button1" type="submit" name="submit" value="{{ lang('VIEW_PERMISSIONS') }}"/>
+		</fieldset>
+	</form>
+
+	<form id="add_user" method="post" action="{{ U_ACTION }}">
+
+		<fieldset>
+			<legend>{{ lang('LOOK_UP_USER') }}</legend>
+			<dl>
+				<dt><label for="username">{{ lang('FIND_USERNAME') }}{{ lang('COLON') }}</label></dt>
+				<dd><input type="text" id="username" name="username[]"/></dd>
+				<dd>[ <a href="{{ U_FIND_USERNAME }}" onclick="find_username(this.href); return false;">{{
+					lang('FIND_USERNAME') }}</a> ]
+				</dd>
+				<dd class="full" style="text-align: left;"><label><input type="checkbox" class="radio" id="anonymous"
+																		 name="user_id[]"
+																		 value="{{ ANONYMOUS_USER_ID }}"/> {{
+					lang('SELECT_ANONYMOUS') }}</label></dd>
+			</dl>
+		</fieldset>
+
+		<fieldset class="quick">
+			{{ S_HIDDEN_FIELDS }}
+			{{ S_FORM_TOKEN }}
+			<input type="submit" name="submit" value="{{ lang('VIEW_PERMISSIONS') }}" class="button1"/>
+		</fieldset>
+	</form>
+
+</div>
+
+<div class="column2">
+
+	<h1>{{ lang('USERGROUPS') }}</h1>
+
+	<form id="groups" method="post" action="{{ U_ACTION }}">
+
+		<fieldset>
+			<legend>{{ lang('MANAGE_GROUPS') }}</legend>
+			<dl>
+				<dd class="full"><select style="width: 100%;" name="group_id[]" multiple="multiple" size="5">{{
+					S_DEFINED_GROUP_OPTIONS }}</select></dd>
+			</dl>
+		</fieldset>
+
+		<fieldset class="quick">
+			{{ S_HIDDEN_FIELDS }}
+			{{ S_FORM_TOKEN }}
+			<input class="button1" type="submit" name="submit" value="{{ lang('VIEW_PERMISSIONS') }}"/>
+		</fieldset>
+	</form>
+
+	<form id="group" method="post" action="{{ U_ACTION }}">
+
+		<fieldset>
+			<legend>{{ lang('LOOK_UP_GROUP') }}</legend>
+			<dl>
+				<dt><label for="group_select">{{ lang('LOOK_UP_GROUP') }}{{ lang('COLON') }}</label></dt>
+				<dd><select name="group_id[]" id="group_select">{{ S_ADD_GROUP_OPTIONS }}</select></dd>
+				<dd>&nbsp;</dd>
+			</dl>
+		</fieldset>
+
+		<fieldset class="quick">
+			{{ S_HIDDEN_FIELDS }}
+			{{ S_FORM_TOKEN }}
+			<input type="submit" name="submit" value="{{ lang('VIEW_PERMISSIONS') }}" class="button1"/>
+		</fieldset>
+	</form>
+
+</div>
+
+{% endif %}
+
+{% endif %}
+
+{% if S_VIEWING_PERMISSIONS %}
+
+<h1>{{ lang('ACL_VIEW') }}</h1>
+
+<p>{{ lang('ACL_VIEW_EXPLAIN') }}</p>
+
+<fieldset class="quick">
+	<strong>&raquo; {{ lang('PERMISSION_TYPE') }}</strong>
+</fieldset>
+
+{% INCLUDE 'acp_template_permission_mask.html' %}
+
+{% endif %}
+
+{% if S_SETTING_PERMISSIONS %}
+
+<h1>{{ lang('ACL_SET') }}</h1>
+
+<p>{{ lang('ACL_SET_EXPLAIN') }}</p>
+
+<br/>
+
+<fieldset class="quick" style="float: {{ S_CONTENT_FLOW_END }};">
+	<strong>&raquo; {{ lang('PERMISSION_TYPE') }}</strong>
+</fieldset>
+
+{% if S_PERMISSION_DROPDOWN %}
+<form id="pselect" method="post" action="{{ U_ACTION }}">
+
+	<fieldset class="quick" style="float: {{ S_CONTENT_FLOW_BEGIN }};">
+		{{ S_HIDDEN_FIELDS }}
+		{{ S_FORM_TOKEN }}
+		{{ lang('SELECT_TYPE') }}{{ lang('COLON') }} <select name="type">{{ S_PERMISSION_DROPDOWN }}</select>
+
+		<input class="button2" type="submit" name="submit" value="{{ lang('GO') }}"/>
+	</fieldset>
+</form>
+{% endif %}
+
+<br class="responsive-hide"/><br class="responsive-hide"/>
+
+<!-- include tooltip file -->
+{% INCLUDEJS 'tooltip.js' %}
+
+<form id="set-permissions" method="post" action="{{ U_ACTION }}" data-role-description="{{ lang('ROLE_DESCRIPTION') }}">
+
+	{{ S_HIDDEN_FIELDS }}
+
+	{% INCLUDE 'acp_template_permission_mask.html' %}
+
+	<br class="responsive-hide"/><br class="responsive-hide"/>
+
+	<fieldset class="quick" style="float: {{ S_CONTENT_FLOW_END }};">
+		<legend>{{ lang('ACP_SUBMIT_CHANGES') }}</legend>
+		<p class="submit-buttons">
+			<input class="button1" type="submit" id="submit" name="action[apply_all_permissions]"
+				   value="{{ lang('APPLY_ALL_PERMISSIONS') }}"/>&nbsp;
+			<input class="button2" type="button" id="reset" name="cancel" value="{{ lang('RESET') }}"
+				   onclick="document.forms['set-permissions'].reset(); init_colours(active_pmask + active_fmask);"/>
+			{{ S_FORM_TOKEN }}
+		</p>
+	</fieldset>
+
+	<br class="responsive-hide"/><br class="responsive-hide"/>
+
+</form>
+
+{% endif %}
+
+{% INCLUDE 'overall_footer.html' %}

@@ -1,0 +1,123 @@
+{% set PFT_SHOW_ENTRIES = not PFT_NO_TEMPLATE %}
+{% if pft_categories %}
+{% if PFT_HIDE_POSTFIELDS %}
+<style>
+#postform .panel.bg2, #postform #format-buttons, #postform #smiley-box, #postform #message-box {
+	display: none;
+}
+</style>
+{% endif %}
+<dl style="clear: left;">
+	<dt>
+		<label>{{ lang('PFT_SELECT_TEMPLATE') }}</label>
+	</dt>
+	<dd>
+		<div class="pft_dropdown">
+			{% set cat_prepend = '' %}
+			{% set cat_html = '' %}
+			{% for row in loops.pft_categories %}
+			{% if row.SELECTED or PFT_NO_CATEGORY %}
+			{% set firstrow_name = (PFT_NO_CATEGORY ? lang('PFT_NO_CATEGORY') : row.NAME) %}
+			{% set cat_prepend = '<input type="hidden" name="pft_parent_id_post" value="' ~ row.ID ~ '">
+			<a href="#0"> ' ~ firstrow_name ~ PFT_MAX_CAT_ROW_LENGTH ~ '&nbsp;<i
+					class="icon fa-sharp fa-light fa-chevron-down"></i>&nbsp;</strong></a>
+			<ul>' %}
+				{% endif %}
+				{% set rowname = row.SELECTED ? '<em>' ~ row.NAME ~ '</em>' : row.NAME %}
+				{% set cat_html = cat_html ~ '<a href="' ~ row.U_SELECT ~ '">' ~ rowname ~ '</a>' %}
+				{% set PFT_NO_CATEGORY = false %}
+				{% endfor %}
+				{{ cat_prepend }}
+				{{ cat_html }}
+			</ul>
+		</div>
+		<div class="pft_dropdown">
+			{% set template_prepend = '' %}
+			{% set template_html = '' %}
+			{% set indent = '&nbsp; &nbsp;' %}
+			{% for row in loops.pft_templates %}
+			{% if row.SELECTED or PFT_NO_TEMPLATE %}
+			{% set PFT_SHOW_ENTRIES = PFT_NO_TEMPLATE ? false : true %}
+			{% set firstrow_name = (PFT_NO_TEMPLATE ? lang('PFT_NO_TEMPLATE') : row.NAME) %}
+			{% set template_prepend = '<input type="hidden" name="pft_template_id_post" value="' ~ row.ID ~ '">
+			<a href="#0"> ' ~ firstrow_name ~ PFT_MAX_ROW_LENGTH ~ '&nbsp;<i
+					class="icon fa-sharp fa-light fa-chevron-down"></i>&nbsp;</strong></a>
+			<ul>' %}
+				{% set PFT_NO_TEMPLATE = false %}
+				{% endif %}
+				{% if row.TYPE == 0 or row.DISABLED %}
+				{% set template_url = '#0' %}
+				{% set template_class = 'pft_disabled' %}
+				{% else %}
+				{% set template_url = row.U_SELECT %}
+				{% set template_class = 'pft_row' %}
+				{% endif %}
+				{% set rowname = row.SELECTED ? '<em>' ~ row.NAME ~ '</em>' : row.NAME %}
+				{% set template_html = template_html ~ '<a href="' ~ template_url ~ '" class="' ~ template_class ~ '">'
+					~ (row.LEVEL == 2 ? indent : "") ~ rowname ~ '</a>' %}
+				{% endfor %}
+				{{ template_prepend }}
+				{{ template_html }}
+			</ul>
+		</div>
+	</dd>
+</dl>
+
+{% if PFT_SHOW_ENTRIES %}
+<hr>
+{% for row in loops.pft_entries %}
+{% set pft_for = 'pft_e' ~ row.ID %}
+<dl class="pft_entries {% if row.PARENT_ID %}pft_subentry{% endif %}">
+	<dt>
+		<label for="{{ pft_for }}" {% if row.ENTRY_HELPLINE %}title="{{ row.ENTRY_HELPLINE }}" class="pft_tooltip" {%
+			   endif %}>{{ row.ENTRY_TAG }}</label>
+	</dt>
+	<dd>
+		{% set match_array = _context['pft_entries_type_match_' ~ row.ID] %}
+		{% if row.ENTRY_TYPE == PFT_ENTRIES_TEXT %}
+		<textarea name="{{ pft_for }}" cols="1" rows="{{ row.ENTRY_ROWS }}"></textarea>
+		{% endif %}
+		{% if row.ENTRY_TYPE == PFT_ENTRIES_RADIO %}
+		{% for match in match_array %}
+		<label for="{{ pft_for }}_{{ loop.index0 }}"><input type="radio" name="{{ pft_for }}"
+															id="{{ pft_for }}_{{ loop.index0 }}"
+															value="{{ loop.index0 }}" {% if loop.first
+															%}checked="checked" {% endif %}>{{ match.MATCH }}</label>
+		{% endfor %}
+		{% endif %}
+		{% if row.ENTRY_TYPE == PFT_ENTRIES_CHECKBOX %}
+		{% for match in match_array %}
+		<label for="{{ pft_for }}_{{ loop.index0 }}"><input type="checkbox" name="{{ pft_for }}[]"
+															id="{{ pft_for }}_{{ loop.index0 }}"
+															value="{{ loop.index0 }}">{{ match.MATCH }}</label>
+		{% endfor %}
+		{% endif %}
+		{% if row.ENTRY_TYPE == PFT_ENTRIES_DROPDOWN %}
+		<select id="{{ pft_for }}" name="{{ pft_for }}">
+			{% for match in match_array %}
+			<option value="{{ loop.index0 }}" {% if loop.first %}selected="selected" {% endif %}>{{ match.MATCH }}
+			</option>
+			{% endfor %}
+		</select>
+		{% endif %}
+	</dd>
+</dl>
+{% endfor %}
+<br/>
+<div class="inner pft_buttons">
+	<fieldset>
+		{% if not PFT_HIDE_POSTFIELDS %}
+		<input type="submit" accesskey="s" tabindex="6" name="pft_add_template" value="Add to post"
+			   class="button1 default-submit-action">
+		{% endif %}
+		{% if PFT_SUBMIT_BUTTON %}
+		<input type="submit" accesskey="s" tabindex="6" name="post" value="Post template"
+				class="button1 default-submit-action">
+		{% endif %}
+	</fieldset>
+</div>
+{% if not PFT_HIDE_POSTFIELDS %}
+<hr>
+{% endif %}
+{% endif %}
+{% endif %}

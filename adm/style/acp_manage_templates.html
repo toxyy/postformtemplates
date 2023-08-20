@@ -1,0 +1,476 @@
+{% INCLUDE 'overall_header.html' %}
+
+<a id="maincontent"></a>
+
+{% if S_EDIT_TEMPLATE %}
+<script>
+	// <![CDATA[
+	/**
+	 * Handle displaying/hiding several options based on the template type
+	 */
+	function display_options(id, value) {
+		if (id == 'template_type')
+		{
+			{% if not S_ADD_ACTION %}
+			if (value == {{ S_TEMPLATE_ORIG_FORM ? TEMPLATE_FORM : TEMPLATE_CAT }})
+			{
+				phpbb.toggleDisplay('type_actions', -1);
+			}
+			else
+			{
+				phpbb.toggleDisplay('type_actions', 1);
+			}
+			{% endif %}
+
+			if (value == {{ TEMPLATE_FORM }})
+			{
+				phpbb.toggleDisplay('locked', 1);
+				phpbb.toggleDisplay('images', 1);
+				phpbb.toggleDisplay('entries_from', 1);
+				phpbb.toggleDisplay('images_from', 1);
+				phpbb.toggleDisplay('contents_from', -1);
+			}
+			else if (value == {{ TEMPLATE_CAT }})
+			{
+				phpbb.toggleDisplay('locked', -1);
+				phpbb.toggleDisplay('entries_from', -1);
+				phpbb.toggleDisplay('images_from', -1);
+				phpbb.toggleDisplay('images', -1);
+				phpbb.toggleDisplay('contents_from', 1);
+			}
+		}
+		else if (id == 'settings_from')
+		{
+			if (value > 0) {
+				phpbb.toggleDisplay('type', -1);
+				phpbb.toggleDisplay('type_actions', -1);
+				phpbb.toggleDisplay('permissions_from', -1);
+				phpbb.toggleDisplay('entries_from', -1);
+				phpbb.toggleDisplay('contents_from', -1);
+				phpbb.toggleDisplay('forums_from', -1);
+				phpbb.toggleDisplay('images_from', -1);
+				phpbb.toggleDisplay('display_forums', -1);
+				phpbb.toggleDisplay('name', -1);
+				phpbb.toggleDisplay('desc', -1);
+				phpbb.toggleDisplay('images', -1);
+				phpbb.toggleDisplay('template_form_options', -1);
+				phpbb.toggleDisplay('locked', -1);
+			}
+			else
+			{
+				phpbb.toggleDisplay('type', 1);
+				phpbb.toggleDisplay('type_actions', 1);
+				phpbb.toggleDisplay('permissions_from', 1);
+				phpbb.toggleDisplay('entries_from', 1);
+				phpbb.toggleDisplay('forums_from', 1);
+				phpbb.toggleDisplay('images_from', 1);
+				phpbb.toggleDisplay('display_forums', 1);
+				phpbb.toggleDisplay('name', 1);
+				phpbb.toggleDisplay('desc', 1);
+				phpbb.toggleDisplay('images', 1);
+				phpbb.toggleDisplay('template_form_options', 1);
+				phpbb.toggleDisplay('locked', 1);
+
+				if (document.getElementById("template_type").value == {{ TEMPLATE_CAT }})
+				{
+					phpbb.toggleDisplay('entries_from', -1);
+					phpbb.toggleDisplay('images_from', -1);
+					phpbb.toggleDisplay('contents_from', 1);
+				}
+				else
+				{
+					phpbb.toggleDisplay('entries_from', 1);
+					phpbb.toggleDisplay('images_from', 1);
+					phpbb.toggleDisplay('contents_from', -1);
+				}
+			}
+		}
+		else if (id == 'forums_from')
+		{
+			if (value > 0)
+			{
+				phpbb.toggleDisplay('display_forums', -1);
+			}
+			else
+			{
+				phpbb.toggleDisplay('display_forums', 1);
+			}
+		}
+	}
+
+	/**
+	 * Init the wanted display functionality if javascript is enabled.
+	 * If javascript is not available, the user is still able to properly administer.
+	 */
+	window.onload = function() {
+		{% if not S_ADD_ACTION %}
+		{% if (S_TEMPLATE_ORIG_FORM and S_TEMPLATE_FORM) or(S_TEMPLATE_ORIG_CAT and S_TEMPLATE_CAT) %}
+		phpbb.toggleDisplay('type_actions', -1);
+		{% endif %}
+		{% endif %}
+
+		{% if not S_TEMPLATE_FORM %}
+		phpbb.toggleDisplay('locked', -1);
+		phpbb.toggleDisplay('entries_from', -1);
+		phpbb.toggleDisplay('images_from', -1);
+		phpbb.toggleDisplay('images', -1);
+		phpbb.toggleDisplay('contents_from', 1);
+		{% endif %}
+
+		{% if not S_TEMPLATE_CAT %}
+		phpbb.toggleDisplay('locked', 1);
+		phpbb.toggleDisplay('entries_from', 1);
+		phpbb.toggleDisplay('images_from', 1);
+		phpbb.toggleDisplay('images', 1);
+		phpbb.toggleDisplay('contents_from', -1);
+		{% endif %}
+		if (document.getElementById("template_type").value == {{ TEMPLATE_CAT }})
+		{
+			{% if S_TEMPLATE_ORIG_FORM %}
+			phpbb.toggleDisplay('type_actions', 1);
+			{% endif %}
+			phpbb.toggleDisplay('entries_from', -1);
+			phpbb.toggleDisplay('images', -1);
+			phpbb.toggleDisplay('contents_from', 1);
+		}
+		else
+		{
+			{% if S_TEMPLATE_ORIG_CAT %}
+			phpbb.toggleDisplay('type_actions', 1);
+			{% endif %}
+			phpbb.toggleDisplay('locked', 1);
+			phpbb.toggleDisplay('entries_from', 1);
+			phpbb.toggleDisplay('images_from', 1);
+			phpbb.toggleDisplay('images', 1);
+			phpbb.toggleDisplay('contents_from', -1);
+		}
+		if (document.getElementById("template_forums_from").value > 0)
+		{
+			phpbb.toggleDisplay('display_forums', -1);
+		}
+		else
+		{
+			phpbb.toggleDisplay('display_forums', 1);
+		}
+	}
+
+	// ]]>
+</script>
+
+<a href="{{ U_BACK }}" style="float: {{ S_CONTENT_FLOW_END }};">&laquo; {{ lang('BACK') }}</a>
+
+<h1>{{ lang('TITLE') }} {% if TEMPLATE_NAME %}:: {{ TEMPLATE_NAME }}{% endif %}</h1>
+
+<p>{{ lang('ACP_PFT_TEMPLATE_EDIT_EXPLAIN') }}</p>
+
+{% if S_ERROR %}
+<div class="errorbox">
+	<h3>{{ lang('WARNING') }}</h3>
+	<p>{{ ERROR_MSG }}</p>
+</div>
+{% endif %}
+
+<form id="templateedit" method="post" action="{{ U_EDIT_ACTION }}">
+
+	<fieldset>
+		<legend>{{ lang('ACP_PFT_TEMPLATE_SETTINGS') }}</legend>
+		<dl id="type">
+			<dt><label for="template_type">{{ lang('ACP_PFT_TEMPLATE_TYPE') }}{{ lang('COLON') }}</label></dt>
+			<dd><select id="template_type" name="template_type"
+						onchange="display_options('template_type', this.options[this.selectedIndex].value);">{{
+				S_TEMPLATE_TYPE_OPTIONS }}</select></dd>
+		</dl>
+		{% if not S_ADD_ACTION and (S_HAS_ENTRIES || S_HAS_FORMS) %}
+		<div id="type_actions">
+			<dl>
+				{% if S_TEMPLATE_ORIG_FORM and S_HAS_ENTRIES %}
+				<dt><label for="type_action">{{ lang('ACP_PFT_DECIDE_MOVE_DELETE_CONTENT') }}{{ lang('COLON') }}</label>
+				</dt>
+				<dd><label><input type="radio" class="radio" name="type_action" value="delete" {% if not
+								  S_MOVE_TEMPLATE_OPTIONS %} checked="checked" id="type_action" {% endif %}/> {{
+					lang('ACP_PFT_DELETE_CONTENT') }}</label></dd>
+				{% if S_MOVE_TEMPLATE_OPTIONS %}
+				<dd><label><input type="radio" class="radio" name="type_action" id="type_action" value="move"
+								  checked="checked"/> {{ lang('ACP_PFT_MOVE_CONTENT_TO') }}</label> <select
+						name="to_template_id">{{ S_MOVE_TEMPLATE_OPTIONS }}</select></dd>
+				{% endif %}
+				{% elseif S_HAS_FORMS %}
+				<dt><label for="type_action">{{ lang('ACP_PFT_DECIDE_MOVE_DELETE_TEMPLATES') }}{{ lang('COLON')
+					}}</label></dt>
+				<dd><label><input type="radio" class="radio" name="type_action" value="delete" {% if not
+								  S_MOVE_TEMPLATE_OPTIONS %} checked="checked" id="type_action" {% endif %}/> {{
+					lang('ACP_PFT_DELETE_SUBTEMPLATES') }}</label></dd>
+				{% if S_MOVE_TEMPLATE_OPTIONS %}
+				<dd><label><input type="radio" class="radio" name="type_action" id="type_action" value="move"
+								  checked="checked"/> {{ lang('ACP_PFT_MOVE_SUBTEMPLATES_TO') }}</label> <select
+						name="to_template_id">{{ S_MOVE_TEMPLATE_OPTIONS }}</select></dd>
+				{% endif %}
+				{% endif %}
+			</dl>
+		</div>
+		{% else %}
+		<input type="hidden" id="type_actions" name="type_action" value="nothing">
+		{% endif %}
+		<dl id="template_parent">
+			<dt><label for="parent">{{ lang('ACP_PFT_TEMPLATE_PARENT') }}{{ lang('COLON') }}</label></dt>
+			<dd><select id="parent" name="template_parent_id">
+				<option value="0" {% if not S_TEMPLATE_PARENT_ID %} selected="selected" {% endif %}>{{
+					lang('ACP_PFT_NO_PARENT') }}
+				</option>
+				{{ S_PARENT_OPTIONS }}</select></dd>
+		</dl>
+		<dl id="settings_from">
+			<dt><label for="settings_from">{{ lang('ACP_PFT_COPY_TEMPLATE') }}{{ lang('COLON') }}</label><br/><span>{{ lang('COPY_TEMPLATE_EXPLAIN') }}</span>
+			</dt>
+			<dd><select id="settings_from" name="settings_from"
+						onchange="display_options('settings_from', this.options[this.selectedIndex].value);">
+				<option value="0">{{ lang('ACP_PFT_NO_COPY_TEMPLATE') }}</option>
+				{% if S_CAT_OR_FORM %}{{ S_TEMPLATE_OPTIONS_NO_SELECT }}{% elseif S_TEMPLATE_CAT %}{{
+				S_TEMPLATE_CATS_NO_SELECT }}{% else %}{{ S_TEMPLATE_FORMS_NO_SELECT }}{% endif %}</select></dd>
+			<dd><label><input type="checkbox" class="radio" name="template_copy_parent_id" value="0"/> {{
+				lang('ACP_PFT_COPY_PARENT') }}</label></dd>
+		</dl>
+		{% if S_CAN_COPY_PERMISSIONS %}
+		<dl id="permissions_from">
+			<dt><label for="template_permissions_from">{{ lang('ACP_PFT_COPY_PERMISSIONS') }}{{ lang('COLON') }}</label><br/><span>{{ lang('COPY_PERMISSIONS_EXPLAIN') }}</span>
+			</dt>
+			<dd><select id="template_permissions_from" name="template_permissions_from">
+				<option value="0">{{ lang('ACP_PFT_NO_COPY_PERMISSIONS') }}</option>
+				{{ S_TEMPLATE_OPTIONS }}</select></dd>
+		</dl>
+		{% endif %}
+		<dl id="entries_from">
+			<dt><label for="template_entries_from">{{ lang('ACP_PFT_COPY_ENTRIES') }}{{ lang('COLON')
+				}}</label><br/><span>{{ lang('COPY_ENTRIES_EXPLAIN') }}</span></dt>
+			<dd><select id="template_entries_from" name="template_entries_from">
+				<option value="0">{{ lang('ACP_PFT_NO_COPY_ENTRIES') }}</option>
+				{{ S_ENTRY_OPTIONS }}</select></dd>
+			<dd><label><input type="checkbox" class="radio" name="template_keep_entries" value="1"/> {{
+				lang('ACP_PFT_KEEP_ENTRIES') }}</label></dd>
+		</dl>
+		<dl id="contents_from">
+			<dt><label for="template_contents_from">{{ lang('ACP_PFT_COPY_CONTENTS') }}{{ lang('COLON')
+				}}</label><br/><span>{{ lang('COPY_CONTENTS_EXPLAIN') }}</span></dt>
+			<dd><select id="template_contents_from" name="template_contents_from">
+				<option value="0">{{ lang('ACP_PFT_NO_COPY_CONTENTS') }}</option>
+				{{ S_TEMPLATE_CATS_NO_SELECT }}</select></dd>
+			<dd><label><input type="checkbox" class="radio" name="template_keep_contents" value="1"/> {{
+				lang('ACP_PFT_KEEP_CONTENTS') }}</label></dd>
+		</dl>
+		<dl id="forums_from">
+			<dt><label for="template_forums_from">{{ lang('ACP_PFT_COPY_FORUMS') }}{{ lang('COLON')
+				}}</label><br/><span>{{ lang('COPY_FORUMS_EXPLAIN') }}</span></dt>
+			<dd><select id="template_forums_from" name="template_forums_from"
+						onchange="display_options('forums_from', this.options[this.selectedIndex].value);">
+				<option value="0">{{ lang('ACP_PFT_NO_COPY_FORUMS') }}</option>
+				{{ S_TEMPLATE_OPTIONS }}</select></dd>
+		</dl>
+		<dl id="images_from">
+			<dt><label for="template_images_from">{{ lang('ACP_PFT_COPY_IMAGES') }}{{ lang('COLON')
+				}}</label><br/><span>{{ lang('COPY_IMAGES_EXPLAIN') }}</span></dt>
+			<dd><select id="template_images_from" name="template_images_from">
+				<option value="0">{{ lang('ACP_PFT_NO_COPY_IMAGES') }}</option>
+				{{ S_ENTRY_OPTIONS }}</select></dd>
+			<dd><label><input type="checkbox" class="radio" name="template_keep_image_cycle" value="1"/> {{
+				lang('ACP_PFT_KEEP_IMAGE_CYCLE') }}</label></dd>
+		</dl>
+	</fieldset>
+
+	<div id="template_form_options">
+		<fieldset>
+			<legend>{{ lang('ACP_PFT_GENERAL_TEMPLATE_SETTINGS') }}</legend>
+			<dl id="locked">
+				<dt><label for="template_status">{{ lang('ACP_PFT_TEMPLATE_STATUS') }}{{ lang('COLON') }}</label></dt>
+				<dd><select id="template_status" name="template_status">{{ S_STATUS_OPTIONS }}</select></dd>
+			</dl>
+			<dl id="name">
+				<dt><label for="template_name">{{ lang('ACP_PFT_TEMPLATE_NAME') }}{{ lang('COLON') }}</label></dt>
+				<dd><input class="text medium" type="text" id="template_name" name="template_name"
+						   value="{{ TEMPLATE_NAME }}" maxlength="255"/></dd>
+			</dl>
+			<dl id="desc">
+				<dt><label for="template_desc">{{ lang('ACP_PFT_TEMPLATE_DESC') }}{{ lang('COLON') }}</label><br/><span>{{ lang('ACP_PFT_TEMPLATE_DESC_EXPLAIN') }}</span>
+				</dt>
+				<dd><textarea id="template_desc" name="template_desc" rows="5" cols="45" data-bbcode="true">{{ TEMPLATE_DESC }}</textarea>
+				</dd>
+				<dd><label><input type="checkbox" class="radio" name="desc_parse_bbcode" {% if S_DESC_BBCODE_CHECKED %}
+								  checked="checked" {% endif %}/> {{ lang('PARSE_BBCODE') }}</label>
+					<label><input type="checkbox" class="radio" name="desc_parse_smilies" {% if S_DESC_SMILIES_CHECKED
+								  %} checked="checked" {% endif %}/> {{ lang('PARSE_SMILIES') }}</label>
+					<label><input type="checkbox" class="radio" name="desc_parse_urls" {% if S_DESC_URLS_CHECKED %}
+								  checked="checked" {% endif %}/> {{ lang('PARSE_URLS') }}</label></dd>
+			</dl>
+			<dl id="display_forums">
+				<dt><label for="forum">{{ lang('ACP_PFT_LOOK_UP_FORUM') }}{{ lang('COLON') }}</label><br/><span>{{ lang('LOOK_UP_FORUMS_EXPLAIN') }}</span>
+				</dt>
+				<dd><select id="forum" name="forum_id[]" multiple="multiple" size="10">{{ S_FORUM_OPTIONS }}</select>
+				</dd>
+				<dd><label><input type="checkbox" class="radio" name="all_forums" value="1" {% if S_FORUM_ALL %} checked
+								  {% endif %}/> {{ lang('ALL_FORUMS') }}</label></dd>
+			</dl>
+			<dl id="images">
+				{% if S_IMAGES_OPTIONS %}
+				<dt><label for="template_images">{{ lang('ACP_PFT_TEMPLATE_IMAGES') }}{{ lang('COLON')
+					}}</label><br/><span>{{ lang('ACP_PFT_TEMPLATE_IMAGES_EXPLAIN') }}</span></dt>
+				<dd><select id="template_images" name="template_images[]" multiple="multiple" size="10">{{
+					S_IMAGES_OPTIONS }}</select></dd>
+				<dd><label><input type="checkbox" class="radio" name="all_images" value="1" {% if S_IMAGES_ALL %}
+								  checked {% endif %}/> {{ lang('ACP_PFT_ALL_IMAGES') }}</label></dd>
+				<br/>
+				{% endif %}
+				<dt><label for="birthday">{{ lang('ACP_PFT_TEMPLATE_IMAGE_DATE') }}{{ lang('COLON')
+					}}</label><br/><span>{{ lang('ACP_PFT_TEMPLATE_IMAGE_DATE_EXPLAIN') }}</span></dt>
+				<dd><label><input type="radio" name="image_date_type" value="0" class="radio" {% if S_IMAGE_TYPE== 0
+								  %}checked="checked" {% endif %}/> {{ lang('ACP_PFT_IMAGE_DAILY') }}</label>
+					<label><input type="radio" name="image_date_type" value="1" class="radio" {% if S_IMAGE_TYPE== 1
+								  %}checked="checked" {% endif %}/> {{ lang('ACP_PFT_IMAGE_WEEKLY') }}</label>
+					<label><input type="radio" name="image_date_type" value="2" class="radio" {% if S_IMAGE_TYPE== 2
+								  %}checked="checked" {% endif %}/> {{ lang('ACP_PFT_IMAGE_RANDOM') }}</label></dd>
+				<dd>{{ lang('DAY') }}{{ lang('COLON') }} <select id="template_image_date" name="image_day">{{
+					S_DAY_OPTIONS }}</select> {{ lang('MONTH') }}{{ lang('COLON') }} <select name="image_month">{{
+					S_MONTH_OPTIONS }}</select> {{ lang('YEAR') }}{{ lang('COLON') }} <select name="image_year">{{
+					S_YEAR_OPTIONS }}</select></dd>
+
+			</dl>
+		</fieldset>
+	</div>
+
+	<fieldset class="submit-buttons">
+		<legend>{{ lang('SUBMIT') }}</legend>
+		<input class="button1" type="submit" id="submit" name="update" value="{{ lang('SUBMIT') }}"/>&nbsp;
+		<input class="button2" type="reset" id="reset" name="reset" value="{{ lang('RESET') }}"/>
+		{{ S_FORM_TOKEN }}
+	</fieldset>
+</form>
+
+{% elseif S_DELETE_TEMPLATE %}
+
+<a href="{{ U_BACK }}" style="float: {{ S_CONTENT_FLOW_END }};">&laquo; {{ lang('BACK') }}</a>
+
+<h1>{{ lang('ACP_PFT_TEMPLATE_DELETE') }}</h1>
+
+<p>{{ lang('ACP_PFT_TEMPLATE_DELETE_EXPLAIN') }}</p>
+
+{% if S_ERROR %}
+<div class="errorbox">
+	<h3>{{ lang('WARNING') }}</h3>
+	<p>{{ ERROR_MSG }}</p>
+</div>
+{% endif %}
+
+<form id="acp_template" method="post" action="{{ U_ACTION }}">
+
+	<fieldset>
+		<legend>{{ lang('ACP_PFT_TEMPLATE_DELETE') }}</legend>
+		<dl>
+			<dt><label>{{ lang('ACP_PFT_TEMPLATE_NAME') }}{{ lang('COLON') }}</label></dt>
+			<dd><strong>{{ TEMPLATE_NAME }}</strong></dd>
+		</dl>
+		{% if S_TEMPLATE_FORM %}
+		<dl>
+			<dt><label for="action_entries">{{ lang('ACTIONS') }}{{ lang('COLON') }}</label></dt>
+			<dd><label><input type="radio" class="radio" id="action_entries" name="action_entries" value="delete"
+							  checked="checked"/> {{ lang('ACP_PFT_DELETE_ENTRIES') }}</label></dd>
+			{% if S_MOVE_TEMPLATE_OPTIONS %}
+			<dd><label><input type="radio" class="radio" name="action_entries" value="move"/> {{
+				lang('ACP_PFT_MOVE_ENTRIES_TO') }}</label> <select name="entries_to_id">{{ S_MOVE_TEMPLATE_OPTIONS
+				}}</select></dd>
+			{% endif %}
+		</dl>
+		{% endif %}
+		{% if S_HAS_FORMS %}
+		<dl>
+			<dt><label for="action_subtemplates">{{ lang('ACTIONS') }}{{ lang('COLON') }}</label></dt>
+			<dd><label><input type="radio" class="radio" id="sub_delete_action" name="action_subtemplates"
+							  value="delete" checked="checked"/> {{ lang('ACP_PFT_DELETE_SUBTEMPLATES') }}</label></dd>
+			{% if S_TEMPLATES_LIST %}
+			<dd><label><input type="radio" class="radio" name="action_subtemplates" value="move"/> {{
+				lang('ACP_PFT_MOVE_SUBTEMPLATES_TO') }}</label> <select name="subtemplates_to_id">{{
+				S_MOVE_TEMPLATE_OPTIONS }}</select></dd>
+			{% endif %}
+		</dl>
+		{% endif %}
+
+		<p class="quick">
+			<input class="button1" type="submit" name="update" value="{{ lang('SUBMIT') }}"/>
+		</p>
+		{{ S_FORM_TOKEN }}
+	</fieldset>
+</form>
+
+{% else %}
+
+<h1>{{ lang('ACP_PFT_MANAGE_TEMPLATES_HEADER') }}</h1>
+
+<p>{{ lang('ACP_PFT_MANAGE_TEMPLATES_EXPLAIN') }}</p>
+
+{% if ERROR_MSG %}
+<div class="errorbox">
+	<h3>{{ lang('WARNING') }}</h3>
+	<p>{{ ERROR_MSG }}</p>
+</div>
+{% endif %}
+
+<p><strong>{{ NAVIGATION }}{% if S_NO_TEMPLATES %} [<a href="{{ U_EDIT }}">{{ lang('EDIT') }}</a> | <a
+		href="{{ U_DELETE }}">{{ lang('DELETE') }}</a>]{% endif %}</strong></p>
+
+{% if loops.templates|length %}
+<table class="table1 forums">
+	<col class="row1"/>
+	<col class="row1"/>
+	<col class="row2"/>
+	<tbody>
+	{% for templates in loops.templates %}
+	<tr>
+		<td class="folder">{{ templates.FOLDER_IMAGE }}</td>
+		<td class="forum-desc">
+			{% if templates.TEMPLATE_IMAGE %}
+			<div style="float: {{ S_CONTENT_FLOW_BEGIN }}; margin-right: 5px;">{{ templates.TEMPLATE_IMAGE }}</div>
+			{% endif %}
+			<strong><a href="{{ templates.U_TEMPLATE }}">{{ templates.TEMPLATE_NAME }}</a></strong>
+			{% if templates.TEMPLATE_DESCRIPTION %}<br/><span>{{ templates.TEMPLATE_DESCRIPTION }}</span>{% endif %}
+		</td>
+		<td class="actions">
+			<span class="up-disabled" style="display:none;">{{ ICON_MOVE_UP_DISABLED }}</span>
+			<span class="up"><a href="{{ templates.U_MOVE_UP }}" data-ajax="row_up">{{ ICON_MOVE_UP }}</a></span>
+			<span class="down-disabled" style="display:none;">{{ ICON_MOVE_DOWN_DISABLED }}</span>
+			<span class="down"><a href="{{ templates.U_MOVE_DOWN }}"
+								  data-ajax="row_down">{{ ICON_MOVE_DOWN }}</a></span>
+			<a href="{{ templates.U_EDIT }}">{{ ICON_EDIT }}</a>
+			<a href="{{ templates.U_DELETE }}">{{ ICON_DELETE }}</a>
+		</td>
+	</tr>
+	{% endfor %}
+	</tbody>
+</table>
+{% endif %}
+{% if S_TEMPLATE_FORM %}
+{% INCLUDE 'acp_manage_template_entries.html' %}
+{% else %}
+<form id="fselect" method="post" action="{{ U_SEL_ACTION }}">
+
+	<fieldset class="quick">
+		{{ lang('ACP_PFT_SELECT_TEMPLATE') }}{{ lang('COLON') }} <select name="parent_id"
+																		 onchange="if(this.options[this.selectedIndex].value != -1){ this.form.submit(); }">{{
+		TEMPLATE_BOX }}</select>
+
+		<input class="button2" type="submit" value="{{ lang('GO') }}"/>
+		{{ S_FORM_TOKEN }}
+	</fieldset>
+</form>
+
+<form id="templates" method="post" action="{{ U_ACTION }}">
+
+	<fieldset class="quick">
+		<input type="hidden" name="action" value="add"/>
+
+		<input type="text" name="template_name" value="" maxlength="255"/>
+		<input class="button2" name="addtemplate" type="submit" value="{{ lang('ACP_PFT_CREATE_TEMPLATE') }}"/>
+		{{ S_FORM_TOKEN }}
+	</fieldset>
+</form>
+{% endif %}
+
+{% endif %}
+
+{% INCLUDE 'overall_footer.html' %}

@@ -1,0 +1,188 @@
+<a id="maincontent"></a>
+{% if S_EDIT_TEMPLATE_ENTRY %}
+<script>
+	// <![CDATA[
+	/**
+	 * Handle displaying/hiding several options based on the template type
+	 */
+	function display_options(id, value) {
+		if (id == 'entry_type')
+		{
+			if (value > 0)
+			{
+				phpbb.toggleDisplay('box_lines', -1);
+			}
+			else
+			{
+				phpbb.toggleDisplay('box_lines', 1);
+			}
+		}
+	}
+
+	/**
+	 * Init the wanted display functionality if javascript is enabled.
+	 * If javascript is not available, the user is still able to properly administer.
+	 */
+	window.onload = function() {
+		if (document.getElementById("entry_type").value > 0)
+		{
+			phpbb.toggleDisplay('box_lines', -1);
+		}
+		else
+		{
+			phpbb.toggleDisplay('box_lines', 1);
+		}
+	}
+
+	// ]]>
+</script>
+
+<a href="{{ U_BACK }}" style="float: {{ S_CONTENT_FLOW_END }};">&laquo; {{ lang('BACK') }}</a>
+
+<h2>{% if not S_PARENT_ENTRY_ID %}{{ lang('ACP_PFT_TEMPLATE_ENTRIES') }}{% else %}{{ lang('ACP_PFT_TEMPLATE_SUBENTRIES')
+	}}{% endif %}</h2>
+
+<p>{% if not S_PARENT_ENTRY_ID %}{{ lang('ACP_PFT_TEMPLATE_ENTRIES_EXPLAIN') }}{% else %}{{
+	lang('ACP_PFT_TEMPLATE_SUBENTRIES_EXPLAIN') }}{% endif %}</p>
+
+<form id="acp_entries" method="post" action="{{ U_ACTION }}">
+
+	<fieldset>
+		<legend>{{ lang('ACP_PFT_TEMPLATE_ENTRY_TAG_USAGE') }}</legend>
+		<p>{{ lang('ACP_PFT_TEMPLATE_ENTRY_TAG_USAGE_EXPLAIN') }}</p>
+		<dl>
+			<dt><label for="entry_helpline">{{ lang('EXAMPLES') }}</label><br/><br/><span>{{ lang('ACP_PFT_TEMPLATE_ENTRY_TAG_USAGE_EXAMPLE') }}</span>
+			</dt>
+			<dd><textarea id="entry_tag" name="entry_tag" cols="60" rows="4">{{ TEMPLATE_ENTRY_TAG }}</textarea></dd>
+		</dl>
+	</fieldset>
+
+	<fieldset>
+		<legend>{{ lang('ACP_PFT_TEMPLATE_ENTRY_USAGE') }}</legend>
+		<p>{{ lang('ACP_PFT_TEMPLATE_ENTRY_USAGE_EXPLAIN') }}</p>
+		<dl>
+			<dt><label for="entry_match">{{ lang('EXAMPLES') }}</label><br/><br/><span>{{ lang('ACP_PFT_TEMPLATE_ENTRY_USAGE_EXAMPLE') }}</span>
+			</dt>
+			<dd><textarea id="entry_match" name="entry_match" cols="60" rows="5">{{ TEMPLATE_ENTRY_MATCH }}</textarea>
+			</dd>
+		</dl>
+	</fieldset>
+
+	<fieldset>
+		<legend>{{ lang('ACP_PFT_TEMPLATE_ENTRY_HELPLINE') }}</legend>
+		<p>{{ lang('ACP_PFT_TEMPLATE_ENTRY_HELPLINE_EXPLAIN') }}</p>
+		<dl>
+			<dt><label for="entry_helpline">{{ lang('ACP_PFT_TEMPLATE_ENTRY_HELPLINE_TEXT') }}</label></dt>
+			<dd><textarea id="entry_helpline" name="entry_helpline" cols="60"
+						  rows="4">{{ TEMPLATE_ENTRY_HELPLINE }}</textarea></dd>
+		</dl>
+	</fieldset>
+
+	<fieldset>
+		<legend>{{ lang('ACP_PFT_ENTRY_TYPE') }}</legend>
+		<dl>
+			<dt>{{ lang('ACP_PFT_ENTRY_TYPE_TEXT') }}</dt>
+			<dd>
+				<select name="entry_type" id="entry_type"
+					onchange="display_options('entry_type', this.options[this.selectedIndex].value);">>
+					<option value="0" {% if ENTRY_TYPE== PFT_ENTRIES_TEXT %}selected=selected {% endif %}>Text replace
+					</option>
+					<option value="1" {% if ENTRY_TYPE== PFT_ENTRIES_RADIO %}selected=selected {% endif %}>Radio
+					</option>
+					<option value="2" {% if ENTRY_TYPE== PFT_ENTRIES_CHECKBOX %}selected=selected {% endif %}>Checkbox
+					</option>
+					<option value="3" {% if ENTRY_TYPE== PFT_ENTRIES_DROPDOWN %}selected=selected {% endif %}>Dropdown
+					</option>
+				</select>
+			</dd>
+		</dl>
+		<dl id="box_lines">
+			<dt><label for="box_lines">{{ lang('ACP_PFT_TEMPLATE_ENTRY_ROWS') }}{{ lang('COLON') }}</label><br/><span>{{ lang('ACP_PFT_TEMPLATE_ENTRY_ROWS_EXPLAIN') }}</span>
+			</dt>
+			<dd><label><input type="number" name="box_lines" min="1" max="100" value="{{ ENTRY_ROWS }}"/> rows</label></dd>
+		</dl>
+		<dl>
+			<br/>
+			<dt><label for="entry_type_match">{{ lang('ACP_PFT_TEMPLATE_ENTRY_TYPE_MATCH_TEXT')
+				}}</label><br/><br/><span>{{ lang('ACP_PFT_TEMPLATE_ENTRY_TYPE_MATCH_EXAMPLE') }}</span><br/><br/>
+				<label for="entry_type_match">{{ lang('EXAMPLES') }}</label><br/><br/><span>{{ lang('ACP_PFT_TEMPLATE_ENTRY_TYPE_USAGE_EXAMPLE') }}</span>
+			</dt>
+			<dd><textarea id="entry_type_match" name="entry_type_match" cols="60" rows="4">{{ TEMPLATE_ENTRY_TYPE_MATCH }}</textarea>
+			</dd>
+		</dl>
+	</fieldset>
+
+	<fieldset>
+		<legend>{{ lang('SETTINGS') }}</legend>
+		<dl>
+			<dt><label for="display_on_posting">{{ lang('DISPLAY_ON_POSTING') }}</label></dt>
+			<dd><input type="checkbox" class="radio" name="display_on_posting" id="display_on_posting" value="1" {% if
+					   DISPLAY_ON_POSTING %} checked="checked" {% endif %}/></dd>
+		</dl>
+	</fieldset>
+
+	<fieldset class="submit-buttons">
+		<legend>{{ lang('SUBMIT') }}</legend>
+		<input class="button1" type="submit" id="submit" name="submit" value="{{ lang('SUBMIT') }}"/>&nbsp;
+		<input class="button2" type="reset" id="reset" name="reset" value="{{ lang('RESET') }}"/>
+		{{ S_FORM_TOKEN }}
+	</fieldset>
+</form>
+
+{% if not S_PARENT_ENTRY_ID and S_ENTRY_ID %}
+{% INCLUDE 'acp_manage_template_entries.html' with {
+'S_EDIT_TEMPLATE_ENTRY' : false,
+'S_SUBENTRY' : true,
+'U_ACTION' : U_ACTION|replace({"modify_entry": "add_entry"}) ~ '&amp;parent_entry_id=' ~ S_ENTRY_ID
+} %}
+{% endif %}
+
+{% else %}
+
+<h2>{% if not S_PARENT_ENTRY_ID and not S_SUBENTRY %}{{ lang('ACP_PFT_TEMPLATE_ENTRIES') }}{% else %}{{
+	lang('ACP_PFT_TEMPLATE_SUBENTRIES') }}{% endif %}</h2>
+
+<p>{% if not S_PARENT_ENTRY_ID and not S_SUBENTRY %}{{ lang('ACP_PFT_TEMPLATE_ENTRIES_EXPLAIN') }}{% else %}{{
+	lang('ACP_PFT_TEMPLATE_SUBENTRIES_EXPLAIN') }}{% endif %}</p>
+
+<form id="acp_entries" method="post" action="{{ U_ACTION }}">
+	<fieldset class="tabulated">
+		<legend>{{ lang('ACP_PFT_TEMPLATE_ENTRIES') }}</legend>
+
+		<table class="table1 zebra-table" id="down">
+			<thead>
+			<tr>
+				<th>{{ lang('ACP_PFT_TEMPLATE_ENTRY_TAG') }}</th>
+				<th>{{ lang('ACTION') }}</th>
+			</tr>
+			</thead>
+			<tbody>
+			{% for entries in loops.entries %}
+			<tr>
+				<td style="text-align: left;">{{ entries.TEMPLATE_ENTRY_TAG }}</td>
+				<td class="actions">
+					<span class="up-disabled" style="display:none;">{{ ICON_MOVE_UP_DISABLED }}</span>
+					<span class="up"><a href="{{ entries.U_MOVE_UP }}" data-ajax="row_up">{{ ICON_MOVE_UP }}</a></span>
+					<span class="down-disabled" style="display:none;">{{ ICON_MOVE_DOWN_DISABLED }}</span>
+					<span class="down"><a href="{{ entries.U_MOVE_DOWN }}" data-ajax="row_down">{{ ICON_MOVE_DOWN }}</a></span>
+					<a href="{{ entries.U_EDIT }}">{{ ICON_EDIT }}</a>
+					<a href="{{ entries.U_DELETE }}" data-ajax="row_delete">{{ ICON_DELETE }}</a>
+				</td>
+			</tr>
+			{% else %}
+			<tr class="row3">
+				<td colspan="2">{{ lang('ACP_NO_ITEMS') }}</td>
+			</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+
+		<p class="quick">
+			<input class="button2" name="submit" type="submit" value="{{ lang('ACP_PFT_ADD_TEMPLATE_ENTRY') }}"/>
+		</p>
+		{{ S_FORM_TOKEN }}
+	</fieldset>
+
+</form>
+
+{% endif %}

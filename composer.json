@@ -1,0 +1,39 @@
+{
+  "name": "toxyy/postformtemplates",
+  "type": "phpbb-extension",
+  "description": "Post form templates in phpbb 3.3",
+  "homepage": "https://github.com/toxyy/postformtemplates",
+  "version": "0.0.1",
+  "time": "2023-06-03",
+  "keywords": [
+    "phpbb",
+    "extension",
+    "post form",
+    "post template",
+    "post form templates"
+  ],
+  "license": "GPL-2.0-only",
+  "authors": [
+    {
+      "name": "toxyy",
+      "email": "thrashtek@yahoo.com",
+      "homepage": "https://github.com/toxyy/",
+      "role": "Developer"
+    }
+  ],
+  "require": {
+    "php": ">=7"
+  },
+  "extra": {
+    "display-name": "Post Form Templates",
+    "soft-require": {
+      "phpbb/phpbb": ">=3.3.3"
+    },
+    "version-check": {
+      "host": "toxyy.github.io",
+      "directory": "/version",
+      "filename": "postformtemplates.json",
+      "ssl": 1
+    }
+  }
+}
