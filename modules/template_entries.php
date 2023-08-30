@@ -45,6 +45,8 @@ class template_entries
 	protected $pft_entries_checkbox;
 	/** @var string */
 	protected $pft_entries_dropdown;
+	/** @var string */
+	protected $pft_entries_textfield;
 
 	/**
 	 * Constructor
@@ -66,6 +68,7 @@ class template_entries
 	 * @param string \toxyy\postformtemplates\     $pft_entries_radio
 	 * @param string \toxyy\postformtemplates\     $pft_entries_checkbox
 	 * @param string \toxyy\postformtemplates\     $pft_entries_dropdown
+	 * @param string \toxyy\postformtemplates\     $pft_entries_textfield
 	 */
 	public function __construct(
 		\phpbb\cache\driver\driver_interface $cache,
@@ -84,7 +87,8 @@ class template_entries
 		$pft_entries_text,
 		$pft_entries_radio,
 		$pft_entries_checkbox,
-		$pft_entries_dropdown
+		$pft_entries_dropdown,
+		$pft_entries_textfield
 	)
 	{
 		$this->cache = $cache;
@@ -104,6 +108,7 @@ class template_entries
 		$this->pft_entries_radio = $pft_entries_radio;
 		$this->pft_entries_checkbox = $pft_entries_checkbox;
 		$this->pft_entries_dropdown = $pft_entries_dropdown;
+		$this->pft_entries_textfield = $pft_entries_textfield;
 
 		if (!defined('PFT_TEMPLATE_ENTRIES_TABLE'))
 		{
@@ -124,6 +129,10 @@ class template_entries
 		if (!defined('PFT_ENTRIES_DROPDOWN'))
 		{
 			define('PFT_ENTRIES_DROPDOWN', $this->pft_entries_dropdown);
+		}
+		if (!defined('PFT_ENTRIES_TEXTFIELD'))
+		{
+			define('PFT_ENTRIES_TEXTFIELD', $this->pft_entries_textfield);
 		}
 	}
 
@@ -149,7 +158,8 @@ class template_entries
 		{
 			case 'add_entry':
 				$entry_tag = $entry_match = $entry_helpline = $entry_type_match = '';
-				$display_on_posting = $entry_type = $entry_rows = 0;
+				$display_on_posting = $entry_type = 0;
+				$entry_rows = 1;
 			break;
 
 			case 'edit_entry':
@@ -166,8 +176,8 @@ class template_entries
 				}
 
 				$entry_tag_data = generate_text_for_edit($row['entry_tag'], $row['entry_tag_uid'], 0);
-				$entry_tag = $entry_tag_data['text'];
-				$entry_match = $row['entry_match'];
+				$entry_tag = PHP_EOL . $entry_tag_data['text'];
+				$entry_match = PHP_EOL . $row['entry_match'];
 				$display_on_posting = $row['display_on_posting'];
 				$entry_helpline = $row['entry_helpline'];
 				$entry_type = (int) $row['entry_type'];
@@ -198,11 +208,11 @@ class template_entries
 				$display_on_posting = $this->request->variable('display_on_posting', 0);
 				$entry_type = $this->request->variable('entry_type', 0);
 
-				$entry_tag = $this->request->variable('entry_tag', '', true);
-				$entry_match = $this->request->variable('entry_match', '');
+				$entry_tag = $this->request->untrimmed_variable('entry_tag', '');
+				$entry_match = $this->request->untrimmed_variable('entry_match', '');
 				$entry_helpline = $this->request->variable('entry_helpline', '', true);
 				$entry_type_match = $this->request->variable('entry_type_match', '', true);
-				$entry_rows = $this->request->variable('entry_rows', 0);
+				$entry_rows = $this->request->variable('entry_rows', 1);
 			break;
 		}
 
@@ -338,7 +348,7 @@ class template_entries
 				$entry_tag_bitfield = $entry_tag_uid = $entry_tag_flags = '';
 				if ($entry_tag)
 				{
-					generate_text_for_storage($entry_tag, $entry_tag_uid, $entry_tag_bitfield, $entry_tag_flags, true, false, true);
+					generate_text_for_storage($entry_tag, $entry_tag_uid, $entry_tag_bitfield, $entry_tag_flags, true, true, true);
 				}
 
 				$sql_ary = array_merge($sql_ary, [

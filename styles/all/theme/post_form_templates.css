@@ -29,7 +29,7 @@ ul.pft_dropdown {
 
 .pft_dropdown {
 	width: fit-content;
-	display: inline-block;
+	display: inline-table;
 }
 
 .pft_dropdown > a {
@@ -116,13 +116,12 @@ ul.pft_dropdown {
 }
 
 .pft_dropdown:focus > ul,
-.pft_dropdown:active > ul {
-	display: table-cell;
-}
-
+.pft_dropdown:active > ul,
 .pft_dropdown a:focus + ul,
 .pft_dropdown a:active + ul {
-	display: table-cell;
+	display: list-item;
+	max-height: 150px;
+	overflow-y: auto;
 }
 
 .pft_buttons input {
@@ -141,8 +140,14 @@ dl.pft_entries dd {
 	margin-left: 30em;
 }
 
+dl.pft_entries label {
+	white-space: pre-wrap;
+	font-weight: initial;
+}
+
 .pft_tooltip {
 	cursor: help;
+	white-space: pre-wrap;
 }
 
 @media (max-width: 700px) {

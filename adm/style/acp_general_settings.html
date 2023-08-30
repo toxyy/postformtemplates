@@ -6,13 +6,13 @@
 	<fieldset>
 		<dl>
 			<dt><label for="post_form_templates_add_post">{{ lang('ACP_PFT_ADD_POST')
-				}}</label><br/><br/><span>{{ lang('ACP_PFT_ADD_POST_EXPLAIN') }}</span><br/><br/></dt>
+				}}</label><br/><span>{{ lang('ACP_PFT_ADD_POST_EXPLAIN') }}</span><br/></dt>
 			<dd><input type="radio" class="radio" name="post_form_templates_add_post" value="1" {% if ACP_PFT_ADD_POST %}checked="checked" {% endif %}/> {{ lang('YES') }} &nbsp;
 				<input type="radio" class="radio" name="post_form_templates_add_post" value="0" {% if not ACP_PFT_ADD_POST %}checked="checked" {% endif %}/> {{ lang('NO') }}</dd>
 		</dl>
 		<dl>
 			<dt><label for="post_form_templates_hide_postfields">{{ lang('ACP_PFT_HIDE_POSTFIELDS')
-				}}</label><br/><br/><span>{{ lang('ACP_PFT_HIDE_POSTFIELDS_EXPLAIN') }}</span><br/><br/></dt>
+				}}</label><br/><span>{{ lang('ACP_PFT_HIDE_POSTFIELDS_EXPLAIN') }}</span><br/></dt>
 			<dd><input type="radio" class="radio" name="post_form_templates_hide_postfields" value="1" {% if ACP_PFT_HIDE_POSTFIELDS %}checked="checked" {% endif %}/> {{ lang('YES') }} &nbsp;
 				<input type="radio" class="radio" name="post_form_templates_hide_postfields" value="0" {% if not ACP_PFT_HIDE_POSTFIELDS %}checked="checked" {% endif %}/> {{ lang('NO') }}</dd>
 		</dl>

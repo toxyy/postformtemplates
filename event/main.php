@@ -54,6 +54,8 @@ class main implements EventSubscriberInterface
 	protected $pft_entries_checkbox;
 	/** @var string */
 	protected $pft_entries_dropdown;
+	/** @var string */
+	protected $pft_entries_textfield;
 
 	/**
 	 * Constructor
@@ -77,6 +79,7 @@ class main implements EventSubscriberInterface
 	 * @param string \toxyy\postformtemplates\                      $pft_entries_radio
 	 * @param string \toxyy\postformtemplates\                      $pft_entries_checkbox
 	 * @param string \toxyy\postformtemplates\                      $pft_entries_dropdown
+	 * @param string \toxyy\postformtemplates\                      $pft_entries_textfield
 	 *
 	 */
 	public function __construct(
@@ -97,7 +100,8 @@ class main implements EventSubscriberInterface
 		$pft_entries_text,
 		$pft_entries_radio,
 		$pft_entries_checkbox,
-		$pft_entries_dropdown
+		$pft_entries_dropdown,
+		$pft_entries_textfield
 	)
 	{
 		$this->db = $db;
@@ -118,6 +122,7 @@ class main implements EventSubscriberInterface
 		$this->pft_entries_radio = $pft_entries_radio;
 		$this->pft_entries_checkbox = $pft_entries_checkbox;
 		$this->pft_entries_dropdown = $pft_entries_dropdown;
+		$this->pft_entries_textfield = $pft_entries_textfield;
 
 		if (!defined('PFT_TEMPLATES_TABLE'))
 		{
@@ -151,6 +156,10 @@ class main implements EventSubscriberInterface
 		{
 			define('PFT_ENTRIES_DROPDOWN', $this->pft_entries_dropdown);
 		}
+		if (!defined('PFT_ENTRIES_TEXTFIELD'))
+		{
+			define('PFT_ENTRIES_TEXTFIELD', $this->pft_entries_textfield);
+		}
 	}
 
 	public static function getSubscribedEvents()
@@ -175,10 +184,11 @@ class main implements EventSubscriberInterface
 		$event['lang_set_ext'] = $lang_set_ext;
 
 		$this->template->assign_vars([
-			'PFT_ENTRIES_TEXT'     => PFT_ENTRIES_TEXT,
-			'PFT_ENTRIES_RADIO'    => PFT_ENTRIES_RADIO,
-			'PFT_ENTRIES_CHECKBOX' => PFT_ENTRIES_CHECKBOX,
-			'PFT_ENTRIES_DROPDOWN' => PFT_ENTRIES_DROPDOWN,
+			'PFT_ENTRIES_TEXT'      => PFT_ENTRIES_TEXT,
+			'PFT_ENTRIES_RADIO'     => PFT_ENTRIES_RADIO,
+			'PFT_ENTRIES_CHECKBOX'  => PFT_ENTRIES_CHECKBOX,
+			'PFT_ENTRIES_DROPDOWN'  => PFT_ENTRIES_DROPDOWN,
+			'PFT_ENTRIES_TEXTFIELD' => PFT_ENTRIES_TEXTFIELD,
 		]);
 	}
 
@@ -326,13 +336,15 @@ class main implements EventSubscriberInterface
 			{
 				if ($row['display_on_posting'])
 				{
+					$entry_tag_bitfield = '';
 					$entry_tag = $row['entry_tag'];
-					strip_bbcode($entry_tag, $row['entry_tag_uid']);
-
+					$entry_tag_parsed = generate_text_for_display($entry_tag, $row['entry_tag_uid'], $entry_tag_bitfield, OPTION_FLAG_BBCODE | OPTION_FLAG_SMILIES, true);
+					// remove beginning and ending <br> tags for display
+					$entry_tag_parsed = preg_replace('/^(<br\s*\/?>\n?)*|(<br\s*\/?>\n?)*$/i', '', $entry_tag_parsed);
 					$entries_array = [
 						'ID'             => $row['entry_id'],
 						'PARENT_ID'      => $row['parent_id'],
-						'ENTRY_TAG'      => $entry_tag,
+						'ENTRY_TAG'      => $entry_tag_parsed,
 						'ENTRY_MATCH'    => $row['entry_match'],
 						'ENTRY_HELPLINE' => $row['entry_helpline'],
 						'ENTRY_TYPE'     => $row['entry_type'],
@@ -403,8 +415,7 @@ class main implements EventSubscriberInterface
 					'entry_type_match' => unserialize($row['entry_type_match']),
 					'display'          => $row['display_on_posting'],
 				];
-	
-				$template_images = ($row['template_images'] === '') ? '' : (($row['template_images'] === 0) ? 0 : unserialize($row['template_images']));
+				$template_images = ($row['template_images'] === '') ? '' : (($row['template_images'] === '0') ? 0 : unserialize($row['template_images']));
 				$template_image_date = str_replace(' ', '', $row['template_image_date']);
 				$template_image_type = $row['template_image_type'];
 			}
@@ -462,6 +473,8 @@ class main implements EventSubscriberInterface
 				$value = '';
 				switch ($entry['entry_type'])
 				{
+					case PFT_ENTRIES_TEXTFIELD:
+						continue 2;
 					case PFT_ENTRIES_CHECKBOX:
 						$value = [];
 						$replace_array = $replace;
