@@ -46,7 +46,7 @@ class template_entries
 	/** @var string */
 	protected $pft_entries_dropdown;
 	/** @var string */
-	protected $pft_entries_textfield;
+	protected $pft_entries_textnote;
 
 	/**
 	 * Constructor
@@ -68,7 +68,7 @@ class template_entries
 	 * @param string \toxyy\postformtemplates\     $pft_entries_radio
 	 * @param string \toxyy\postformtemplates\     $pft_entries_checkbox
 	 * @param string \toxyy\postformtemplates\     $pft_entries_dropdown
-	 * @param string \toxyy\postformtemplates\     $pft_entries_textfield
+	 * @param string \toxyy\postformtemplates\     $pft_entries_textnote
 	 */
 	public function __construct(
 		\phpbb\cache\driver\driver_interface $cache,
@@ -88,7 +88,7 @@ class template_entries
 		$pft_entries_radio,
 		$pft_entries_checkbox,
 		$pft_entries_dropdown,
-		$pft_entries_textfield
+		$pft_entries_textnote
 	)
 	{
 		$this->cache = $cache;
@@ -108,7 +108,7 @@ class template_entries
 		$this->pft_entries_radio = $pft_entries_radio;
 		$this->pft_entries_checkbox = $pft_entries_checkbox;
 		$this->pft_entries_dropdown = $pft_entries_dropdown;
-		$this->pft_entries_textfield = $pft_entries_textfield;
+		$this->pft_entries_textnote = $pft_entries_textnote;
 
 		if (!defined('PFT_TEMPLATE_ENTRIES_TABLE'))
 		{
@@ -130,9 +130,9 @@ class template_entries
 		{
 			define('PFT_ENTRIES_DROPDOWN', $this->pft_entries_dropdown);
 		}
-		if (!defined('PFT_ENTRIES_TEXTFIELD'))
+		if (!defined('PFT_ENTRIES_TEXTNOTE'))
 		{
-			define('PFT_ENTRIES_TEXTFIELD', $this->pft_entries_textfield);
+			define('PFT_ENTRIES_TEXTNOTE', $this->pft_entries_textnote);
 		}
 	}
 

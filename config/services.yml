@@ -10,7 +10,7 @@ parameters:
     toxyy.postformtemplates.constants.entry_radio: '1'
     toxyy.postformtemplates.constants.entry_checkbox: '2'
     toxyy.postformtemplates.constants.entry_dropdown: '3'
-    toxyy.postformtemplates.constants.entry_textfield: '4'
+    toxyy.postformtemplates.constants.entry_textnote: '4'
 services:
     toxyy.postformtemplates.main:
         class: toxyy\postformtemplates\event\main
@@ -33,7 +33,7 @@ services:
             - '%toxyy.postformtemplates.constants.entry_radio%'
             - '%toxyy.postformtemplates.constants.entry_checkbox%'
             - '%toxyy.postformtemplates.constants.entry_dropdown%'
-            - '%toxyy.postformtemplates.constants.entry_textfield%'
+            - '%toxyy.postformtemplates.constants.entry_textnote%'
         tags:
             - { name: event.listener }
     toxyy.postformtemplates.auth_admin_helper:
@@ -105,4 +105,4 @@ services:
             - '%toxyy.postformtemplates.constants.entry_radio%'
             - '%toxyy.postformtemplates.constants.entry_checkbox%'
             - '%toxyy.postformtemplates.constants.entry_dropdown%'
-            - '%toxyy.postformtemplates.constants.entry_textfield%'
+            - '%toxyy.postformtemplates.constants.entry_textnote%'

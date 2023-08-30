@@ -55,7 +55,7 @@ class main implements EventSubscriberInterface
 	/** @var string */
 	protected $pft_entries_dropdown;
 	/** @var string */
-	protected $pft_entries_textfield;
+	protected $pft_entries_textnote;
 
 	/**
 	 * Constructor
@@ -79,7 +79,7 @@ class main implements EventSubscriberInterface
 	 * @param string \toxyy\postformtemplates\                      $pft_entries_radio
 	 * @param string \toxyy\postformtemplates\                      $pft_entries_checkbox
 	 * @param string \toxyy\postformtemplates\                      $pft_entries_dropdown
-	 * @param string \toxyy\postformtemplates\                      $pft_entries_textfield
+	 * @param string \toxyy\postformtemplates\                      $pft_entries_textnote
 	 *
 	 */
 	public function __construct(
@@ -101,7 +101,7 @@ class main implements EventSubscriberInterface
 		$pft_entries_radio,
 		$pft_entries_checkbox,
 		$pft_entries_dropdown,
-		$pft_entries_textfield
+		$pft_entries_textnote
 	)
 	{
 		$this->db = $db;
@@ -122,7 +122,7 @@ class main implements EventSubscriberInterface
 		$this->pft_entries_radio = $pft_entries_radio;
 		$this->pft_entries_checkbox = $pft_entries_checkbox;
 		$this->pft_entries_dropdown = $pft_entries_dropdown;
-		$this->pft_entries_textfield = $pft_entries_textfield;
+		$this->pft_entries_textnote = $pft_entries_textnote;
 
 		if (!defined('PFT_TEMPLATES_TABLE'))
 		{
@@ -156,9 +156,9 @@ class main implements EventSubscriberInterface
 		{
 			define('PFT_ENTRIES_DROPDOWN', $this->pft_entries_dropdown);
 		}
-		if (!defined('PFT_ENTRIES_TEXTFIELD'))
+		if (!defined('PFT_ENTRIES_TEXTNOTE'))
 		{
-			define('PFT_ENTRIES_TEXTFIELD', $this->pft_entries_textfield);
+			define('PFT_ENTRIES_TEXTNOTE', $this->pft_entries_textnote);
 		}
 	}
 
@@ -188,7 +188,7 @@ class main implements EventSubscriberInterface
 			'PFT_ENTRIES_RADIO'     => PFT_ENTRIES_RADIO,
 			'PFT_ENTRIES_CHECKBOX'  => PFT_ENTRIES_CHECKBOX,
 			'PFT_ENTRIES_DROPDOWN'  => PFT_ENTRIES_DROPDOWN,
-			'PFT_ENTRIES_TEXTFIELD' => PFT_ENTRIES_TEXTFIELD,
+			'PFT_ENTRIES_TEXTNOTE' => PFT_ENTRIES_TEXTNOTE,
 		]);
 	}
 
@@ -473,7 +473,7 @@ class main implements EventSubscriberInterface
 				$value = '';
 				switch ($entry['entry_type'])
 				{
-					case PFT_ENTRIES_TEXTFIELD:
+					case PFT_ENTRIES_TEXTNOTE:
 						continue 2;
 					case PFT_ENTRIES_CHECKBOX:
 						$value = [];
