@@ -147,7 +147,6 @@ dl.pft_entries label {
 
 .pft_tooltip {
 	cursor: help;
-	white-space: pre-wrap;
 }
 
 @media (max-width: 700px) {
