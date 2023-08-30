@@ -473,8 +473,6 @@ class main implements EventSubscriberInterface
 				$value = '';
 				switch ($entry['entry_type'])
 				{
-					case PFT_ENTRIES_TEXTNOTE:
-						continue 2;
 					case PFT_ENTRIES_CHECKBOX:
 						$value = [];
 						$replace_array = $replace;
