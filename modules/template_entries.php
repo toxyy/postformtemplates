@@ -296,8 +296,9 @@ class template_entries
 
 				while ($row = $this->db->sql_fetchrow($result))
 				{
+					$entry_tag_data = generate_text_for_edit($row['entry_tag'], $row['entry_tag_uid'], 0);
 					$entries_array = [
-						'TEMPLATE_ENTRY_TAG' => $row['entry_tag'],
+						'TEMPLATE_ENTRY_TAG' => $entry_tag_data['text'],
 						'U_MOVE_UP'          => $u_action . '&amp;action=move_up_entry&amp;entry=' . $row['entry_id'] . '&amp;parent_entry_id=' . $row['parent_id'],
 						'U_MOVE_DOWN'        => $u_action . '&amp;action=move_down_entry&amp;entry=' . $row['entry_id'] . '&amp;parent_entry_id=' . $row['parent_id'],
 						'U_EDIT'             => $u_action . '&amp;action=edit_entry&amp;entry=' . $row['entry_id'] . '&amp;parent_entry_id=' . $row['parent_id'],
