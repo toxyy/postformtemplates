@@ -19,7 +19,7 @@
 			{% if row.SELECTED or PFT_NO_CATEGORY %}
 			{% set firstrow_name = (PFT_NO_CATEGORY ? lang('PFT_NO_CATEGORY') : row.NAME) %}
 			{% set cat_prepend = '<input type="hidden" name="pft_parent_id_post" value="' ~ row.ID ~ '">
-			<a href="#0"> ' ~ firstrow_name ~ PFT_MAX_CAT_ROW_LENGTH ~ '&nbsp;<i
+			<a href="#0" tabindex="3"> ' ~ firstrow_name ~ PFT_MAX_CAT_ROW_LENGTH ~ '&nbsp;<i
 					class="icon fa-sharp fa-light fa-chevron-down"></i>&nbsp;</strong></a>
 			<ul>' %}
 				{% endif %}
@@ -40,7 +40,7 @@
 			{% set PFT_SHOW_ENTRIES = PFT_NO_TEMPLATE ? false : true %}
 			{% set firstrow_name = (PFT_NO_TEMPLATE ? lang('PFT_NO_TEMPLATE') : row.NAME) %}
 			{% set template_prepend = '<input type="hidden" name="pft_template_id_post" value="' ~ row.ID ~ '">
-			<a href="#0"> ' ~ firstrow_name ~ PFT_MAX_ROW_LENGTH ~ '&nbsp;<i
+			<a href="#0" tabindex="3"> ' ~ firstrow_name ~ PFT_MAX_ROW_LENGTH ~ '&nbsp;<i
 					class="icon fa-sharp fa-light fa-chevron-down"></i>&nbsp;</strong></a>
 			<ul>' %}
 				{% set PFT_NO_TEMPLATE = false %}

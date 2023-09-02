@@ -208,8 +208,8 @@ class template_entries
 				$display_on_posting = $this->request->variable('display_on_posting', 0);
 				$entry_type = $this->request->variable('entry_type', 0);
 
-				$entry_tag = $this->request->untrimmed_variable('entry_tag', '');
-				$entry_match = $this->request->untrimmed_variable('entry_match', '');
+				$entry_tag = $this->request->untrimmed_variable('entry_tag', '', true);
+				$entry_match = $this->request->untrimmed_variable('entry_match', '', true);
 				$entry_helpline = $this->request->variable('entry_helpline', '', true);
 				$entry_type_match = $this->request->variable('entry_type_match', '', true);
 				$entry_rows = $this->request->variable('entry_rows', 1);
