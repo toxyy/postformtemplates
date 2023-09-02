@@ -68,6 +68,9 @@
 {% for row in loops.pft_entries %}
 {% set pft_for = 'pft_e' ~ row.ID %}
 <dl class="pft_entries{% if row.PARENT_ID %} pft_subentry{% endif %}">
+	{% if row.ENTRY_TYPE == PFT_ENTRIES_TEXTNOTE %}
+	<label for="{{ pft_for }}" >{{ row.ENTRY_TAG|trim }}</label>
+	{% else %}
 	<dt>
 		<label for="{{ pft_for }}" {% if row.ENTRY_HELPLINE %}title="{{ row.ENTRY_HELPLINE }}" class="pft_tooltip" {%
 			   endif %}>{{ row.ENTRY_TAG|trim }}</label>
@@ -101,6 +104,7 @@
 		</select>
 		{% endif %}
 	</dd>
+	{% endif %}
 </dl>
 {% endfor %}
 <br/>
