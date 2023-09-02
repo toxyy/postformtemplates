@@ -128,7 +128,7 @@ ul.pft_dropdown {
 	font-size: 11px;
 }
 
-.pft_subentry label {
+.pft_subentry > label, .pft_subentry dt > label {
 	margin-left: 5em;
 }
 
