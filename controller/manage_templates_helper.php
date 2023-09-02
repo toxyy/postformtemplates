@@ -1384,7 +1384,7 @@ class manage_templates_helper
 	 * @param bool  $clear_dest_entries True if destination entries should be deleted
 	 * @param bool  $add_log            True if log entry should be added
 	 *
-	 * @return bool                            False on error
+	 * @return bool                     False on error
 	 */
 	function copy_template_entries($src_template_id, $dest_template_ids, $clear_dest_entries = true, $add_log = true)
 	{
@@ -1406,6 +1406,16 @@ class manage_templates_helper
 
 		// Rowsets we're going to insert
 		$entries_sql_ary = [];
+
+		$this->db->sql_transaction('begin');
+
+		// Clear current entries of destination templates
+		if ($clear_dest_entries)
+		{
+			$sql = 'DELETE FROM ' . PFT_TEMPLATE_ENTRIES_TABLE . '
+				WHERE ' . $this->db->sql_in_set('template_id', $dest_template_ids);
+			$this->db->sql_query($sql);
+		}
 
 		// Query pft template entries table for source entry data
 		$sql = 'SELECT entry_id, left_id, right_id, parent_id, entry_tag, entry_tag_bitfield, entry_tag_uid, entry_match, entry_helpline, entry_type_match, entry_type, display_on_posting
@@ -1446,16 +1456,6 @@ class manage_templates_helper
 			}
 		}
 		$this->db->sql_freeresult($result);
-
-		$this->db->sql_transaction('begin');
-
-		// Clear current entries of destination templates
-		if ($clear_dest_entries)
-		{
-			$sql = 'DELETE FROM ' . PFT_TEMPLATE_ENTRIES_TABLE . '
-				WHERE ' . $this->db->sql_in_set('template_id', $dest_template_ids);
-			$this->db->sql_query($sql);
-		}
 
 		$count = count($entries_sql_ary);
 		for ($i = 0; $i < $count; $i++)
@@ -1683,7 +1683,7 @@ class manage_templates_helper
 	 * @param bool  $clear_dest_contents True if destination image settings should be deleted
 	 * @param bool  $add_log             True if log entry should be added
 	 *
-	 * @return bool                            False on error
+	 * @return bool                      False on error
 	 */
 	function copy_template_images($src_template_id, $dest_template_ids, $clear_dest_contents = true, $add_log = true)
 	{
@@ -1754,7 +1754,7 @@ class manage_templates_helper
 	 *
 	 * @param int $src_template_id The source template we want to copy display forums from
 	 *
-	 * @return bool                            False on error
+	 * @return bool                False on error
 	 */
 	function copy_template_settings($src_template_id, $u_action, $parent_id = 'copy', &$template_data)
 	{

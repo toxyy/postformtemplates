@@ -269,7 +269,7 @@ class template_permissions_helper
 	 * @param bool  $clear_dest_perms  True if destination permissions should be deleted
 	 * @param bool  $add_log           True if log entry should be added
 	 *
-	 * @return bool                            False on error
+	 * @return bool                    False on error
 	 */
 	function copy_template_permissions($src_template_id, $dest_template_ids, $clear_dest_perms = true, $add_log = true)
 	{
