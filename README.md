@@ -1,10 +1,26 @@
 # PhpBB Extension - toxyy Post Form Templates v0.0.1
 
-[Topic on phpBB.com]()
+[Topic on phpBB.com](https://www.phpbb.com/community/viewtopic.php?t=2645506)
 
 ## Requirements
 
-phpBB 3.3.5-RC1+ PHP 7+
+**phpBB 3.3.10-RC1+ PHP 7+
+** - I have not tested with earlier versions, technically the latest event I use was added in 3.1.9, so it might work on even earlier versions. Try it out!
+
+(core bug) ticket 17188 - [PHPBB3-17188](https://tracker.phpbb.com/browse/PHPBB3-17188)
+
+To fix this yourself, open `/forumroot/phpbb/request/type_cast_helper.php`
+
+Find
+`!preg_match('/^./u', $result)`
+
+Replace with
+`!preg_match('//u', $result)`
+
+Alternatively, you can also replace with:
+`!preg_match('/.*/u', $result)`
+
+Readme will be updated when the official fix is pushed to core phpBB.
 
 ## Features
 
@@ -30,6 +46,29 @@ Extremely customizeable, with multiple ways to copy a template or category:
 template settings (with or without copying parent), permissions, templates, entries, display forums, and image settings.
 
 ## Screenshot
+
+This is just a minor preview. I could add many more pictures but this is already a bit much. It's a very big extension!
+
+In a post:
+![alt text](https://toxyy.github.io/postformtemplates/pft1.png)
+
+What it looks like when you add, and then preview:
+![alt text](https://toxyy.github.io/postformtemplates/pft2.png)
+
+Form settings in the ACP:
+![alt text](https://toxyy.github.io/postformtemplates/pft3.png)
+
+Entry settings in the ACP:
+![alt text](https://toxyy.github.io/postformtemplates/pft4.png)
+
+Main image management page in ACP (I just used smiles as a quick example, use whatever images you want!)
+![alt text](https://toxyy.github.io/postformtemplates/pft5.png)
+
+Main permissions page (as you're used to):
+![alt text](https://toxyy.github.io/postformtemplates/pft6.png)
+
+Setting permissions page (also as you're used to):
+![alt text](https://toxyy.github.io/postformtemplates/pft7.png)
 
 ## Quick Install
 
