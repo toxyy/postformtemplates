@@ -169,7 +169,7 @@ class main implements EventSubscriberInterface
 			'core.permissions'                       => 'permissions',
 			'core.delete_forum_content_before_query' => 'delete_forum_content_before_query',
 			'core.posting_modify_template_vars'      => 'posting_modify_template_vars',
-			'core.posting_modify_message_text'          => 'posting_modify_message_text',
+			'core.posting_modify_message_text'       => 'posting_modify_message_text',
 			'core.decode_message_before'             => 'decode_message_before',
 		];
 	}
@@ -188,7 +188,7 @@ class main implements EventSubscriberInterface
 			'PFT_ENTRIES_RADIO'     => PFT_ENTRIES_RADIO,
 			'PFT_ENTRIES_CHECKBOX'  => PFT_ENTRIES_CHECKBOX,
 			'PFT_ENTRIES_DROPDOWN'  => PFT_ENTRIES_DROPDOWN,
-			'PFT_ENTRIES_TEXTNOTE' => PFT_ENTRIES_TEXTNOTE,
+			'PFT_ENTRIES_TEXTNOTE'  => PFT_ENTRIES_TEXTNOTE,
 		]);
 	}
 
