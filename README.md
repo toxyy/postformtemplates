@@ -1,4 +1,4 @@
-# PhpBB Extension - toxyy Post Form Templates v0.0.1
+# PhpBB Extension - toxyy Post Form Templates v0.0.2
 
 [Topic on phpBB.com](https://www.phpbb.com/community/viewtopic.php?t=2645506)
 
