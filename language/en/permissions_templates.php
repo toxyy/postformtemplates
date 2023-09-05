@@ -40,6 +40,7 @@ $lang = array_merge($lang, [
 	'ACL_A_PFT_TEMPLATE'    => 'Can manage post form templates',
 	'ACL_A_PFT_TEMPLATEADD' => 'Can add new post form templates',
 	'ACL_A_PFT_TEMPLATEDEL' => 'Can delete post form templates',
+	'ACP_A_PFT_IMAGES'      => 'Can manage post form template images',
 	'ACL_PFT_TVIEW'         => 'Can view template',
 	'ACL_PFT_TUSE'          => 'Can use template',
 ]);
