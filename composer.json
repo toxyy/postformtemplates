@@ -3,7 +3,7 @@
   "type": "phpbb-extension",
   "description": "Post form templates in phpbb 3.3",
   "homepage": "https://github.com/toxyy/postformtemplates",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "time": "2023-06-03",
   "keywords": [
     "phpbb",
