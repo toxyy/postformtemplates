@@ -11,6 +11,7 @@ namespace toxyy\postformtemplates\acp;
 
 class general_settings_module
 {
+	/** @var \Symfony\Component\DependencyInjection\ContainerInterface $phpbb_container */
 	protected $phpbb_container;
 	/** @var \phpbb\request\request $request */
 	protected $request;
@@ -29,6 +30,7 @@ class general_settings_module
 	{
 		global $phpbb_container;
 
+		/** @var \Symfony\Component\DependencyInjection\ContainerInterface $phpbb_container */
 		$this->phpbb_container = $phpbb_container;
 		/** @var \phpbb\request\request $request */
 		$this->request = $this->phpbb_container->get('request');

@@ -11,6 +11,7 @@ namespace toxyy\postformtemplates\acp;
 
 class template_permissions_module
 {
+	/** @var \Symfony\Component\DependencyInjection\ContainerInterface $phpbb_container */
 	protected $phpbb_container;
 	/** @var \phpbb\cache\driver\driver_interface $cache */
 	protected $cache;
@@ -54,6 +55,7 @@ class template_permissions_module
 	{
 		global $phpbb_container;
 
+		/** @var \Symfony\Component\DependencyInjection\ContainerInterface $phpbb_container */
 		$this->phpbb_container = $phpbb_container;
 		/** @var \phpbb\cache\driver\driver_interface $cache */
 		$this->cache = $this->phpbb_container->get('cache.driver');
@@ -565,7 +567,6 @@ class template_permissions_module
 		}
 
 		$acp_permissions = new \acp_permissions();
-
 
 		$psubmit = $this->request->variable('psubmit', [0 => [0 => 0]]);
 

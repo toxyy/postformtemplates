@@ -92,7 +92,6 @@ $lang = array_merge($lang, [
 	'ACP_PFT_IMAGE_LOCATION'                => 'Image location',
 	'ACP_PFT_IMAGE_ORDER'                   => 'Image order',
 
-
 	'ACP_PFT_LOOK_UP_FORUM'                => 'Display in forum',
 	'ACP_PFT_TEMPLATE_STATUS'              => 'Template status',
 	'ACP_PFT_TEMPLATE_SETTINGS'            => 'Template settings',

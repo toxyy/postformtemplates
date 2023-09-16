@@ -15,15 +15,13 @@ services:
     toxyy.postformtemplates.main:
         class: toxyy\postformtemplates\event\main
         arguments:
+            - '@service_container'
             - '@dbal.conn'
             - '@request'
             - '@language'
             - '@template'
             - '@config'
             - '@user'
-            - '@auth'
-            - '@content.visibility'
-            - '@toxyy.postformtemplates.auth_admin_helper'
             - '%toxyy.postformtemplates.paths.pft_image_path%'
             - '%toxyy.postformtemplates.tables.pft_templates_table%'
             - '%toxyy.postformtemplates.tables.pft_template_forums_table%'
@@ -95,7 +93,6 @@ services:
             - '@language'
             - '@template'
             - '@log'
-            - '@text_formatter.acp_utils'
             - '@text_formatter.cache'
             - '%core.root_path%'
             - '%core.adm_relative_path%'

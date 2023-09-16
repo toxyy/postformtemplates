@@ -25,8 +25,6 @@ class template_entries
 	protected $template;
 	/** @var \phpbb\log\log $phpbb_log */
 	protected $phpbb_log;
-	/** @var \phpbb\textformatter\s9e\acp_utils $acp_utils */
-	protected $acp_utils;
 	/** @var \phpbb\textformatter\s9e\factory $textformatter_cache */
 	protected $textformatter_cache;
 	/** @var string */
@@ -58,7 +56,6 @@ class template_entries
 	 * @param \phpbb\language\language             $language
 	 * @param \phpbb\template\template             $template
 	 * @param \phpbb\log\log                       $phpbb_log
-	 * @param \phpbb\textformatter\s9e\acp_utils   $acp_utils
 	 * @param \phpbb\textformatter\s9e\factory     $textformatter_cache
 	 * @param string                               $phpbb_root_path            phpBB root path
 	 * @param string                               $phpbb_admin_path           phpBB admin path
@@ -78,7 +75,6 @@ class template_entries
 		\phpbb\language\language $language,
 		\phpbb\template\template $template,
 		\phpbb\log\log $phpbb_log,
-		\phpbb\textformatter\s9e\acp_utils $acp_utils,
 		\phpbb\textformatter\s9e\factory $textformatter_cache,
 		$phpbb_root_path,
 		$phpbb_admin_path,
@@ -98,7 +94,6 @@ class template_entries
 		$this->language = $language;
 		$this->template = $template;
 		$this->phpbb_log = $phpbb_log;
-		$this->acp_utils = $acp_utils;
 		$this->textformatter_cache = $textformatter_cache;
 		$this->phpbb_root_path = $phpbb_root_path;
 		$this->phpbb_admin_path = $this->phpbb_root_path . $phpbb_admin_path;
@@ -471,7 +466,6 @@ class template_entries
 						$this->cache->destroy('sql', PFT_TEMPLATE_ENTRIES_TABLE);
 						$this->textformatter_cache->invalidate();
 						$this->phpbb_log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_ACP_PFT_TEMPLATE_ENTRY_DELETE', false, [$entry_tag]);
-
 
 						if ($this->request->is_ajax())
 						{

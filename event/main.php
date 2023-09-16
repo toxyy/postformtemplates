@@ -18,6 +18,8 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class main implements EventSubscriberInterface
 {
+	/** @var \Symfony\Component\DependencyInjection\ContainerInterface $phpbb_container */
+	protected $phpbb_container;
 	/** @var \phpbb\db\driver\driver_interface $db */
 	protected $db;
 	/** @var \phpbb\request\request $request */
@@ -28,14 +30,8 @@ class main implements EventSubscriberInterface
 	protected $template;
 	/** @var \phpbb\config\config $config */
 	protected $config;
-	/** @var \phpbb\user */
+	/** @var \phpbb\user $user */
 	protected $user;
-	/** @var \phpbb\auth\auth */
-	protected $auth;
-	/** @var \phpbb\content_visibility */
-	protected $content_visibility;
-	/** @var \toxyy\postformtemplates\controller\auth_admin_helper $auth_admin_helper */
-	protected $auth_admin_helper;
 	/** @var string */
 	protected $pft_image_path;
 	/** @var string */
@@ -60,38 +56,34 @@ class main implements EventSubscriberInterface
 	/**
 	 * Constructor
 	 *
-	 * @param \phpbb\db\driver\driver_interface                     $db
-	 * @param \phpbb\request\request                                $request
-	 * @param \phpbb\language\language                              $language
-	 * @param \phpbb\template\template                              $template
-	 * @param \phpbb\config\config                                  $config
-	 * @param \phpbb\user                                           $user
-	 * @param \phpbb\auth\auth                                      $auth
-	 * @param \phpbb\content_visibility                             $content_visibility
-	 * @param \toxyy\postformtemplates\controller\auth_admin_helper $auth_admin_helper
-	 * @param string \toxyy\postformtemplates\                      $pft_image_path
-	 * @param string \toxyy\postformtemplates\                      $pft_templates_table
-	 * @param string \toxyy\postformtemplates\                      $pft_template_forums_table
-	 * @param string \toxyy\postformtemplates\                      $pft_template_entries_table
-	 * @param string \toxyy\postformtemplates\                      $pft_template_images_table
-	 * @param string \toxyy\postformtemplates\                      $pft_image_path
-	 * @param string \toxyy\postformtemplates\                      $pft_entries_text
-	 * @param string \toxyy\postformtemplates\                      $pft_entries_radio
-	 * @param string \toxyy\postformtemplates\                      $pft_entries_checkbox
-	 * @param string \toxyy\postformtemplates\                      $pft_entries_dropdown
-	 * @param string \toxyy\postformtemplates\                      $pft_entries_textnote
+	 * @param \Symfony\Component\DependencyInjection\ContainerInterface  $phpbb_container
+	 * @param \phpbb\db\driver\driver_interface                          $db
+	 * @param \phpbb\request\request                                     $request
+	 * @param \phpbb\language\language                                   $language
+	 * @param \phpbb\template\template                                   $template
+	 * @param \phpbb\config\config                                       $config
+	 * @param \phpbb\user                                                $user
+	 * @param string \toxyy\postformtemplates\                           $pft_image_path
+	 * @param string \toxyy\postformtemplates\                           $pft_templates_table
+	 * @param string \toxyy\postformtemplates\                           $pft_template_forums_table
+	 * @param string \toxyy\postformtemplates\                           $pft_template_entries_table
+	 * @param string \toxyy\postformtemplates\                           $pft_template_images_table
+	 * @param string \toxyy\postformtemplates\                           $pft_image_path
+	 * @param string \toxyy\postformtemplates\                           $pft_entries_text
+	 * @param string \toxyy\postformtemplates\                           $pft_entries_radio
+	 * @param string \toxyy\postformtemplates\                           $pft_entries_checkbox
+	 * @param string \toxyy\postformtemplates\                           $pft_entries_dropdown
+	 * @param string \toxyy\postformtemplates\                           $pft_entries_textnote
 	 *
 	 */
 	public function __construct(
+		\Symfony\Component\DependencyInjection\ContainerInterface $phpbb_container,
 		\phpbb\db\driver\driver_interface $db,
 		\phpbb\request\request $request,
 		\phpbb\language\language $language,
 		\phpbb\template\template $template,
 		\phpbb\config\config $config,
 		\phpbb\user $user,
-		\phpbb\auth\auth $auth,
-		\phpbb\content_visibility $content_visibility,
-		\toxyy\postformtemplates\controller\auth_admin_helper $auth_admin_helper,
 		$pft_image_path,
 		$pft_templates_table,
 		$pft_template_forums_table,
@@ -104,15 +96,13 @@ class main implements EventSubscriberInterface
 		$pft_entries_textnote
 	)
 	{
+		$this->phpbb_container = $phpbb_container;
 		$this->db = $db;
 		$this->request = $request;
 		$this->language = $language;
 		$this->template = $template;
 		$this->config = $config;
 		$this->user = $user;
-		$this->auth = $auth;
-		$this->content_visibility = $content_visibility;
-		$this->auth_admin_helper = $auth_admin_helper;
 		$this->pft_image_path = $pft_image_path;
 		$this->pft_templates_table = $pft_templates_table;
 		$this->pft_template_forums_table = $pft_template_forums_table;
@@ -165,7 +155,7 @@ class main implements EventSubscriberInterface
 	public static function getSubscribedEvents()
 	{
 		return [
-			'core.user_setup'                        => 'core_user_setup',
+			'core.user_setup_after'                  => 'user_setup_after',
 			'core.permissions'                       => 'permissions',
 			'core.delete_forum_content_before_query' => 'delete_forum_content_before_query',
 			'core.posting_modify_template_vars'      => 'posting_modify_template_vars',
@@ -174,14 +164,9 @@ class main implements EventSubscriberInterface
 		];
 	}
 
-	public function core_user_setup($event)
+	public function user_setup_after($event)
 	{
-		$lang_set_ext = $event['lang_set_ext'];
-		$lang_set_ext[] = [
-			'ext_name' => 'toxyy/postformtemplates',
-			'lang_set' => 'common',
-		];
-		$event['lang_set_ext'] = $lang_set_ext;
+		$this->language->add_lang('common', 'toxyy/postformtemplates');
 
 		$this->template->assign_vars([
 			'PFT_ENTRIES_TEXT'      => PFT_ENTRIES_TEXT,
@@ -261,7 +246,8 @@ class main implements EventSubscriberInterface
 			$categories_array = $template_array = [];
 
 			$auth2 = new \phpbb\auth\auth();
-			$this->auth_admin_helper->acl($this->user->data, $auth2);
+			$auth_admin_helper = $this->phpbb_container->get('toxyy.postformtemplates.auth_admin_helper');
+			$auth_admin_helper->acl($this->user->data, $auth2);
 			while ($row = $this->db->sql_fetchrow($result))
 			{
 				if ($auth2->acl_get('pft_view', $row['template_id']))

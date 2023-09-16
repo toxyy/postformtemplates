@@ -11,6 +11,7 @@ namespace toxyy\postformtemplates\acp;
 
 class template_images_module
 {
+	/** @var \Symfony\Component\DependencyInjection\ContainerInterface $phpbb_container */
 	protected $phpbb_container;
 	/** @var \phpbb\cache\driver\driver_interface $cache */
 	protected $cache;
@@ -41,6 +42,7 @@ class template_images_module
 	{
 		global $phpbb_container;
 
+		/** @var \Symfony\Component\DependencyInjection\ContainerInterface $phpbb_container */
 		$this->phpbb_container = $phpbb_container;
 		/** @var \phpbb\cache\driver\driver_interface $cache */
 		$this->cache = $this->phpbb_container->get('cache.driver');
@@ -55,9 +57,9 @@ class template_images_module
 		/** @var \phpbb\config\config $config */
 		$this->config = $this->phpbb_container->get('config');
 		/** @var \phpbb\textformatter\s9e\factory $textformatter_cache */
-		$this->textformatter_cache = $phpbb_container->get('text_formatter.cache');
+		$this->textformatter_cache = $this->phpbb_container->get('text_formatter.cache');
 		/** @var \phpbb\pagination $pagination */
-		$this->pagination = $phpbb_container->get('pagination');
+		$this->pagination = $this->phpbb_container->get('pagination');
 		/** @var string */
 		$this->phpbb_root_path = $this->phpbb_container->getParameter('core.root_path');
 		/** @var string */
