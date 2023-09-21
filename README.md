@@ -1,13 +1,13 @@
-# PhpBB Extension - toxyy Post Form Templates v0.0.2
+# PhpBB Extension - toxyy Post Form Templates v0.0.3
 
 [Topic on phpBB.com](https://www.phpbb.com/community/viewtopic.php?t=2645506)
 
 ## Requirements
 
 **phpBB 3.3.10-RC1+ PHP 7+
-** - I have not tested with earlier versions, technically the latest event I use was added in 3.1.9, so it might work on even earlier versions. Try it out!
+** - I have not tested with earlier versions, technically the latest event I use was added in 3.1.9, so it might work on even earlier versions. Try it out! Unfortunately, for multibyte compatibility, you'll need the fix below as well.
 
-(core bug) ticket 17188 - [PHPBB3-17188](https://tracker.phpbb.com/browse/PHPBB3-17188)
+(core bug) ticket 17188 - [PHPBB3-17188](https://github.com/phpbb/phpbb/pull/6531)
 
 To fix this yourself, open `/forumroot/phpbb/request/type_cast_helper.php`
 
@@ -15,12 +15,7 @@ Find
 `!preg_match('/^./u', $result)`
 
 Replace with
-`!preg_match('//u', $result)`
-
-Alternatively, you can also replace with:
-`!preg_match('/.*/u', $result)`
-
-Readme will be updated when the official fix is pushed to core phpBB.
+`!preg_match('/^./um', $result)`
 
 ## Features
 
