@@ -454,7 +454,7 @@ class main implements EventSubscriberInterface
 			foreach ($entries_array as $entry)
 			{
 				$default_value = ($entry['entry_type'] == PFT_ENTRIES_CHECKBOX) ? [-1] : '';
-				$replace = $this->request->variable('pft_e' . $entry['entry_id'], $default_value);
+				$replace = $this->request->variable('pft_e' . $entry['entry_id'], $default_value, true);
 	
 				$value = '';
 				switch ($entry['entry_type'])
