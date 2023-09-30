@@ -111,11 +111,11 @@
 <div class="inner pft_buttons">
 	<fieldset>
 		{% if not PFT_HIDE_POSTFIELDS %}
-		<input type="submit" accesskey="s" tabindex="6" name="pft_add_template" value="Add to post"
+		<input type="submit" accesskey="s" tabindex="6" name="pft_add_template" value="lang('PFT_ADD_TO_POST')"
 			   class="button1 default-submit-action">
 		{% endif %}
 		{% if PFT_SUBMIT_BUTTON %}
-		<input type="submit" accesskey="s" tabindex="6" name="post" value="Post template"
+		<input type="submit" accesskey="s" tabindex="6" name="post" value="{{ lang('PFT_POST_TEMPLATE') }}"
 				class="button1 default-submit-action">
 		{% endif %}
 	</fieldset>

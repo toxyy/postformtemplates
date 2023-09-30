@@ -55,6 +55,7 @@ $lang = array_merge($lang, [
 	'ACP_PFT_IMAGE_WEEKLY'                => 'Weekly',
 	'ACP_PFT_IMAGE_RANDOM'                => 'Random',
 	'ACP_PFT_DATE_INVALID'                => 'The entered template date is not a valid date.',
+	'ACP_PFT_ROWS'                        => 'rows',
 
 	'ACP_PFT_COPY_TEMPLATE'                 => 'Copy template settings from',
 	'ACP_PFT_COPY_PARENT'                   => 'Copy template parent',

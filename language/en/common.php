@@ -50,4 +50,6 @@ $lang = array_merge($lang, [
 	'PFT_NO_TEMPLATE'                      => 'Select a template',
 	'PFT_NO_CATEGORY'                      => 'Select a category',
 	'PFT_SEPARATOR'                        => ', ',
+	'PFT_ADD_TO_POST'                      => 'Add to post',
+	'PFT_POST_TEMPLATE'                    => 'Post template',
 ]);
