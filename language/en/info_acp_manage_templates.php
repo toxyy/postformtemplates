@@ -92,6 +92,8 @@ $lang = array_merge($lang, [
 	'ACP_PFT_IMAGE_URL'                     => 'Image file',
 	'ACP_PFT_IMAGE_LOCATION'                => 'Image location',
 	'ACP_PFT_IMAGE_ORDER'                   => 'Image order',
+	'PFT_IMAGES_CONFIG'                     => 'Images configuration',
+	'NO_PFT_IMAGES_ADD'                     => 'There are no images available for adding.',
 
 	'ACP_PFT_LOOK_UP_FORUM'                => 'Display in forum',
 	'ACP_PFT_TEMPLATE_STATUS'              => 'Template status',

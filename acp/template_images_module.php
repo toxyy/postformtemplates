@@ -543,7 +543,7 @@ class template_images_module
 					while ($row = $this->db->sql_fetchrow($result))
 					{
 						$template_id = $row['template_id'];
-						$template_images = unserialize($row['template_images']);
+						$template_images = (array) unserialize($row['template_images']);
 						if (($key = array_search($image_id, $template_images)) !== false)
 						{
 							if ($action == 'move_up' && isset($template_images[$key - 1]))
