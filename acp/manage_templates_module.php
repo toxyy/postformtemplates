@@ -151,7 +151,7 @@ class manage_templates_module
 			{
 				case 'delete':
 					$action_subtemplates    = $this->request->variable('action_subtemplates', '');
-					$subtemplates_to_id	    = $this->request->variable('subtemplates_to_id', 0);
+					$subtemplates_to_id     = $this->request->variable('subtemplates_to_id', 0);
 					$action_entries         = $this->request->variable('action_entries', '');
 					$entries_to_id          = $this->request->variable('entries_to_id', 0);
 
