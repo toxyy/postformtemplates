@@ -68,7 +68,7 @@
 	<fieldset class="tabulated">
 		<legend>{{ lang('TITLE') }}</legend>
 
-		<table class="table1 zebra-table" id="smilies">
+		<table class="table1 zebra-table" id="pft_images">
 			<thead>
 			<tr>
 				<th colspan="{{ COLSPAN }}">{{ lang('CONFIG') }}</th>
@@ -77,14 +77,11 @@
 			<tr class="row3">
 				<td>{{ lang('ACP_PFT_IMAGE_URL') }}</td>
 				<td>{{ lang('ACP_PFT_IMAGE_LOCATION') }}</td>
-				{% if not S_SMILIES %}
-				<td>{{ lang('ALT_TEXT') }}</td>
-				{% endif %}
 				{% if ID or S_ADD %}
 				<td>{{ lang('ACP_PFT_IMAGE_ORDER') }}</td>
 				{% endif %}
 				{% if S_ADD %}
-				<td>{{ lang('ADD') }} <a href="#" onclick="marklist('smilies', 'add_img', true); return false;">({{
+				<td>{{ lang('ADD') }} <a href="#" onclick="marklist('pft_images', 'add_img', true); return false;">({{
 					lang('MARK_ALL') }})</a></td>
 				{% endif %}
 			</tr>
@@ -92,21 +89,20 @@
 			<tbody>
 			{% for items in loops.items %}
 			<tr>
-
 				<td style="text-align: center;"><img src="{{ items.IMG_SRC }}" alt="{{ items.TEXT_ALT }}"
 													 title="{{ items.TEXT_ALT }}" style="max-width: 160px;"><input
 						type="hidden" name="image[{{ items.IMG }}]" value="1"/></td>
-				<td style="vertical-align: top;">[{{ items.IMG }}]</td>
+				<td style="vertical-align: top;">[{{ items.IMG_SRC }}]</td>
 				<input type="hidden" name="id[{{ items.IMG }}]" value="{{ items.ID }}"/>
 				{% if ID or S_ADD %}
 				<td><select id="order_{{ items.S_ROW_COUNT }}" name="order[{{ items.IMG }}]">
-					<optgroup id="order_disp_{{ items.S_ROW_COUNT }}" label="{{ lang('DISPLAY_POSTING') }}" {% if not
-							  items.POSTING_CHECKED %}disabled="disabled" class="disabled-options" {% endif %}>{{
-						S_ORDER_LIST_DISPLAY }}
+					<optgroup id="order_disp_{{ items.S_ROW_COUNT }}" label="{{ lang('DISPLAY_POSTING') }}"
+						{% if not items.POSTING_CHECKED %}disabled="disabled" class="disabled-options" {% endif %}>
+						{{ S_ORDER_LIST_DISPLAY }}
 					</optgroup>
-					<optgroup id="order_no_disp_{{ items.S_ROW_COUNT }}" label="{{ lang('DISPLAY_POSTING_NO') }}" {% if
-							  items.POSTING_CHECKED %}disabled="disabled" class="disabled-options" {% endif %}>{{
-						S_ORDER_LIST_DISPLAY }}
+					<optgroup id="order_no_disp_{{ items.S_ROW_COUNT }}" label="{{ lang('DISPLAY_POSTING_NO') }}"
+						{% if items.POSTING_CHECKED %}disabled="disabled" class="disabled-options" {% endif %}>
+						{{ S_ORDER_LIST_DISPLAY }}
 					</optgroup>
 				</select></td>
 				{% endif %}
@@ -117,7 +113,7 @@
 			{% endfor %}
 			{% if S_ADD_CODE %}
 			<tr>
-				<th colspan="{{ COLSPAN }}">{{ lang('ADD_SMILEY_CODE') }}</th>
+				<th colspan="{{ COLSPAN }}">{{ lang('PFT_ADD_ADDITIONAL_IMAGE') }}</th>
 			</tr>
 			<tr class="row1">
 				<td style="text-align: center;"><select name="add_image" id="add_image"
@@ -176,7 +172,7 @@
 			<thead>
 			<tr>
 				<th>{{ lang('ACP_PFT_IMAGES') }}</th>
-				<th>{{ lang('IMAGE_URL') }}</th>
+				<th>{{ lang('ACP_PFT_IMAGE_URL') }}</th>
 				<th>{{ lang('OPTIONS') }}</th>
 			</tr>
 			</thead>

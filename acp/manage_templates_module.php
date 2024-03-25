@@ -150,10 +150,10 @@ class manage_templates_module
 			switch ($action)
 			{
 				case 'delete':
-					$action_subtemplates = $this->request->variable('action_subtemplates', '');
-					$subtemplates_to_id = $this->request->variable('subtemplates_to_id', 0);
-					$action_entries = $this->request->variable('action_entries', '');
-					$entries_to_id = $this->request->variable('entries_to_id', 0);
+					$action_subtemplates 	= $this->request->variable('action_subtemplates', '');
+					$subtemplates_to_id 	= $this->request->variable('subtemplates_to_id', 0);
+					$action_entries 		= $this->request->variable('action_entries', '');
+					$entries_to_id 			= $this->request->variable('entries_to_id', 0);
 
 					$errors = $this->manage_templates_helper->delete_template($template_id, $action_entries, $action_subtemplates, $entries_to_id, $subtemplates_to_id);
 

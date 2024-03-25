@@ -97,7 +97,7 @@ class template_images_module
 		$this->tpl_name = 'acp_template_images';
 
 		$table = PFT_TEMPLATE_IMAGES_TABLE;
-		$lang = 'SMILIES';
+		$lang = 'PFT_IMAGES';
 		$fields = 'image';
 		$img_path = 'ext/toxyy/postformtemplates/images';
 		$images_per_page = 100;
@@ -262,9 +262,6 @@ class template_images_module
 
 				$this->template->assign_vars([
 					'S_EDIT'    => true,
-					'S_SMILIES' => ($mode == 'manage_images')
-						? true
-						: false,
 					'S_ADD'     => ($action == 'add')
 						? true
 						: false,
@@ -382,7 +379,7 @@ class template_images_module
 
 					if ($image_count + $addable_images_count > SMILEY_LIMIT)
 					{
-						trigger_error($this->language->lang('TOO_MANY_SMILIES', SMILEY_LIMIT) . adm_back_link($this->u_action), E_USER_WARNING);
+						trigger_error($this->language->lang('PFT_TOO_MANY_IMAGES', SMILEY_LIMIT) . adm_back_link($this->u_action), E_USER_WARNING);
 					}
 				}
 
@@ -397,7 +394,7 @@ class template_images_module
 					}
 					else if (!file_exists($this->phpbb_root_path . $img_path . '/' . $image))
 					{
-						$errors[$image] = 'SMILIE_NO_FILE';
+						$errors[$image] = 'PFT_IMAGE_NO_FILE';
 					}
 					else
 					{
@@ -665,10 +662,6 @@ class template_images_module
 			'COLSPAN' => ($mode == 'manage_images')
 				? 5
 				: 3,
-
-			'S_SMILIES' => ($mode == 'manage_images')
-				? true
-				: false,
 
 			'U_ACTION' => $this->u_action,
 		]);

@@ -92,8 +92,20 @@ $lang = array_merge($lang, [
 	'ACP_PFT_IMAGE_URL'                     => 'Image file',
 	'ACP_PFT_IMAGE_LOCATION'                => 'Image location',
 	'ACP_PFT_IMAGE_ORDER'                   => 'Image order',
-	'PFT_IMAGES_CONFIG'                     => 'Images configuration',
+	'PFT_IMAGES_CONFIG'                     => 'Image configuration',
+	'PFT_ADD_ADDITIONAL_IMAGE'              => 'Add additional image',
+	'PFT_TOO_MANY_IMAGES'                   => [
+		1	=> 'Limit of %d image reached.',
+		2	=> 'Limit of %d images reached.',
+	],
+	'PFT_IMAGES_ADDED'                      => [
+		0	=> 'No images were added.',
+		1	=> 'The image has been added successfully.',
+		2	=> 'The images have been added successfully.',
+	],
+	'PFT_IMAGE_NO_FILE'                     => 'The image “%s” was ignored, as the file is missing.',
 	'NO_PFT_IMAGES_ADD'                     => 'There are no images available for adding.',
+	'AFTER_PFT_IMAGES'                      => 'After %s',
 
 	'ACP_PFT_LOOK_UP_FORUM'                => 'Display in forum',
 	'ACP_PFT_TEMPLATE_STATUS'              => 'Template status',
