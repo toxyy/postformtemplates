@@ -839,9 +839,9 @@ class manage_templates_module
 					if ($template_data['template_type'] == TEMPLATE_CAT)
 					{
 						$sql = 'SELECT template_id
-						FROM ' . PFT_TEMPLATES_TABLE . '
-						WHERE parent_id = ' . $template_id . '
-						AND template_type = ' . TEMPLATE_CAT;
+							FROM ' . PFT_TEMPLATES_TABLE . '
+							WHERE parent_id = ' . $template_id . '
+							AND template_type = ' . TEMPLATE_CAT;
 						$result2 = $this->db->sql_query_limit($sql, 1);
 						$has_cats = $this->db->sql_fetchrow($result2);
 						$this->db->sql_freeresult($result2);
