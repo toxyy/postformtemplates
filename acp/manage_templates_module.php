@@ -150,10 +150,10 @@ class manage_templates_module
 			switch ($action)
 			{
 				case 'delete':
-					$action_subtemplates 	= $this->request->variable('action_subtemplates', '');
-					$subtemplates_to_id 	= $this->request->variable('subtemplates_to_id', 0);
-					$action_entries 		= $this->request->variable('action_entries', '');
-					$entries_to_id 			= $this->request->variable('entries_to_id', 0);
+					$action_subtemplates    = $this->request->variable('action_subtemplates', '');
+					$subtemplates_to_id	    = $this->request->variable('subtemplates_to_id', 0);
+					$action_entries         = $this->request->variable('action_entries', '');
+					$entries_to_id          = $this->request->variable('entries_to_id', 0);
 
 					$errors = $this->manage_templates_helper->delete_template($template_id, $action_entries, $action_subtemplates, $entries_to_id, $subtemplates_to_id);
 
@@ -421,8 +421,8 @@ class manage_templates_module
 					if ($this->parent_id)
 					{
 						$sql = 'SELECT parent_id
-                            FROM ' . PFT_TEMPLATES_TABLE . '
-                            WHERE template_id = ' . $this->parent_id;
+							FROM ' . PFT_TEMPLATES_TABLE . '
+							WHERE template_id = ' . $this->parent_id;
 						$result = $this->db->sql_query($sql);
 						$parent_id = $this->db->sql_fetchfield('parent_id');
 						$this->db->sql_freeresult($result);
@@ -430,8 +430,8 @@ class manage_templates_module
 						if (!$parent_id && $this->parent_id)
 						{
 							$sql = 'SELECT parent_id
-                                FROM ' . PFT_TEMPLATES_TABLE . '
-                                WHERE template_id = ' . $this->parent_id;
+								FROM ' . PFT_TEMPLATES_TABLE . '
+								WHERE template_id = ' . $this->parent_id;
 							$result = $this->db->sql_query($sql);
 							$row = $this->db->sql_fetchrow();
 							$this->db->sql_freeresult($result);
@@ -444,9 +444,9 @@ class manage_templates_module
 					else
 					{
 						$sql = 'SELECT template_id
-                        FROM ' . PFT_TEMPLATES_TABLE . '
-                        WHERE parent_id = ' . $template_id . '
-                        AND template_type = ' . TEMPLATE_CAT;
+							FROM ' . PFT_TEMPLATES_TABLE . '
+							WHERE parent_id = ' . $template_id . '
+							AND template_type = ' . TEMPLATE_CAT;
 						$result = $this->db->sql_query_limit($sql, 1);
 						$has_cats = $this->db->sql_fetchrow($result);
 						$this->db->sql_freeresult($result);
@@ -455,8 +455,8 @@ class manage_templates_module
 						if (!empty($has_cats))
 						{
 							$sql = 'SELECT template_id
-                                FROM ' . PFT_TEMPLATES_TABLE . '
-                                WHERE template_type = ' . TEMPLATE_CAT;
+								FROM ' . PFT_TEMPLATES_TABLE . '
+								WHERE template_type = ' . TEMPLATE_CAT;
 							$result = $this->db->sql_query($sql);
 							while ($row = $this->db->sql_fetchrow())
 							{
@@ -522,8 +522,8 @@ class manage_templates_module
 				if ($this->parent_id)
 				{
 					$sql = 'SELECT parent_id
-                        FROM ' . PFT_TEMPLATES_TABLE . '
-                        WHERE template_id = ' . $this->parent_id;
+						FROM ' . PFT_TEMPLATES_TABLE . '
+						WHERE template_id = ' . $this->parent_id;
 					$result = $this->db->sql_query($sql);
 					$parent_id = $this->db->sql_fetchfield('parent_id');
 					$this->db->sql_freeresult($result);
@@ -605,8 +605,8 @@ class manage_templates_module
 				if ($action == 'edit' && $template_data['template_type'] == TEMPLATE_FORM)
 				{
 					$sql = 'SELECT entry_id
-                        FROM ' . PFT_TEMPLATE_ENTRIES_TABLE . "
-                        WHERE template_id = $template_id";
+						FROM ' . PFT_TEMPLATE_ENTRIES_TABLE . "
+						WHERE template_id = $template_id";
 					$result = $this->db->sql_query_limit($sql, 1);
 
 					$has_entries = false;
@@ -622,8 +622,8 @@ class manage_templates_module
 				if ($action != 'add')
 				{
 					$sql = 'SELECT forum_id
-                        FROM ' . PFT_TEMPLATE_FORUMS_TABLE . "
-                        WHERE template_id = {$template_data['template_id']}";
+						FROM ' . PFT_TEMPLATE_FORUMS_TABLE . "
+						WHERE template_id = {$template_data['template_id']}";
 					$result = $this->db->sql_query($sql);
 
 					$forum_ids = [];
@@ -646,8 +646,8 @@ class manage_templates_module
 				{
 					// is not a main category... don't allow copying main categories to keep cat depth at 2
 					$sql = 'SELECT template_id
-                        FROM ' . PFT_TEMPLATES_TABLE . '
-                        WHERE parent_id = 0';
+						FROM ' . PFT_TEMPLATES_TABLE . '
+						WHERE parent_id = 0';
 					$result = $this->db->sql_query($sql);
 					while ($row = $this->db->sql_fetchrow())
 					{
@@ -839,9 +839,9 @@ class manage_templates_module
 					if ($template_data['template_type'] == TEMPLATE_CAT)
 					{
 						$sql = 'SELECT template_id
-                        FROM ' . PFT_TEMPLATES_TABLE . '
-                        WHERE parent_id = ' . $template_id . '
-                        AND template_type = ' . TEMPLATE_CAT;
+						FROM ' . PFT_TEMPLATES_TABLE . '
+						WHERE parent_id = ' . $template_id . '
+						AND template_type = ' . TEMPLATE_CAT;
 						$result2 = $this->db->sql_query_limit($sql, 1);
 						$has_cats = $this->db->sql_fetchrow($result2);
 						$this->db->sql_freeresult($result2);
@@ -850,8 +850,8 @@ class manage_templates_module
 						if (!empty($has_cats))
 						{
 							$sql = 'SELECT template_id
-                                FROM ' . PFT_TEMPLATES_TABLE . '
-                                WHERE parent_id != 0';
+								FROM ' . PFT_TEMPLATES_TABLE . '
+								WHERE parent_id != 0';
 							$result2 = $this->db->sql_query($sql);
 							while ($row = $this->db->sql_fetchrow())
 							{

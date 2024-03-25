@@ -409,8 +409,8 @@ class manage_templates_helper
 	{
 		// This query is identical to the jumpbox one
 		$sql = 'SELECT image_id, image_url
-            FROM ' . PFT_TEMPLATE_IMAGES_TABLE . '
-            ORDER BY image_order ASC';
+			FROM ' . PFT_TEMPLATE_IMAGES_TABLE . '
+			ORDER BY image_order ASC';
 		$result = $this->db->sql_query($sql, 1000);
 
 		$rowset = [];
