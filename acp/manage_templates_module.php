@@ -113,7 +113,9 @@ class manage_templates_module
 		add_form_key($form_key);
 
 		$action = $this->request->variable('action', '');
-		$update = (isset($_POST['update'])) ? true : false;
+		$update = (isset($_POST['update']))
+			? true
+			: false;
 		$template_id = $this->request->variable('t', 0);
 
 		$this->parent_id = $this->request->variable('parent_id', 0);
@@ -128,21 +130,17 @@ class manage_templates_module
 		switch ($action)
 		{
 			case 'delete':
-
 				if (!$this->auth->acl_get('a_pft_templatedel'))
 				{
 					trigger_error($this->language->lang('NO_PERMISSION_TEMPLATE_DELETE') . adm_back_link($this->u_action . '&amp;parent_id=' . $this->parent_id), E_USER_WARNING);
 				}
-
 			break;
 
 			case 'add':
-
 				if (!$this->auth->acl_get('a_pft_templateadd'))
 				{
 					trigger_error($this->language->lang('NO_PERMISSION_TEMPLATE_ADD') . adm_back_link($this->u_action . '&amp;parent_id=' . $this->parent_id), E_USER_WARNING);
 				}
-
 			break;
 		}
 
@@ -222,7 +220,9 @@ class manage_templates_module
 						if ($action != 'edit' || ($this->auth->acl_get('a_pftauth') && $this->auth->acl_get('a_authusers') && $this->auth->acl_get('a_authgroups') && $this->auth->acl_get('a_mauth')))
 						{
 							$copy_parent_id = $this->request->variable('template_copy_parent_id', $this->parent_id);
-							$copy_parent_id = ($copy_parent_id != $this->parent_id) ? 'copy' : $this->parent_id;
+							$copy_parent_id = ($copy_parent_id != $this->parent_id)
+								? 'copy'
+								: $this->parent_id;
 							$errors = $this->manage_templates_helper->copy_template_settings($settings_from, $this->u_action, $copy_parent_id, $template_data);
 							$copied_template = true;
 						}
@@ -234,14 +234,28 @@ class manage_templates_module
 
 					if (!count($errors))
 					{
-						$template_permissions_from = $copied_template ? $settings_from : $this->request->variable('template_permissions_from', 0);
-						$template_entries_from = $copied_template ? $settings_from : $this->request->variable('template_entries_from', 0);
-						$template_keep_entries = $copied_template ? false : $this->request->variable('template_keep_entries', 0);
-						$template_contents_from = $copied_template ? $settings_from : $this->request->variable('template_contents_from', 0);
-						$template_keep_contents = $copied_template ? false : $this->request->variable('template_keep_contents', 0);
-						$template_forums_from = $copied_template ? $settings_from : $this->request->variable('template_forums_from', 0);
-						$template_images_from = $copied_template ? $settings_from : $this->request->variable('template_images_from', 0);
-						$template_keep_cycle = $copied_template ? false : $this->request->variable('template_keep_image_cycle', 0);
+						if ($copied_template)
+						{
+							$template_permissions_from 	= $settings_from;
+							$template_entries_from 		= $settings_from;
+							$template_keep_entries 		= false;
+							$template_contents_from 	= $settings_from;
+							$template_keep_contents 	= false;
+							$template_forums_from 		= $settings_from;
+							$template_images_from 		= $settings_from;
+							$template_keep_cycle 		= false;
+						}
+						else
+						{
+							$template_permissions_from 	= $this->request->variable('template_permissions_from', 0);
+							$template_entries_from 		= $this->request->variable('template_entries_from', 0);
+							$template_keep_entries 		= $this->request->variable('template_keep_entries', 0);
+							$template_contents_from 	= $this->request->variable('template_contents_from', 0);
+							$template_keep_contents 	= $this->request->variable('template_keep_contents', 0);
+							$template_forums_from 		= $this->request->variable('template_forums_from', 0);
+							$template_images_from 		= $this->request->variable('template_images_from', 0);
+							$template_keep_cycle 		= $this->request->variable('template_keep_image_cycle', 0);
+						}
 						$this->cache->destroy('sql', PFT_TEMPLATES_TABLE);
 
 						$copied_permissions = false;
@@ -249,7 +263,12 @@ class manage_templates_module
 						if ($template_permissions_from && $template_permissions_from != $template_data['template_id'] &&
 							($action != 'edit' || empty($template_id) || ($this->auth->acl_get('a_pftauth') && $this->auth->acl_get('a_authusers') && $this->auth->acl_get('a_authgroups') && $this->auth->acl_get('a_mauth'))))
 						{
-							$this->template_permissions_helper->copy_template_permissions($template_permissions_from, $template_data['template_id'], ($action == 'edit') ? true : false, !$copied_template);
+							$this->template_permissions_helper->copy_template_permissions($template_permissions_from, $template_data['template_id'], (
+									($action == 'edit')
+									? true
+									: false
+								), !$copied_template
+							);
 							phpbb_cache_moderators($this->db, $this->cache, $this->auth);
 							$copied_permissions = true;
 						}
@@ -259,7 +278,12 @@ class manage_templates_module
 						if ($template_entries_from && $template_entries_from != $template_data['template_id'] &&
 							($action != 'edit' || empty($template_id) || $this->auth->acl_get('a_pftauth')))
 						{
-							$this->manage_templates_helper->copy_template_entries($template_entries_from, $template_data['template_id'], ($template_keep_entries) ? false : true, !$copied_template);
+							$this->manage_templates_helper->copy_template_entries($template_entries_from, $template_data['template_id'], (
+									($template_keep_entries)
+									? false
+									: true
+								), !$copied_template
+							);
 							$copied_entries = true;
 						}
 
@@ -268,7 +292,12 @@ class manage_templates_module
 						if ($template_contents_from && $template_contents_from != $template_data['template_id'] &&
 							($action != 'edit' || empty($template_id) || $this->auth->acl_get('a_pftauth')))
 						{
-							$this->manage_templates_helper->copy_template_contents($template_contents_from, $template_data['template_id'], ($template_keep_contents) ? false : true, !$copied_template, $this->u_action);
+							$this->manage_templates_helper->copy_template_contents($template_contents_from, $template_data['template_id'], (
+									($template_keep_contents)
+									? false
+									: true
+								), !$copied_template, $this->u_action
+							);
 							$copied_contents = true;
 						}
 
@@ -277,7 +306,12 @@ class manage_templates_module
 						if ($template_forums_from && $template_forums_from != $template_data['template_id'] &&
 							($action != 'edit' || empty($template_id) || $this->auth->acl_get('a_pftauth')))
 						{
-							$this->manage_templates_helper->copy_template_display_forums($template_forums_from, $template_data['template_id'], ($action == 'edit') ? true : false, !$copied_template);
+							$this->manage_templates_helper->copy_template_display_forums($template_forums_from, $template_data['template_id'], (
+									($action == 'edit')
+									? true
+									: false
+								), !$copied_template
+							);
 							$copied_display_forums = true;
 						}
 
@@ -286,7 +320,12 @@ class manage_templates_module
 						if ($template_images_from && $template_images_from != $template_data['template_id'] &&
 							($action != 'edit' || empty($template_id) || $this->auth->acl_get('a_pftauth')))
 						{
-							$this->manage_templates_helper->copy_template_images($template_images_from, $template_data['template_id'], ($template_keep_cycle) ? false : true, !$copied_template);
+							$this->manage_templates_helper->copy_template_images($template_images_from, $template_data['template_id'], (
+									($template_keep_cycle)
+									? false
+									: true
+								), !$copied_template
+							);
 							$copied_images = true;
 						}
 
@@ -294,7 +333,9 @@ class manage_templates_module
 
 						$acl_url = '&amp;mode=setting_template_local&amp;template_id[]=' . $template_data['template_id'];
 
-						$message = ($action == 'add') ? $this->language->lang('ACP_PFT_TEMPLATE_CREATED') : $this->language->lang('ACP_PFT_TEMPLATE_UPDATED');
+						$message = ($action == 'add')
+							? $this->language->lang('ACP_PFT_TEMPLATE_CREATED')
+							: $this->language->lang('ACP_PFT_TEMPLATE_UPDATED');
 
 						// redirect directly to permission settings screen if authed
 						if ($action == 'add' && (!$copied_template || !$copied_permissions || !$copied_entries || !$copied_display_forums || !$copied_images || !$copied_contents) && $this->auth->acl_get('a_pftauth'))
@@ -314,7 +355,6 @@ class manage_templates_module
 		{
 			case 'move_up':
 			case 'move_down':
-
 				if (!$template_id)
 				{
 					trigger_error($this->language->lang('ACP_PFT_NO_TEMPLATE') . adm_back_link($this->u_action . '&amp;parent_id=' . $this->parent_id), E_USER_WARNING);
@@ -345,12 +385,10 @@ class manage_templates_module
 					$json_response = new \phpbb\json_response;
 					$json_response->send(['success' => ($move_template_name !== false)]);
 				}
-
 			break;
 
 			case 'add':
 			case 'edit':
-
 				// Initialise $row, so we always have it in the event
 				$row = [];
 
@@ -442,7 +480,9 @@ class manage_templates_module
 					{
 						$template_data = [
 							'parent_id'       => $this->parent_id,
-							'template_type'   => $this->parent_id ? TEMPLATE_FORM : TEMPLATE_CAT,
+							'template_type'   => $this->parent_id
+								? TEMPLATE_FORM
+								: TEMPLATE_CAT,
 							'template_status' => ITEM_UNLOCKED,
 							'template_name'   => $this->request->variable('template_name', '', true),
 							'template_desc'   => '',
@@ -489,14 +529,32 @@ class manage_templates_module
 					$this->db->sql_freeresult($result);
 				}
 
-				$template_type_ary = $parent_id ? [TEMPLATE_FORM => 'FORM'] : ($this->parent_id ? [TEMPLATE_CAT => 'CAT', TEMPLATE_FORM => 'FORM'] : [TEMPLATE_CAT => 'CAT']);
+				$template_type_ary = ($parent_id
+					? [TEMPLATE_FORM => 'FORM']
+					: ($this->parent_id
+						? [TEMPLATE_CAT => 'CAT', TEMPLATE_FORM => 'FORM']
+						: [TEMPLATE_CAT => 'CAT']
+					)
+				);
 
 				foreach ($template_type_ary as $value => $lang)
 				{
-					$template_type_options .= '<option value="' . $value . '"' . (($value == $template_data['template_type']) ? ' selected="selected"' : '') . '>' . $this->language->lang('ACP_PFT_TYPE_' . $lang) . '</option>';
+					$template_type_options .= '<option value="' . $value . '"' . (
+						($value == $template_data['template_type'])
+						? ' selected="selected"'
+						: ''
+					) . '>' . $this->language->lang('ACP_PFT_TYPE_' . $lang) . '</option>';
 				}
 
-				$statuslist = '<option value="' . ITEM_UNLOCKED . '"' . (($template_data['template_status'] == ITEM_UNLOCKED) ? ' selected="selected"' : '') . '>' . $this->language->lang('ACP_PFT_UNLOCKED') . '</option><option value="' . ITEM_LOCKED . '"' . (($template_data['template_status'] == ITEM_LOCKED) ? ' selected="selected"' : '') . '>' . $this->language->lang('ACP_PFT_LOCKED') . '</option>';
+				$statuslist = '<option value="' . ITEM_UNLOCKED . '"' . (
+					($template_data['template_status'] == ITEM_UNLOCKED)
+					? ' selected="selected"'
+					: ''
+				) . '>' . $this->language->lang('ACP_PFT_UNLOCKED') . '</option><option value="' . ITEM_LOCKED . '"' . (
+					($template_data['template_status'] == ITEM_LOCKED)
+					? ' selected="selected"'
+					: ''
+				) . '>' . $this->language->lang('ACP_PFT_LOCKED') . '</option>';
 
 				$sql = 'SELECT template_id
 					FROM ' . PFT_TEMPLATES_TABLE . '
@@ -532,7 +590,9 @@ class manage_templates_module
 					}
 
 					$this->template->assign_vars([
-						'S_HAS_FORMS'      => ($template_data['right_id'] - $template_data['left_id'] > 1) ? true : false,
+						'S_HAS_FORMS'      => ($template_data['right_id'] - $template_data['left_id'] > 1)
+							? true
+							: false,
 						'S_TEMPLATES_LIST' => $templates_list,
 					]);
 				}
@@ -574,8 +634,12 @@ class manage_templates_module
 					$this->db->sql_freeresult($result);
 				}
 
-				$select_id = ($action == 'add') ? $template_data['parent_id'] : false;
-				$ignore_id = ($action == 'edit') ? $template_data['template_id'] : false;
+				$select_id = ($action == 'add')
+					? $template_data['parent_id']
+					: false;
+				$ignore_id = ($action == 'edit')
+					? $template_data['template_id']
+					: false;
 
 				$options_no_select_ignore_ids[] = $ignore_id;
 				if (!$parent_id && $this->parent_id && $template_data['template_type'] == TEMPLATE_CAT)
@@ -596,41 +660,65 @@ class manage_templates_module
 				$date_data['image_day'] = $date_data['image_month'] = $date_data['image_year'] = 0;
 				if (!empty($template_data['template_images']) || $template_data['template_images'] == 0)
 				{
-					$template_images = ($template_data['template_images'] == 0) ? [0] : unserialize($template_data['template_images']);
+					$template_images = ($template_data['template_images'] == 0)
+						? [0]
+						: unserialize($template_data['template_images']);
 					list($date_data['image_day'], $date_data['image_month'], $date_data['image_year']) = explode('-', $template_data['template_image_date']);
 				}
 
 				$template_options_no_select = $this->manage_templates_helper->make_template_select(false, $options_no_select_ignore_ids, false, false, false);
 
-				$s_day_options = '<option value="0"' . ((!$date_data['image_day']) ? ' selected="selected"' : '') . '>--</option>';
+				$s_day_options = '<option value="0"' . (
+					(!$date_data['image_day'])
+					? ' selected="selected"'
+					: ''
+				) . '>--</option>';
 				for ($i = 1; $i < 32; $i++)
 				{
-					$selected = ($i == $date_data['image_day']) ? ' selected="selected"' : '';
+					$selected = ($i == $date_data['image_day'])
+						? ' selected="selected"'
+						: '';
 					$s_day_options .= "<option value=\"$i\"$selected>$i</option>";
 				}
 
-				$s_month_options = '<option value="0"' . ((!$date_data['image_month']) ? ' selected="selected"' : '') . '>--</option>';
+				$s_month_options = '<option value="0"' . (
+					(!$date_data['image_month'])
+					? ' selected="selected"'
+					: ''
+				) . '>--</option>';
 				for ($i = 1; $i < 13; $i++)
 				{
-					$selected = ($i == $date_data['image_month']) ? ' selected="selected"' : '';
+					$selected = ($i == $date_data['image_month'])
+						? ' selected="selected"'
+						: '';
 					$s_month_options .= "<option value=\"$i\"$selected>$i</option>";
 				}
 
 				$now = getdate();
-				$s_year_options = '<option value="0"' . ((!$date_data['image_year']) ? ' selected="selected"' : '') . '>--</option>';
+				$s_year_options = '<option value="0"' . (
+					(!$date_data['image_year'])
+					? ' selected="selected"'
+					: ''
+				) . '>--</option>';
 				for ($i = $now['year'] - 100; $i <= $now['year']; $i++)
 				{
-					$selected = ($i == $date_data['image_year']) ? ' selected="selected"' : '';
+					$selected = ($i == $date_data['image_year'])
+						? ' selected="selected"'
+						: '';
 					$s_year_options .= "<option value=\"$i\"$selected>$i</option>";
 				}
 				unset($now);
 
 				$template_data = [
 					'S_EDIT_TEMPLATE'      => true,
-					'S_ERROR'              => (count($errors)) ? true : false,
+					'S_ERROR'              => (count($errors))
+						? true
+						: false,
 					'S_PARENT_ID'          => $this->parent_id,
 					'S_TEMPLATE_PARENT_ID' => $template_data['parent_id'],
-					'S_ADD_ACTION'         => ($action == 'add') ? true : false,
+					'S_ADD_ACTION'         => ($action == 'add')
+						? true
+						: false,
 
 					'U_BACK'        => $this->u_action . '&amp;parent_id=' . $this->parent_id,
 					'U_EDIT_ACTION' => $this->u_action . "&amp;parent_id={$this->parent_id}&amp;action=$action&amp;t=$template_id",
@@ -642,16 +730,24 @@ class manage_templates_module
 					'L_COPY_FORUMS_EXPLAIN'      => $this->language->lang('ACP_PFT_COPY_FORUMS_' . strtoupper($action) . '_EXPLAIN'),
 					'L_COPY_IMAGES_EXPLAIN'      => $this->language->lang('ACP_PFT_COPY_IMAGES_' . strtoupper($action) . '_EXPLAIN'),
 					'L_TITLE'                    => $this->language->lang($this->page_title),
-					'ERROR_MSG'                  => (count($errors)) ? implode('<br />', $errors) : '',
+					'ERROR_MSG'                  => (count($errors))
+						? implode('<br />', $errors)
+						: '',
 
 					'TEMPLATE_NAME' => $template_data['template_name'],
 					'TEMPLATE_FORM' => TEMPLATE_FORM,
 					'TEMPLATE_CAT'  => TEMPLATE_CAT,
 
 					'TEMPLATE_DESC'          => $template_desc_data['text'],
-					'S_DESC_BBCODE_CHECKED'  => ($template_desc_data['allow_bbcode']) ? true : false,
-					'S_DESC_SMILIES_CHECKED' => ($template_desc_data['allow_smilies']) ? true : false,
-					'S_DESC_URLS_CHECKED'    => ($template_desc_data['allow_urls']) ? true : false,
+					'S_DESC_BBCODE_CHECKED'  => ($template_desc_data['allow_bbcode'])
+						? true
+						: false,
+					'S_DESC_SMILIES_CHECKED' => ($template_desc_data['allow_smilies'])
+						? true
+						: false,
+					'S_DESC_URLS_CHECKED'    => ($template_desc_data['allow_urls'])
+						? true
+						: false,
 
 					'S_DAY_OPTIONS'   => $s_day_options,
 					'S_MONTH_OPTIONS' => $s_month_options,
@@ -660,32 +756,60 @@ class manage_templates_module
 					'S_TEMPLATE_TYPE_OPTIONS'      => $template_type_options,
 					'S_STATUS_OPTIONS'             => $statuslist,
 					'S_PARENT_OPTIONS'             => $parents_list,
-					'S_FORUM_OPTIONS'              => make_forum_select(($action == 'add') ? false : ($action == 'edit' ? $forum_ids : false), false, false, false, false),
-					'S_FORUM_ALL'                  => !empty($forum_ids) ? $forum_ids[0] == 0 : false,
-					'S_IMAGES_OPTIONS'             => $this->manage_templates_helper->make_template_images_select(($action == 'add') ? false : ($action == 'edit' ? $template_images : false), false, false, false, false),
-					'S_IMAGES_ALL'                 => !empty($template_images) ? $template_images[0] == 0 : false,
-					'S_IMAGE_TYPE'                 => isset($template_data['template_image_type']) ? $template_data['template_image_type'] : 0,
+					'S_FORUM_OPTIONS'              => make_forum_select(
+						($action == 'add')
+						? false
+						: ($action == 'edit'
+							? $forum_ids
+							: false
+						), false, false, false, false
+					),
+					'S_FORUM_ALL'                  => !empty($forum_ids)
+						? $forum_ids[0] == 0
+						: false,
+					'S_IMAGES_OPTIONS'             => $this->manage_templates_helper->make_template_images_select(
+						($action == 'add')
+						? false
+						: ($action == 'edit'
+							? $template_images
+							: false
+						), false, false, false, false
+					),
+					'S_IMAGES_ALL'                 => !empty($template_images)
+						? $template_images[0] == 0
+						: false,
+					'S_IMAGE_TYPE'                 => isset($template_data['template_image_type'])
+						? $template_data['template_image_type']
+						: 0,
 					'S_CAT_OR_FORM'                => !$parent_id && $this->parent_id,
 					'S_ENTRY_OPTIONS'              => $this->manage_templates_helper->make_template_select(false, $ignore_id, false, true),
 					'S_TEMPLATE_OPTIONS_NO_SELECT' => $template_options_no_select,
 					'S_TEMPLATE_FORMS_NO_SELECT'   => $this->manage_templates_helper->make_template_select(false, $ignore_id, false, true, false),
 					'S_TEMPLATE_CATS_NO_SELECT'    => $this->manage_templates_helper->make_template_select(false, $ignore_id, false, false, false, false, false, true),
 					'S_TEMPLATE_OPTIONS'           => $this->manage_templates_helper->make_template_select($select_id, $ignore_id, false, false, false),
-					'S_TEMPLATE_FORM'              => ($template_data['template_type'] == TEMPLATE_FORM) ? true : false,
-					'S_TEMPLATE_ORIG_FORM'         => (isset($old_template_type) && $old_template_type == TEMPLATE_FORM) ? true : false,
-					'S_TEMPLATE_ORIG_CAT'          => (isset($old_template_type) && $old_template_type == TEMPLATE_CAT) ? true : false,
-					'S_TEMPLATE_CAT'               => ($template_data['template_type'] == TEMPLATE_CAT) ? true : false,
-					'S_CAN_COPY_PERMISSIONS'       => ($action != 'edit' || empty($template_id) || ($this->auth->acl_get('a_pftauth') && $this->auth->acl_get('a_authusers') && $this->auth->acl_get('a_authgroups') && $this->auth->acl_get('a_mauth'))) ? true : false,
+					'S_TEMPLATE_FORM'              => ($template_data['template_type'] == TEMPLATE_FORM)
+						? true
+						: false,
+					'S_TEMPLATE_ORIG_FORM'         => (isset($old_template_type) && $old_template_type == TEMPLATE_FORM)
+						? true
+						: false,
+					'S_TEMPLATE_ORIG_CAT'          => (isset($old_template_type) && $old_template_type == TEMPLATE_CAT)
+						? true
+						: false,
+					'S_TEMPLATE_CAT'               => ($template_data['template_type'] == TEMPLATE_CAT)
+						? true
+						: false,
+					'S_CAN_COPY_PERMISSIONS'       => ($action != 'edit' || empty($template_id) || ($this->auth->acl_get('a_pftauth') && $this->auth->acl_get('a_authusers') && $this->auth->acl_get('a_authgroups') && $this->auth->acl_get('a_mauth')))
+						? true
+						: false,
 				];
 
 				$this->template->assign_vars($template_data);
 
 				return;
-
 			break;
 
 			case 'delete':
-
 				if (!$template_id)
 				{
 					trigger_error($this->language->lang('ACP_PFT_NO_TEMPLATE') . adm_back_link($this->u_action . '&amp;parent_id=' . $this->parent_id), E_USER_WARNING);
@@ -749,20 +873,32 @@ class manage_templates_module
 				}
 				$this->db->sql_freeresult($result);
 
-				$parent_id = ($this->parent_id == $template_id) ? 0 : $this->parent_id;
+				$parent_id = ($this->parent_id == $template_id)
+					? 0
+					: $this->parent_id;
 
-				$has_forms = ($template_data['right_id'] - $template_data['left_id'] > 1) ? true : false;
+				$has_forms = ($template_data['right_id'] - $template_data['left_id'] > 1)
+					? true
+					: false;
 				$this->template->assign_vars([
 					'S_DELETE_TEMPLATE' => true,
 					'U_ACTION'          => $this->u_action . "&amp;parent_id={$parent_id}&amp;action=delete&amp;t=$template_id",
 					'U_BACK'            => $this->u_action . '&amp;parent_id=' . $this->parent_id,
 
 					'TEMPLATE_NAME'    => $template_data['template_name'],
-					'S_TEMPLATE_FORM'  => ($template_data['template_type'] == TEMPLATE_FORM) ? true : false,
+					'S_TEMPLATE_FORM'  => ($template_data['template_type'] == TEMPLATE_FORM)
+						? true
+						: false,
 					'S_HAS_FORMS'      => $has_forms,
-					'S_TEMPLATES_LIST' => $has_forms ? $this->manage_templates_helper->make_template_select($template_data['parent_id'], $forms_id, false, false, false, false, false, true) : $templates_list,
-					'S_ERROR'          => (count($errors)) ? true : false,
-					'ERROR_MSG'        => (count($errors)) ? implode('<br />', $errors) : '',
+					'S_TEMPLATES_LIST' => $has_forms
+						? $this->manage_templates_helper->make_template_select($template_data['parent_id'], $forms_id, false, false, false, false, false, true)
+						: $templates_list,
+					'S_ERROR'          => (count($errors))
+						? true
+						: false,
+					'ERROR_MSG'        => (count($errors))
+						? implode('<br />', $errors)
+						: '',
 				]);
 
 				return;
@@ -791,7 +927,6 @@ class manage_templates_module
 
 					trigger_error($message . adm_back_link($this->u_action . '&amp;parent_id=' . $this->parent_id));
 				}
-
 			break;
 		}
 
@@ -852,7 +987,9 @@ class manage_templates_module
 							$folder_image = '<img src="images/icon_folder_link.gif" alt="' . $this->language->lang('ACP_PFT_TYPE_FORM') . '" />';
 						break;
 						default:
-							$folder_image = ($row['left_id'] + 1 != $row['right_id']) ? '<img src="images/icon_subfolder.gif" alt="' . $this->language->lang('ACP_PFT_TYPE_CAT_NONEMPTY') . '" />' : '<img src="images/icon_folder.gif" alt="' . $this->language->lang('ACP_PFT_TYPE_CAT') . '" />';
+							$folder_image = ($row['left_id'] + 1 != $row['right_id'])
+								? '<img src="images/icon_subfolder.gif" alt="' . $this->language->lang('ACP_PFT_TYPE_CAT_NONEMPTY') . '" />'
+								: '<img src="images/icon_folder.gif" alt="' . $this->language->lang('ACP_PFT_TYPE_CAT') . '" />';
 						break;
 					}
 				}
@@ -861,12 +998,18 @@ class manage_templates_module
 
 				$this->template->assign_block_vars('templates', [
 					'FOLDER_IMAGE'         => $folder_image,
-					'TEMPLATE_IMAGE'       => ($row['template_images']) ? '<img src="' . $this->phpbb_root_path . $row['template_images'] . '" alt="" />' : '',
-					'TEMPLATE_IMAGE_SRC'   => ($row['template_images']) ? $this->phpbb_root_path . $row['template_images'] : '',
+					'TEMPLATE_IMAGE'       => ($row['template_images'])
+						? '<img src="' . $this->phpbb_root_path . $row['template_images'] . '" alt="" />'
+						: '',
+					'TEMPLATE_IMAGE_SRC'   => ($row['template_images'])
+						? $this->phpbb_root_path . $row['template_images']
+						: '',
 					'TEMPLATE_NAME'        => $row['template_name'],
 					'TEMPLATE_DESCRIPTION' => generate_text_for_display($row['template_desc'], $row['template_desc_uid'], $row['template_desc_bitfield'], $row['template_desc_options']),
 
-					'S_TEMPLATE_FORM' => ($template_type == TEMPLATE_FORM) ? true : false,
+					'S_TEMPLATE_FORM' => ($template_type == TEMPLATE_FORM)
+						? true
+						: false,
 
 					'U_TEMPLATE'  => $this->u_action . '&amp;parent_id=' . $row['template_id'],
 					'U_MOVE_UP'   => $url . '&amp;action=move_up',
@@ -884,7 +1027,9 @@ class manage_templates_module
 
 			$this->template->assign_vars([
 				'S_NO_TEMPLATES'  => true,
-				'S_TEMPLATE_FORM' => ($row['template_type'] == TEMPLATE_FORM) ? true : false,
+				'S_TEMPLATE_FORM' => ($row['template_type'] == TEMPLATE_FORM)
+					? true
+					: false,
 
 				'U_EDIT'   => $url . '&amp;action=edit',
 				'U_DELETE' => $url . '&amp;action=delete',
@@ -892,7 +1037,9 @@ class manage_templates_module
 		}
 
 		$this->template->assign_vars([
-			'ERROR_MSG'    => (count($errors)) ? implode('<br />', $errors) : '',
+			'ERROR_MSG'    => (count($errors))
+				? implode('<br />', $errors)
+				: '',
 			'NAVIGATION'   => $navigation,
 			'TEMPLATE_BOX' => $template_box,
 			'U_SEL_ACTION' => $this->u_action,

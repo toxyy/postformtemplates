@@ -151,8 +151,12 @@ class auth_admin_helper
 		$local_length = count($auth->acl_options['local']);
 
 		// Specify comparing length (bitstring is padded to 31 bits)
-		$global_length = ($global_length % 31) ? ($global_length - ($global_length % 31) + 31) : $global_length;
-		$local_length = ($local_length % 31) ? ($local_length - ($local_length % 31) + 31) : $local_length;
+		$global_length = ($global_length % 31)
+			? ($global_length - ($global_length % 31) + 31)
+			: $global_length;
+		$local_length = ($local_length % 31)
+			? ($local_length - ($local_length % 31) + 31)
+			: $local_length;
 
 		// You thought we are finished now? Noooo... now compare them.
 		foreach ($auth->acl as $template_id => $bitstring)
@@ -256,7 +260,9 @@ class auth_admin_helper
 			// If a role is assigned, assign all options included within this role. Else, only set this one option.
 			if ($row['auth_role_id'])
 			{
-				$hold_ary[$row['template_id']] = (empty($hold_ary[$row['template_id']])) ? unserialize($role_cache[$row['auth_role_id']]) : $hold_ary[$row['template_id']] + unserialize($role_cache[$row['auth_role_id']]);
+				$hold_ary[$row['template_id']] = (empty($hold_ary[$row['template_id']]))
+					? unserialize($role_cache[$row['auth_role_id']])
+					: $hold_ary[$row['template_id']] + unserialize($role_cache[$row['auth_role_id']]);
 			}
 			else
 			{
@@ -299,8 +305,20 @@ class auth_admin_helper
 	 */
 	function acl_group_raw_data($group_id = false, $opts = false, $template_id = false)
 	{
-		$sql_group = ($group_id !== false) ? ((!is_array($group_id)) ? 'group_id = ' . (int) $group_id : $this->db->sql_in_set('group_id', array_map('intval', $group_id))) : '';
-		$sql_template = ($template_id !== false) ? ((!is_array($template_id)) ? 'AND a.template_id = ' . (int) $template_id : 'AND ' . $this->db->sql_in_set('a.template_id', array_map('intval', $template_id))) : '';
+		$sql_group = (($group_id !== false)
+			? ((!is_array($group_id))
+				? 'group_id = ' . (int) $group_id
+				: $this->db->sql_in_set('group_id', array_map('intval', $group_id))
+			)
+			: ''
+		);
+		$sql_template = (($template_id !== false)
+			? ((!is_array($template_id))
+				? 'AND a.template_id = ' . (int) $template_id
+				: 'AND ' . $this->db->sql_in_set('a.template_id', array_map('intval', $template_id))
+			)
+			: ''
+		);
 
 		$sql_opts = '';
 		$hold_ary = $sql_ary = [];
@@ -315,7 +333,10 @@ class auth_admin_helper
 			FROM ' . ACL_GROUPS_TABLE . ' a, ' . ACL_OPTIONS_TABLE . ' ao
 			WHERE a.auth_role_id = 0
 				AND a.auth_option_id = ao.auth_option_id ' .
-			(($sql_group) ? 'AND a.' . $sql_group : '') . "
+			(($sql_group)
+				? 'AND a.' . $sql_group
+				: ''
+			) . "
 				$sql_template
 				$sql_opts
 			ORDER BY a.template_id, ao.auth_option";
@@ -325,7 +346,10 @@ class auth_admin_helper
 			FROM ' . ACL_GROUPS_TABLE . ' a, ' . ACL_ROLES_DATA_TABLE . ' r, ' . ACL_OPTIONS_TABLE . ' ao
 			WHERE a.auth_role_id = r.role_id
 				AND r.auth_option_id = ao.auth_option_id ' .
-			(($sql_group) ? 'AND a.' . $sql_group : '') . "
+			(($sql_group)
+				? 'AND a.' . $sql_group
+				: ''
+			) . "
 				$sql_template
 				$sql_opts
 			ORDER BY a.template_id, ao.auth_option";
@@ -349,8 +373,20 @@ class auth_admin_helper
 	 */
 	function acl_raw_data($user_id = false, $opts = false, $template_id = false)
 	{
-		$sql_user = ($user_id !== false) ? ((!is_array($user_id)) ? 'user_id = ' . (int) $user_id : $this->db->sql_in_set('user_id', array_map('intval', $user_id))) : '';
-		$sql_template = ($template_id !== false) ? ((!is_array($template_id)) ? 'AND a.template_id = ' . (int) $template_id : 'AND ' . $this->db->sql_in_set('a.template_id', array_map('intval', $template_id))) : '';
+		$sql_user = (($user_id !== false)
+			? ((!is_array($user_id))
+				? 'user_id = ' . (int) $user_id
+				: $this->db->sql_in_set('user_id', array_map('intval', $user_id))
+			)
+			: ''
+		);
+		$sql_template = (($template_id !== false)
+			? ((!is_array($template_id))
+				? 'AND a.template_id = ' . (int) $template_id
+				: 'AND ' . $this->db->sql_in_set('a.template_id', array_map('intval', $template_id))
+			)
+			: ''
+		);
 
 		$sql_opts = $sql_opts_select = $sql_opts_from = '';
 		$hold_ary = [];
@@ -368,8 +404,14 @@ class auth_admin_helper
 		$sql_ary[] = 'SELECT a.user_id, a.template_id, a.auth_setting, a.auth_option_id' . $sql_opts_select . '
 			FROM ' . ACL_USERS_TABLE . ' a' . $sql_opts_from . '
 			WHERE a.auth_role_id = 0 ' .
-			(($sql_opts_from) ? 'AND a.auth_option_id = ao.auth_option_id ' : '') .
-			(($sql_user) ? 'AND a.' . $sql_user : '') . "
+			(($sql_opts_from)
+				? 'AND a.auth_option_id = ao.auth_option_id '
+				: ''
+			) .
+			(($sql_user)
+				? 'AND a.' . $sql_user
+				: ''
+			) . "
 				$sql_template
 				$sql_opts";
 
@@ -377,8 +419,14 @@ class auth_admin_helper
 		$sql_ary[] = 'SELECT a.user_id, a.template_id, r.auth_option_id, r.auth_setting, r.auth_option_id' . $sql_opts_select . '
 			FROM ' . ACL_USERS_TABLE . ' a, ' . ACL_ROLES_DATA_TABLE . ' r' . $sql_opts_from . '
 			WHERE a.auth_role_id = r.role_id ' .
-			(($sql_opts_from) ? 'AND r.auth_option_id = ao.auth_option_id ' : '') .
-			(($sql_user) ? 'AND a.' . $sql_user : '') . "
+			(($sql_opts_from)
+				? 'AND r.auth_option_id = ao.auth_option_id '
+				: ''
+			) .
+			(($sql_user)
+				? 'AND a.' . $sql_user
+				: ''
+			) . "
 				$sql_template
 				$sql_opts";
 
@@ -388,7 +436,9 @@ class auth_admin_helper
 
 			while ($row = $this->db->sql_fetchrow($result))
 			{
-				$option = ($sql_opts_select) ? $row['auth_option'] : $this->auth->acl_options['option'][$row['auth_option_id']];
+				$option = ($sql_opts_select)
+					? $row['auth_option']
+					: $this->auth->acl_options['option'][$row['auth_option_id']];
 				$hold_ary[$row['user_id']][$row['template_id']][$option] = $row['auth_setting'];
 			}
 			$this->db->sql_freeresult($result);
@@ -400,12 +450,18 @@ class auth_admin_helper
 		$sql_ary[] = 'SELECT ug.user_id, a.template_id, a.auth_setting, a.auth_option_id' . $sql_opts_select . '
 			FROM ' . ACL_GROUPS_TABLE . ' a, ' . USER_GROUP_TABLE . ' ug, ' . GROUPS_TABLE . ' g' . $sql_opts_from . '
 			WHERE a.auth_role_id = 0 ' .
-			(($sql_opts_from) ? 'AND a.auth_option_id = ao.auth_option_id ' : '') . '
+			(($sql_opts_from)
+				? 'AND a.auth_option_id = ao.auth_option_id '
+				: ''
+			) . '
 				AND a.group_id = ug.group_id
 				AND g.group_id = ug.group_id
 				AND ug.user_pending = 0
 				AND NOT (ug.group_leader = 1 AND g.group_skip_auth = 1)
-				' . (($sql_user) ? 'AND ug.' . $sql_user : '') . "
+				' . (($sql_user)
+					? 'AND ug.' . $sql_user
+					: ''
+				) . "
 				$sql_template
 				$sql_opts";
 
@@ -413,12 +469,18 @@ class auth_admin_helper
 		$sql_ary[] = 'SELECT ug.user_id, a.template_id, r.auth_setting, r.auth_option_id' . $sql_opts_select . '
 			FROM ' . ACL_GROUPS_TABLE . ' a, ' . USER_GROUP_TABLE . ' ug, ' . GROUPS_TABLE . ' g, ' . ACL_ROLES_DATA_TABLE . ' r' . $sql_opts_from . '
 			WHERE a.auth_role_id = r.role_id ' .
-			(($sql_opts_from) ? 'AND r.auth_option_id = ao.auth_option_id ' : '') . '
+			(($sql_opts_from)
+				? 'AND r.auth_option_id = ao.auth_option_id '
+				: ''
+			) . '
 				AND a.group_id = ug.group_id
 				AND g.group_id = ug.group_id
 				AND ug.user_pending = 0
 				AND NOT (ug.group_leader = 1 AND g.group_skip_auth = 1)
-				' . (($sql_user) ? 'AND ug.' . $sql_user : '') . "
+				' . (($sql_user)
+					? 'AND ug.' . $sql_user
+					: ''
+				) . "
 				$sql_template
 				$sql_opts";
 
@@ -428,7 +490,9 @@ class auth_admin_helper
 
 			while ($row = $this->db->sql_fetchrow($result))
 			{
-				$option = ($sql_opts_select) ? $row['auth_option'] : $this->auth->acl_options['option'][$row['auth_option_id']];
+				$option = ($sql_opts_select)
+					? $row['auth_option']
+					: $this->auth->acl_options['option'][$row['auth_option_id']];
 
 				if (!isset($hold_ary[$row['user_id']][$row['template_id']][$option]) || (isset($hold_ary[$row['user_id']][$row['template_id']][$option]) && $hold_ary[$row['user_id']][$row['template_id']][$option] != ACL_NEVER))
 				{
@@ -463,8 +527,20 @@ class auth_admin_helper
 	 */
 	function acl_user_raw_data($user_id = false, $opts = false, $template_id = false)
 	{
-		$sql_user = ($user_id !== false) ? ((!is_array($user_id)) ? 'user_id = ' . (int) $user_id : $this->db->sql_in_set('user_id', array_map('intval', $user_id))) : '';
-		$sql_template = ($template_id !== false) ? ((!is_array($template_id)) ? 'AND a.template_id = ' . (int) $template_id : 'AND ' . $this->db->sql_in_set('a.template_id', array_map('intval', $template_id))) : '';
+		$sql_user = (($user_id !== false)
+			? ((!is_array($user_id))
+				? 'user_id = ' . (int) $user_id
+				: $this->db->sql_in_set('user_id', array_map('intval', $user_id))
+			)
+			: ''
+		);
+		$sql_template = (($template_id !== false)
+			? ((!is_array($template_id))
+				? 'AND a.template_id = ' . (int) $template_id
+				: 'AND ' . $this->db->sql_in_set('a.template_id', array_map('intval', $template_id))
+			)
+			: ''
+		);
 
 		$sql_opts = '';
 		$hold_ary = $sql_ary = [];
@@ -479,7 +555,10 @@ class auth_admin_helper
 			FROM ' . ACL_USERS_TABLE . ' a, ' . ACL_OPTIONS_TABLE . ' ao
 			WHERE a.auth_role_id = 0
 				AND a.auth_option_id = ao.auth_option_id ' .
-			(($sql_user) ? 'AND a.' . $sql_user : '') . "
+			(($sql_user)
+				? 'AND a.' . $sql_user
+				: ''
+			) . "
 				$sql_template
 				$sql_opts
 			ORDER BY a.template_id, ao.auth_option";
@@ -489,7 +568,10 @@ class auth_admin_helper
 			FROM ' . ACL_USERS_TABLE . ' a, ' . ACL_ROLES_DATA_TABLE . ' r, ' . ACL_OPTIONS_TABLE . ' ao
 			WHERE a.auth_role_id = r.role_id
 				AND r.auth_option_id = ao.auth_option_id ' .
-			(($sql_user) ? 'AND a.' . $sql_user : '') . "
+			(($sql_user)
+				? 'AND a.' . $sql_user
+				: ''
+			) . "
 				$sql_template
 				$sql_opts
 			ORDER BY a.template_id, ao.auth_option";
@@ -515,14 +597,31 @@ class auth_admin_helper
 	{
 		$roles = [];
 
-		$sql_id = ($user_type == 'user') ? 'user_id' : 'group_id';
+		$sql_id = ($user_type == 'user')
+			? 'user_id'
+			: 'group_id';
 
-		$sql_ug = ($ug_id !== false) ? ((!is_array($ug_id)) ? "AND a.$sql_id = $ug_id" : 'AND ' . $this->db->sql_in_set("a.$sql_id", $ug_id)) : '';
-		$sql_template = ($template_id !== false) ? ((!is_array($template_id)) ? "AND a.template_id = $template_id" : 'AND ' . $this->db->sql_in_set('a.template_id', $template_id)) : '';
+		$sql_ug = (($ug_id !== false)
+			? ((!is_array($ug_id))
+				? "AND a.$sql_id = $ug_id"
+				: 'AND ' . $this->db->sql_in_set("a.$sql_id", $ug_id)
+			)
+			: ''
+		);
+		$sql_template = (($template_id !== false)
+			? ((!is_array($template_id))
+				? "AND a.template_id = $template_id"
+				: 'AND ' . $this->db->sql_in_set('a.template_id', $template_id)
+			)
+			: ''
+		);
 
 		// Grab assigned roles...
 		$sql = 'SELECT a.auth_role_id, a.' . $sql_id . ', a.template_id
-			FROM ' . (($user_type == 'user') ? ACL_USERS_TABLE : ACL_GROUPS_TABLE) . ' a, ' . ACL_ROLES_TABLE . " r
+			FROM ' . (($user_type == 'user')
+				? ACL_USERS_TABLE
+				: ACL_GROUPS_TABLE
+			) . ' a, ' . ACL_ROLES_TABLE . " r
 			WHERE a.auth_role_id = r.role_id
 				AND r.role_type = '" . $this->db->sql_escape($role_type) . "'
 				$sql_ug
@@ -555,9 +654,15 @@ class auth_admin_helper
 			}
 
 			$this->template->assign_block_vars($tpl_cat, [
-				'S_YES'   => ($cat_array['S_YES'] && !$cat_array['S_NEVER'] && !$cat_array['S_NO']) ? true : false,
-				'S_NEVER' => ($cat_array['S_NEVER'] && !$cat_array['S_YES'] && !$cat_array['S_NO']) ? true : false,
-				'S_NO'    => ($cat_array['S_NO'] && !$cat_array['S_NEVER'] && !$cat_array['S_YES']) ? true : false,
+				'S_YES'   => ($cat_array['S_YES'] && !$cat_array['S_NEVER'] && !$cat_array['S_NO'])
+					? true
+					: false,
+				'S_NEVER' => ($cat_array['S_NEVER'] && !$cat_array['S_YES'] && !$cat_array['S_NO'])
+					? true
+					: false,
+				'S_NO'    => ($cat_array['S_NO'] && !$cat_array['S_NEVER'] && !$cat_array['S_YES'])
+					? true
+					: false,
 
 				'CAT_NAME' => $this->phpbb_permissions->get_category_lang($cat),
 			]);
@@ -573,16 +678,24 @@ class auth_admin_helper
 				if ($s_view)
 				{
 					$this->template->assign_block_vars($tpl_cat . '.' . $tpl_mask, [
-						'S_YES'   => ($allowed == ACL_YES) ? true : false,
-						'S_NEVER' => ($allowed == ACL_NEVER) ? true : false,
+						'S_YES'   => ($allowed == ACL_YES)
+							? true
+							: false,
+						'S_NEVER' => ($allowed == ACL_NEVER)
+							? true
+							: false,
 
 						'UG_ID'        => $ug_id,
 						'TEMPLATE_ID'  => $template_id,
 						'FIELD_NAME'   => $permission,
 						'S_FIELD_NAME' => 'setting[' . $ug_id . '][' . $template_id . '][' . $permission . ']',
 
-						'U_TRACE'  => ($show_trace) ? append_sid("{$this->phpbb_admin_path}index.{$this->phpEx}", "i=-toxyy-postformtemplates-acp-template_permissions_module&amp;mode=trace&amp;u=$ug_id&amp;t=$template_id&amp;auth=$permission") : '',
-						'UA_TRACE' => ($show_trace) ? append_sid("{$this->phpbb_admin_path}index.{$this->phpEx}", "i=-toxyy-postformtemplates-acp-template_permissions_module&mode=trace&u=$ug_id&t=$template_id&auth=$permission", false) : '',
+						'U_TRACE'  => ($show_trace)
+							? append_sid("{$this->phpbb_admin_path}index.{$this->phpEx}", "i=-toxyy-postformtemplates-acp-template_permissions_module&amp;mode=trace&amp;u=$ug_id&amp;t=$template_id&amp;auth=$permission")
+							: '',
+						'UA_TRACE' => ($show_trace)
+							? append_sid("{$this->phpbb_admin_path}index.{$this->phpEx}", "i=-toxyy-postformtemplates-acp-template_permissions_module&mode=trace&u=$ug_id&t=$template_id&auth=$permission", false)
+							: '',
 
 						'PERMISSION' => $this->phpbb_permissions->get_permission_lang($permission),
 					]);
@@ -590,17 +703,27 @@ class auth_admin_helper
 				else
 				{
 					$this->template->assign_block_vars($tpl_cat . '.' . $tpl_mask, [
-						'S_YES'   => ($allowed == ACL_YES) ? true : false,
-						'S_NEVER' => ($allowed == ACL_NEVER) ? true : false,
-						'S_NO'    => ($allowed == ACL_NO) ? true : false,
+						'S_YES'   => ($allowed == ACL_YES)
+							? true
+							: false,
+						'S_NEVER' => ($allowed == ACL_NEVER)
+							? true
+							: false,
+						'S_NO'    => ($allowed == ACL_NO)
+							? true
+							: false,
 
 						'UG_ID'        => $ug_id,
 						'TEMPLATE_ID'  => $template_id,
 						'FIELD_NAME'   => $permission,
 						'S_FIELD_NAME' => 'setting[' . $ug_id . '][' . $template_id . '][' . $permission . ']',
 
-						'U_TRACE'  => ($show_trace) ? append_sid("{$this->phpbb_admin_path}index.{$this->phpEx}", "i=-toxyy-postformtemplates-acp-template_permissions_module&amp;mode=trace&amp;u=$ug_id&amp;t=$template_id&amp;auth=$permission") : '',
-						'UA_TRACE' => ($show_trace) ? append_sid("{$this->phpbb_admin_path}index.{$this->phpEx}", "i=-toxyy-postformtemplates-acp-template_permissions_module&mode=trace&u=$ug_id&t=$template_id&auth=$permission", false) : '',
+						'U_TRACE'  => ($show_trace)
+							? append_sid("{$this->phpbb_admin_path}index.{$this->phpEx}", "i=-toxyy-postformtemplates-acp-template_permissions_module&amp;mode=trace&amp;u=$ug_id&amp;t=$template_id&amp;auth=$permission")
+							: '',
+						'UA_TRACE' => ($show_trace)
+							? append_sid("{$this->phpbb_admin_path}index.{$this->phpEx}", "i=-toxyy-postformtemplates-acp-template_permissions_module&mode=trace&u=$ug_id&t=$template_id&auth=$permission", false)
+							: '',
 
 						'PERMISSION' => $this->phpbb_permissions->get_permission_lang($permission),
 					]);
@@ -631,30 +754,67 @@ class auth_admin_helper
 	function get_mask($mode, $user_id = false, $group_id = false, $template_id = false, $auth_option = false, $scope = false, $acl_fill = ACL_NEVER)
 	{
 		$hold_ary = [];
-		$view_user_mask = ($mode == 'view' && $group_id === false) ? true : false;
+		$view_user_mask = ($mode == 'view' && $group_id === false)
+			? true
+			: false;
 
 		if ($auth_option === false || $scope === false)
 		{
 			return [];
 		}
 
-		$acl_user_function = ($mode == 'set') ? 'acl_user_raw_data' : 'acl_raw_data';
+		$acl_user_function = ($mode == 'set')
+			? 'acl_user_raw_data'
+			: 'acl_raw_data';
 
 		if (!$view_user_mask)
 		{
 			if ($template_id !== false)
 			{
-				$hold_ary = ($group_id !== false) ? $this->acl_group_raw_data($group_id, $auth_option . '%', $template_id) : $this->$acl_user_function($user_id, $auth_option . '%', $template_id);
+				$hold_ary = ($group_id !== false)
+					? $this->acl_group_raw_data($group_id, $auth_option . '%', $template_id)
+					: $this->$acl_user_function($user_id, $auth_option . '%', $template_id);
 			}
 			else
 			{
-				$hold_ary = ($group_id !== false) ? $this->acl_group_raw_data($group_id, $auth_option . '%', ($scope == 'global') ? 0 : false) : $this->$acl_user_function($user_id, $auth_option . '%', ($scope == 'global') ? 0 : false);
+				$hold_ary = (($group_id !== false)
+					? $this->acl_group_raw_data($group_id, $auth_option . '%', (
+							($scope == 'global')
+							? 0
+							: false
+						)
+					)
+					: $this->$acl_user_function($user_id, $auth_option . '%', (
+							($scope == 'global')
+							? 0
+							: false
+						)
+					)
+				);
 			}
 		}
 
 		// Make sure hold_ary is filled with every setting (prevents missing templates/users/groups)
-		$ug_id = ($group_id !== false) ? ((!is_array($group_id)) ? [$group_id] : $group_id) : ((!is_array($user_id)) ? [$user_id] : $user_id);
-		$template_ids = ($template_id !== false) ? ((!is_array($template_id)) ? [$template_id] : $template_id) : (($scope == 'global') ? [0] : []);
+		$ug_id = (($group_id !== false)
+			? ((!is_array($group_id))
+				? [$group_id]
+				: $group_id
+			)
+			: ((!is_array($user_id))
+				? [$user_id]
+				: $user_id
+			)
+		);
+		$template_ids = (($template_id !== false)
+			? ((!is_array($template_id))
+				? [$template_id]
+				: $template_id
+			)
+			: (($scope == 'global')
+				? [0]
+				: []
+			)
+		);
 
 		// Only those options we need
 		$compare_options = array_diff(preg_replace('/^((?!' . $auth_option . ').+)|(' . $auth_option . ')$/', '', array_keys($this->auth->acl_options[$scope])), ['']);
@@ -760,7 +920,9 @@ class auth_admin_helper
 		}
 		else
 		{
-			$hold_ary[($group_id !== false) ? $group_id : $user_id][(int) $template_id] = $compare_options;
+			$hold_ary[($group_id !== false)
+				? $group_id
+				: $user_id][(int) $template_id] = $compare_options;
 		}
 
 		return $hold_ary;
@@ -777,10 +939,16 @@ class auth_admin_helper
 		$tpl_category = 'category';
 		$tpl_mask = 'mask';
 
-		$l_acl_type = $this->phpbb_permissions->get_type_lang($permission_type, (($local) ? 'local' : 'global'));
+		$l_acl_type = $this->phpbb_permissions->get_type_lang($permission_type, (
+			($local)
+			? 'local'
+			: 'global'
+		));
 
 		// Allow trace for viewing permissions and in user mode
-		$show_trace = ($mode == 'view' && $user_mode == 'user') ? true : false;
+		$show_trace = ($mode == 'view' && $user_mode == 'user')
+			? true
+			: false;
 
 		// Get names
 		if ($user_mode == 'user')
@@ -802,7 +970,9 @@ class auth_admin_helper
 		$ug_names_ary = [];
 		while ($row = $this->db->sql_fetchrow($result))
 		{
-			$ug_names_ary[$row['ug_id']] = ($user_mode == 'user') ? $row['ug_name'] : $this->group_helper->get_name($row['ug_name']);
+			$ug_names_ary[$row['ug_id']] = ($user_mode == 'user')
+				? $row['ug_name']
+				: $this->group_helper->get_name($row['ug_name']);
 		}
 		$this->db->sql_freeresult($result);
 
@@ -941,39 +1111,67 @@ class auth_admin_helper
 				$this->auth_admin->build_permission_array($hold_ary[$template_id], $content_array, $categories, array_keys($ug_names_ary));
 
 				$this->template->assign_block_vars($tpl_pmask, [
-					'NAME'    => ($template_id == 0) ? $template_names_ary[0] : $template_names_ary[$template_id]['template_name'],
-					'PADDING' => ($template_id == 0) ? '' : $template_names_ary[$template_id]['padding'],
+					'NAME'    => ($template_id == 0)
+						? $template_names_ary[0]
+						: $template_names_ary[$template_id]['template_name'],
+					'PADDING' => ($template_id == 0)
+						? ''
+						: $template_names_ary[$template_id]['padding'],
 
 					'CATEGORIES' => implode('</th><th>', $categories),
 
 					'L_ACL_TYPE' => $l_acl_type,
 
-					'S_LOCAL'       => ($local) ? true : false,
-					'S_GLOBAL'      => (!$local) ? true : false,
+					'S_LOCAL'       => ($local)
+						? true
+						: false,
+					'S_GLOBAL'      => (!$local)
+						? true
+						: false,
 					'S_NUM_CATS'    => count($categories),
-					'S_VIEW'        => ($mode == 'view') ? true : false,
+					'S_VIEW'        => ($mode == 'view')
+						? true
+						: false,
 					'S_NUM_OBJECTS' => count($content_array),
-					'S_USER_MODE'   => ($user_mode == 'user') ? true : false,
-					'S_GROUP_MODE'  => ($user_mode == 'group') ? true : false,
+					'S_USER_MODE'   => ($user_mode == 'user')
+						? true
+						: false,
+					'S_GROUP_MODE'  => ($user_mode == 'group')
+						? true
+						: false,
 				]);
 
 				foreach ($content_array as $ug_id => $ug_array)
 				{
 					// Build role dropdown options
-					$current_role_id = (isset($cur_roles[$ug_id][$template_id])) ? $cur_roles[$ug_id][$template_id] : 0;
+					$current_role_id = (isset($cur_roles[$ug_id][$template_id]))
+						? $cur_roles[$ug_id][$template_id]
+						: 0;
 
 					$role_options = [];
 
 					$s_role_options = '';
-					$current_role_id = (isset($cur_roles[$ug_id][$template_id])) ? $cur_roles[$ug_id][$template_id] : 0;
+					$current_role_id = (isset($cur_roles[$ug_id][$template_id]))
+						? $cur_roles[$ug_id][$template_id]
+						: 0;
 
 					foreach ($roles as $role_id => $role_row)
 					{
-						$role_description = (!empty($this->language->lang($role_row['role_description']))) ? $this->language->lang($role_row['role_description']) : nl2br($role_row['role_description']);
-						$role_name = (!empty($this->language->lang($role_row['role_name']))) ? $this->language->lang($role_row['role_name']) : $role_row['role_name'];
+						$role_description = (!empty($this->language->lang($role_row['role_description'])))
+							? $this->language->lang($role_row['role_description'])
+							: nl2br($role_row['role_description']);
+						$role_name = (!empty($this->language->lang($role_row['role_name'])))
+							? $this->language->lang($role_row['role_name'])
+							: $role_row['role_name'];
 
-						$title = ($role_description) ? ' title="' . $role_description . '"' : '';
-						$s_role_options .= '<option value="' . $role_id . '"' . (($role_id == $current_role_id) ? ' selected="selected"' : '') . $title . '>' . $role_name . '</option>';
+						$title = ($role_description)
+							? ' title="' . $role_description . '"'
+							: '';
+						$s_role_options .= '<option value="' . $role_id . '"' . (
+							($role_id == $current_role_id)
+							? ' selected="selected"'
+							: ''
+						) . $title . '>' . $role_name . '</option>';
 
 						$role_options[] = [
 							'ID'        => $role_id,
@@ -985,7 +1183,11 @@ class auth_admin_helper
 
 					if ($s_role_options)
 					{
-						$s_role_options = '<option value="0"' . ((!$current_role_id) ? ' selected="selected"' : '') . ' title="' . htmlspecialchars($this->language->lang('NO_ROLE_ASSIGNED_EXPLAIN'), ENT_COMPAT) . '">' . $this->language->lang('NO_ROLE_ASSIGNED') . '</option>' . $s_role_options;
+						$s_role_options = '<option value="0"' . (
+							(!$current_role_id)
+							? ' selected="selected"'
+							: ''
+						) . ' title="' . htmlspecialchars($this->language->lang('NO_ROLE_ASSIGNED_EXPLAIN'), ENT_COMPAT) . '">' . $this->language->lang('NO_ROLE_ASSIGNED') . '</option>' . $s_role_options;
 					}
 
 					if (!$current_role_id && $mode != 'view')
@@ -1041,36 +1243,64 @@ class auth_admin_helper
 					'NAME'       => $ug_name,
 					'CATEGORIES' => implode('</th><th>', $categories),
 
-					'USER_GROUPS_DEFAULT' => ($user_mode == 'user' && isset($user_groups_default[$ug_id]) && count($user_groups_default[$ug_id])) ? implode($this->language->lang('COMMA_SEPARATOR'), $user_groups_default[$ug_id]) : '',
-					'USER_GROUPS_CUSTOM'  => ($user_mode == 'user' && isset($user_groups_custom[$ug_id]) && count($user_groups_custom[$ug_id])) ? implode($this->language->lang('COMMA_SEPARATOR'), $user_groups_custom[$ug_id]) : '',
+					'USER_GROUPS_DEFAULT' => ($user_mode == 'user' && isset($user_groups_default[$ug_id]) && count($user_groups_default[$ug_id]))
+						? implode($this->language->lang('COMMA_SEPARATOR'), $user_groups_default[$ug_id])
+						: '',
+					'USER_GROUPS_CUSTOM'  => ($user_mode == 'user' && isset($user_groups_custom[$ug_id]) && count($user_groups_custom[$ug_id]))
+						? implode($this->language->lang('COMMA_SEPARATOR'), $user_groups_custom[$ug_id])
+						: '',
 					'L_ACL_TYPE'          => $l_acl_type,
 
-					'S_LOCAL'       => ($local) ? true : false,
-					'S_GLOBAL'      => (!$local) ? true : false,
+					'S_LOCAL'       => ($local)
+						? true
+						: false,
+					'S_GLOBAL'      => (!$local)
+						? true
+						: false,
 					'S_NUM_CATS'    => count($categories),
-					'S_VIEW'        => ($mode == 'view') ? true : false,
+					'S_VIEW'        => ($mode == 'view')
+						? true
+						: false,
 					'S_NUM_OBJECTS' => count($content_array),
-					'S_USER_MODE'   => ($user_mode == 'user') ? true : false,
-					'S_GROUP_MODE'  => ($user_mode == 'group') ? true : false,
+					'S_USER_MODE'   => ($user_mode == 'user')
+						? true
+						: false,
+					'S_GROUP_MODE'  => ($user_mode == 'group')
+						? true
+						: false,
 				]);
 
 				foreach ($content_array as $template_id => $template_array)
 				{
 					// Build role dropdown options
-					$current_role_id = (isset($cur_roles[$ug_id][$template_id])) ? $cur_roles[$ug_id][$template_id] : 0;
+					$current_role_id = (isset($cur_roles[$ug_id][$template_id]))
+						? $cur_roles[$ug_id][$template_id]
+						: 0;
 
 					$role_options = [];
 
-					$current_role_id = (isset($cur_roles[$ug_id][$template_id])) ? $cur_roles[$ug_id][$template_id] : 0;
+					$current_role_id = (isset($cur_roles[$ug_id][$template_id]))
+						? $cur_roles[$ug_id][$template_id]
+						: 0;
 					$s_role_options = '';
 
 					foreach ($roles as $role_id => $role_row)
 					{
-						$role_description = (!empty($this->language->lang($role_row['role_description']))) ? $this->language->lang($role_row['role_description']) : nl2br($role_row['role_description']);
-						$role_name = (!empty($this->language->lang($role_row['role_name']))) ? $this->language->lang($role_row['role_name']) : $role_row['role_name'];
+						$role_description = (!empty($this->language->lang($role_row['role_description'])))
+							? $this->language->lang($role_row['role_description'])
+							: nl2br($role_row['role_description']);
+						$role_name = (!empty($this->language->lang($role_row['role_name'])))
+							? $this->language->lang($role_row['role_name'])
+							: $role_row['role_name'];
 
-						$title = ($role_description) ? ' title="' . $role_description . '"' : '';
-						$s_role_options .= '<option value="' . $role_id . '"' . (($role_id == $current_role_id) ? ' selected="selected"' : '') . $title . '>' . $role_name . '</option>';
+						$title = ($role_description)
+							? ' title="' . $role_description . '"'
+							: '';
+						$s_role_options .= '<option value="' . $role_id . '"' . (
+							($role_id == $current_role_id)
+							? ' selected="selected"'
+							: ''
+						) . $title . '>' . $role_name . '</option>';
 
 						$role_options[] = [
 							'ID'        => $role_id,
@@ -1082,7 +1312,11 @@ class auth_admin_helper
 
 					if ($s_role_options)
 					{
-						$s_role_options = '<option value="0"' . ((!$current_role_id) ? ' selected="selected"' : '') . ' title="' . htmlspecialchars($this->language->lang('NO_ROLE_ASSIGNED_EXPLAIN'), ENT_COMPAT) . '">' . $this->language->lang('NO_ROLE_ASSIGNED') . '</option>' . $s_role_options;
+						$s_role_options = '<option value="0"' . (
+							(!$current_role_id)
+							? ' selected="selected"'
+							: ''
+						) . ' title="' . htmlspecialchars($this->language->lang('NO_ROLE_ASSIGNED_EXPLAIN'), ENT_COMPAT) . '">' . $this->language->lang('NO_ROLE_ASSIGNED') . '</option>' . $s_role_options;
 					}
 
 					if (!$current_role_id && $mode != 'view')
@@ -1104,8 +1338,12 @@ class auth_admin_helper
 					}
 
 					$this->template->assign_block_vars($tpl_pmask . '.' . $tlp_tmask, [
-						'NAME'           => ($template_id == 0) ? $template_names_ary[0] : $template_names_ary[$template_id]['template_name'],
-						'PADDING'        => ($template_id == 0) ? '' : $template_names_ary[$template_id]['padding'],
+						'NAME'           => ($template_id == 0)
+							? $template_names_ary[0]
+							: $template_names_ary[$template_id]['template_name'],
+						'PADDING'        => ($template_id == 0)
+							? ''
+							: $template_names_ary[$template_id]['padding'],
 						'S_CUSTOM'       => $s_custom_permissions,
 						'UG_ID'          => $ug_id,
 						'S_ROLE_OPTIONS' => $s_role_options,
@@ -1127,7 +1365,13 @@ class auth_admin_helper
 	 */
 	function retrieve_defined_user_groups($permission_scope, $template_id, $permission_type)
 	{
-		$sql_template_id = ($permission_scope == 'global') ? 'AND a.template_id = 0' : ((count($template_id)) ? 'AND ' . $this->db->sql_in_set('a.template_id', $template_id) : 'AND a.template_id <> 0');
+		$sql_template_id = (($permission_scope == 'global')
+			? 'AND a.template_id = 0'
+			: ((count($template_id))
+				? 'AND ' . $this->db->sql_in_set('a.template_id', $template_id)
+				: 'AND a.template_id <> 0'
+			)
+		);
 
 		// Permission options are only able to be a permission set... therefore we will pre-fetch the possible options and also the possible roles
 		$option_ids = $role_ids = [];
@@ -1200,7 +1444,11 @@ class auth_admin_helper
 		$defined_group_ids = [];
 		while ($row = $this->db->sql_fetchrow($result))
 		{
-			$s_defined_group_options .= '<option' . (($row['group_type'] == GROUP_SPECIAL) ? ' class="sep"' : '') . ' value="' . $row['group_id'] . '">' . $this->group_helper->get_name($row['group_name']) . '</option>';
+			$s_defined_group_options .= '<option' . (
+				($row['group_type'] == GROUP_SPECIAL)
+				? ' class="sep"'
+				: ''
+			) . ' value="' . $row['group_id'] . '">' . $this->group_helper->get_name($row['group_name']) . '</option>';
 			$defined_group_ids[] = $row['group_id'];
 		}
 		$this->db->sql_freeresult($result);
@@ -1260,7 +1508,9 @@ class auth_admin_helper
 		}
 
 		// Founder always has all global options set to true...
-		return ($negate) ? !$this->auth->cache[$t][$opt] : $this->auth->cache[$t][$opt];
+		return ($negate)
+			? !$this->auth->cache[$t][$opt]
+			: $this->auth->cache[$t][$opt];
 	}
 
 	/**
@@ -1284,7 +1534,9 @@ class auth_admin_helper
 		$template_sql = $this->db->sql_in_set('template_id', array_map('intval', $template_id));
 
 		// Instead of updating, inserting, removing we just remove all current settings and re-set everything...
-		$table = ($ug_type == 'user') ? ACL_USERS_TABLE : ACL_GROUPS_TABLE;
+		$table = ($ug_type == 'user')
+			? ACL_USERS_TABLE
+			: ACL_GROUPS_TABLE;
 		$id_field = $ug_type . '_id';
 
 		// Get any flags as required
@@ -1405,19 +1657,25 @@ class auth_admin_helper
 		}
 
 		$option_id_ary = [];
-		$table = ($mode == 'user') ? ACL_USERS_TABLE : ACL_GROUPS_TABLE;
+		$table = ($mode == 'user')
+			? ACL_USERS_TABLE
+			: ACL_GROUPS_TABLE;
 		$id_field = $mode . '_id';
 
 		$where_sql = [];
 
 		if ($template_id !== false)
 		{
-			$where_sql[] = (!is_array($template_id)) ? 'template_id = ' . (int) $template_id : $this->db->sql_in_set('template_id', array_map('intval', $template_id));
+			$where_sql[] = (!is_array($template_id))
+				? 'template_id = ' . (int) $template_id
+				: $this->db->sql_in_set('template_id', array_map('intval', $template_id));
 		}
 
 		if ($ug_id !== false)
 		{
-			$where_sql[] = (!is_array($ug_id)) ? $id_field . ' = ' . (int) $ug_id : $this->db->sql_in_set($id_field, array_map('intval', $ug_id));
+			$where_sql[] = (!is_array($ug_id))
+				? $id_field . ' = ' . (int) $ug_id
+				: $this->db->sql_in_set($id_field, array_map('intval', $ug_id));
 		}
 
 		// There seem to be auth options involved, therefore we need to go through the list and make sure we capture roles correctly

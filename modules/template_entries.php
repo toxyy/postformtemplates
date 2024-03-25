@@ -176,7 +176,9 @@ class template_entries
 				$display_on_posting = $row['display_on_posting'];
 				$entry_helpline = $row['entry_helpline'];
 				$entry_type = (int) $row['entry_type'];
-				$entry_type_match = (empty($row['entry_type_match']) ? '' : implode(PHP_EOL, unserialize($row['entry_type_match'])));
+				$entry_type_match = (empty($row['entry_type_match'])
+					? ''
+					: implode(PHP_EOL, unserialize($row['entry_type_match'])));
 				$entry_rows = (int) $row['entry_rows'];
 				$this->template->assign_vars([
 					'S_ENTRY_ID'        => $entry_id,
@@ -216,7 +218,6 @@ class template_entries
 		{
 			case 'move_up_entry':
 			case 'move_down_entry':
-
 				if (!$entry_id)
 				{
 					trigger_error($this->language->lang('ACP_PFT_NO_TEMPLATE') . adm_back_link($u_action . '&amp;parent_id=' . $template_id), E_USER_WARNING);
@@ -247,16 +248,29 @@ class template_entries
 					$json_response = new \phpbb\json_response;
 					$json_response->send(['success' => ($move_entry_tag !== false)]);
 				}
-
 			break;
 
 			case 'edit_entry':
 			case 'add_entry':
-
 				$tpl_ary = [
 					'S_EDIT_TEMPLATE_ENTRY' => true,
-					'U_BACK'                => $u_action . (($parent_entry_id) ? '&amp;action=edit_entry&amp;entry=' . $parent_entry_id : ''),
-					'U_ACTION'              => $u_action . '&amp;action=' . (($action == 'add_entry') ? 'create_entry' : 'modify_entry') . (($entry_id) ? "&amp;entry=$entry_id" : '') . (($parent_entry_id) ? "&amp;parent_entry_id=$parent_entry_id" : ''),
+					'U_BACK'                => $u_action . (
+						($parent_entry_id)
+						? '&amp;action=edit_entry&amp;entry=' . $parent_entry_id
+						: ''
+					),
+					'U_ACTION'              => $u_action . '&amp;action=' . ((
+							($action == 'add_entry')
+							? 'create_entry'
+							: 'modify_entry'
+						) . (($entry_id)
+							? "&amp;entry=$entry_id"
+							: ''
+						) . (($parent_entry_id)
+							? "&amp;parent_entry_id=$parent_entry_id"
+							: ''
+						)
+					),
 
 					'L_TEMPLATE_ENTRY_USAGE_EXPLAIN' => sprintf($this->language->lang('TEMPLATE_ENTRY_USAGE_EXPLAIN'), '<a href="#down">', '</a>'),
 					'TEMPLATE_ENTRY_TAG'             => $entry_tag,
@@ -276,7 +290,9 @@ class template_entries
 				{
 					$this->template->assign_block_vars('token', [
 						'TOKEN'   => '{' . $token . '}',
-						'EXPLAIN' => ($token === 'LOCAL_URL') ? $this->language->lang(['tokens', $token], generate_board_url() . '/') : $this->language->lang(['tokens', $token]),
+						'EXPLAIN' => ($token === 'LOCAL_URL')
+							? $this->language->lang(['tokens', $token], generate_board_url() . '/')
+							: $this->language->lang(['tokens', $token]),
 					]);
 				}
 
@@ -304,12 +320,10 @@ class template_entries
 				}
 
 				return;
-
 			break;
 
 			case 'modify_entry':
 			case 'create_entry':
-
 				$sql_ary = [];
 
 				if (!check_form_key($form_key))
@@ -431,11 +445,9 @@ class template_entries
 				$this->phpbb_log->add('admin', $this->user->data['user_id'], $this->user->ip, $log_action, false, [$entry_tag]);
 
 				trigger_error($this->language->lang($lang) . adm_back_link($u_action));
-
 			break;
 
 			case 'delete_entry':
-
 				$sql = 'SELECT entry_tag, left_id, right_id, template_id
 					FROM ' . PFT_TEMPLATE_ENTRIES_TABLE . "
 					WHERE entry_id = $entry_id";
@@ -489,7 +501,6 @@ class template_entries
 						]));
 					}
 				}
-
 			break;
 		}
 
@@ -540,11 +551,14 @@ class template_entries
 		$sql = 'SELECT entry_id, entry_tag, left_id, right_id
 			FROM ' . PFT_TEMPLATE_ENTRIES_TABLE . "
 			WHERE parent_id = {$entry_row['parent_id']}
-				AND " . (($action == 'move_up_entry') ? "right_id < {$entry_row['right_id']}
-				AND template_id = {$entry_row['template_id']}
-				ORDER BY right_id DESC" : "left_id > {$entry_row['left_id']}
-				AND template_id = {$entry_row['template_id']}
-				ORDER BY left_id ASC");
+				AND " . (($action == 'move_up_entry')
+					? "right_id < {$entry_row['right_id']}
+						AND template_id = {$entry_row['template_id']}
+						ORDER BY right_id DESC"
+					: "left_id > {$entry_row['left_id']}
+						AND template_id = {$entry_row['template_id']}
+						ORDER BY left_id ASC"
+				);
 		$result = $this->db->sql_query_limit($sql, $steps);
 
 		$target = [];

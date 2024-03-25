@@ -4,18 +4,10 @@
 
 ## Requirements
 
-**phpBB 3.3.10-RC1+ PHP 7+
-** - I have not tested with earlier versions, technically the latest event I use was added in 3.1.9, so it might work on even earlier versions. Try it out! Unfortunately, for multibyte compatibility, you'll need the fix below as well.
+**phpBB 3.3.11+ PHP 7+
+** - I have not tested with earlier versions, technically the latest event I use was added in 3.1.9, with the exception of the event in 3.3.11 to enable multibyte capability for non ASCII characters.
 
-(core bug) ticket 17188 - [PHPBB3-17188](https://github.com/phpbb/phpbb/pull/6531)
-
-To fix this yourself, open `/forumroot/phpbb/request/type_cast_helper.php`
-
-Find
-`!preg_match('/^./u', $result)`
-
-Replace with
-`!preg_match('/^./um', $result)`
+It is possible to install this on versions before 3.3.11, but some other changes will have to be made, like sql_nextid being deprecated, or the PR to enable multibyte support. Please post in the support topic if this is truly needed.
 
 ## Features
 

@@ -27,7 +27,7 @@
   "extra": {
     "display-name": "Post Form Templates",
     "soft-require": {
-      "phpbb/phpbb": ">=3.3.3"
+      "phpbb/phpbb": ">=3.3.11"
     },
     "version-check": {
       "host": "toxyy.github.io",

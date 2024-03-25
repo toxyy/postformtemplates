@@ -264,7 +264,9 @@ class main implements EventSubscriberInterface
 							$add_children = false;
 						}
 
-						$length_cat_dropdown = strlen($row['template_name']) > $length_cat_dropdown ? strlen($row['template_name']) : $length_cat_dropdown;
+						$length_cat_dropdown = strlen($row['template_name']) > $length_cat_dropdown
+							? strlen($row['template_name'])
+							: $length_cat_dropdown;
 
 						$categories_array = [
 							'PARENT_ID' => $row['parent_id'],
@@ -292,7 +294,9 @@ class main implements EventSubscriberInterface
 							$selected_length = strlen($row['template_name']);
 						}
 
-						$length_dropdown = strlen($row['template_name']) > $length_dropdown ? strlen($row['template_name']) : $length_dropdown;
+						$length_dropdown = strlen($row['template_name']) > $length_dropdown
+							? strlen($row['template_name'])
+							: $length_dropdown;
 
 						$template_array = [
 							'PARENT_ID' => $row['parent_id'],
@@ -401,7 +405,13 @@ class main implements EventSubscriberInterface
 					'entry_type_match' => unserialize($row['entry_type_match']),
 					'display'          => $row['display_on_posting'],
 				];
-				$template_images = ($row['template_images'] === '') ? '' : (($row['template_images'] === '0') ? 0 : unserialize($row['template_images']));
+				$template_images = (($row['template_images'] === '')
+					? ''
+					: (($row['template_images'] === '0')
+						? 0
+						: unserialize($row['template_images'])
+					)
+				);
 				$template_image_date = str_replace(' ', '', $row['template_image_date']);
 				$template_image_type = $row['template_image_type'];
 			}
@@ -453,7 +463,9 @@ class main implements EventSubscriberInterface
 	
 			foreach ($entries_array as $entry)
 			{
-				$default_value = ($entry['entry_type'] == PFT_ENTRIES_CHECKBOX) ? [-1] : '';
+				$default_value = ($entry['entry_type'] == PFT_ENTRIES_CHECKBOX)
+					? [-1]
+					: '';
 				$replace = $this->request->variable('pft_e' . $entry['entry_id'], $default_value, true);
 	
 				$value = '';

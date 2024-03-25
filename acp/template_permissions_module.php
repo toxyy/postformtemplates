@@ -160,7 +160,9 @@ class template_permissions_module
 		// Set some vars
 		$action = $this->request->variable('action', ['' => 0]);
 		$action = key($action);
-		$action = (isset($_POST['psubmit'])) ? 'apply_permissions' : $action;
+		$action = (isset($_POST['psubmit']))
+			? 'apply_permissions'
+			: $action;
 
 		$all_templates = $this->request->variable('all_templates', 0);
 		$subtemplate_id = $this->request->variable('subtemplate_id', 0);
@@ -180,7 +182,9 @@ class template_permissions_module
 		if ($select_all_groups)
 		{
 			// Add default groups to selection
-			$sql_and = (!$this->config['coppa_enable']) ? " AND group_name <> 'REGISTERED_COPPA'" : '';
+			$sql_and = (!$this->config['coppa_enable'])
+				? " AND group_name <> 'REGISTERED_COPPA'"
+				: '';
 
 			$sql = 'SELECT group_id
 				FROM ' . GROUPS_TABLE . '
@@ -238,7 +242,9 @@ class template_permissions_module
 		}
 
 		// Define some common variables for every mode
-		$permission_scope = (strpos($mode, '_global') !== false) ? 'global' : 'local';
+		$permission_scope = (strpos($mode, '_global') !== false)
+			? 'global'
+			: 'local';
 
 		// Showing introductionary page?
 		if ($mode == 'intro')
@@ -256,16 +262,24 @@ class template_permissions_module
 		{
 			case 'setting_mod_local':
 			case 'setting_template_local':
-				$this->permission_dropdown = ($mode == 'setting_mod_local') ? ['m_'] : ['pft_'];
+				$this->permission_dropdown = ($mode == 'setting_mod_local')
+					? ['m_']
+					: ['pft_'];
 				$permission_victim = ['templates', 'usergroup'];
-				$this->page_title = ($mode == 'setting_mod_local') ? 'ACP_FORUM_MODERATORS' : 'ACP_PFT_TEMPLATE_PERMISSIONS';
+				$this->page_title = ($mode == 'setting_mod_local')
+					? 'ACP_FORUM_MODERATORS'
+					: 'ACP_PFT_TEMPLATE_PERMISSIONS';
 			break;
 
 			case 'view_mod_local':
 			case 'view_template_local':
-				$this->permission_dropdown = ($mode == 'view_mod_local') ? ['m_'] : ['pft_'];
+				$this->permission_dropdown = ($mode == 'view_mod_local')
+					? ['m_']
+					: ['pft_'];
 				$permission_victim = ['templates', 'usergroup_view'];
-				$this->page_title = ($mode == 'view_mod_local') ? 'ACP_VIEW_FORUM_MOD_PERMISSIONS' : 'ACP_PFT_VIEW_TEMPLATE_PERMISSIONS';
+				$this->page_title = ($mode == 'view_mod_local')
+					? 'ACP_VIEW_FORUM_MOD_PERMISSIONS'
+					: 'ACP_PFT_VIEW_TEMPLATE_PERMISSIONS';
 			break;
 
 			default:
@@ -295,8 +309,12 @@ class template_permissions_module
 					if (confirm_box(true))
 					{
 						// All users/groups selected?
-						$all_users = (isset($_POST['all_users'])) ? true : false;
-						$all_groups = (isset($_POST['all_groups'])) ? true : false;
+						$all_users = (isset($_POST['all_users']))
+							? true
+							: false;
+						$all_groups = (isset($_POST['all_groups']))
+							? true
+							: false;
 
 						if ($all_users || $all_groups)
 						{
@@ -390,7 +408,6 @@ class template_permissions_module
 			switch ($victim)
 			{
 				case 'templates':
-
 					if (count($template_id))
 					{
 						$this->template_permissions_helper->check_existence('template', $template_id, $this->u_action);
@@ -403,7 +420,14 @@ class template_permissions_module
 					$s_template_options = '';
 					foreach ($template_list as $t_id => $t_row)
 					{
-						$s_template_options .= '<option value="' . $t_id . '"' . (($t_row['selected']) ? ' selected="selected"' : '') . (($t_row['disabled']) ? ' disabled="disabled" class="disabled-option"' : '') . '>' . $t_row['padding'] . $t_row['template_name'] . '</option>';
+						$s_template_options .= '<option value="' . $t_id . '"' . (
+								($t_row['selected'])
+								? ' selected="selected"'
+								: ''
+							) . (($t_row['disabled'])
+								? ' disabled="disabled" class="disabled-option"'
+								: ''
+							) . '>' . $t_row['padding'] . $t_row['template_name'] . '</option>';
 					}
 
 					// Build subtemplate options
@@ -416,14 +440,16 @@ class template_permissions_module
 						'S_TEMPLATE_ALL'        => true,
 						'S_TEMPLATE_MULTIPLE'   => true,
 					]);
-
 				break;
 
 				case 'usergroup':
 				case 'usergroup_view':
-
-					$all_users = (isset($_POST['all_users'])) ? true : false;
-					$all_groups = (isset($_POST['all_groups'])) ? true : false;
+					$all_users = (isset($_POST['all_users']))
+						? true
+						: false;
+					$all_groups = (isset($_POST['all_groups']))
+						? true
+						: false;
 
 					if ((count($user_id) && !$all_users) || (count($group_id) && !$all_groups))
 					{
@@ -456,14 +482,17 @@ class template_permissions_module
 					}
 
 					$this->template->assign_vars([
-						'S_SELECT_USERGROUP'      => ($victim == 'usergroup') ? true : false,
-						'S_SELECT_USERGROUP_VIEW' => ($victim == 'usergroup_view') ? true : false,
+						'S_SELECT_USERGROUP'      => ($victim == 'usergroup')
+							? true
+							: false,
+						'S_SELECT_USERGROUP_VIEW' => ($victim == 'usergroup_view')
+							? true
+							: false,
 						'S_DEFINED_USER_OPTIONS'  => $items['user_ids_options'],
 						'S_DEFINED_GROUP_OPTIONS' => $items['group_ids_options'],
 						'S_ADD_GROUP_OPTIONS'     => group_select_options(false, $items['group_ids'], false),    // Show all groups
 						'U_FIND_USERNAME'         => append_sid("{$this->phpbb_root_path}memberlist.{$this->phpEx}", 'mode=searchuser&amp;form=add_user&amp;field=username&amp;select_single=true'),
 					]);
-
 				break;
 			}
 
@@ -484,9 +513,15 @@ class template_permissions_module
 				'ANONYMOUS_USER_ID' => ANONYMOUS,
 
 				'S_SELECT_VICTIM'    => true,
-				'S_ALLOW_ALL_SELECT' => (count($template_id) > 5) ? false : true,
-				'S_CAN_SELECT_USER'  => ($this->auth->acl_get('a_authusers')) ? true : false,
-				'S_CAN_SELECT_GROUP' => ($this->auth->acl_get('a_authgroups')) ? true : false,
+				'S_ALLOW_ALL_SELECT' => (count($template_id) > 5)
+					? false
+					: true,
+				'S_CAN_SELECT_USER'  => ($this->auth->acl_get('a_authusers'))
+					? true
+					: false,
+				'S_CAN_SELECT_GROUP' => ($this->auth->acl_get('a_authgroups'))
+					? true
+					: false,
 				'S_HIDDEN_FIELDS'    => $s_hidden_fields,
 			]);
 
@@ -507,7 +542,9 @@ class template_permissions_module
 				$this->db->sql_freeresult($result);
 
 				$this->template->assign_vars([
-					'S_TEMPLATE_NAMES' => (count($template_names)) ? true : false,
+					'S_TEMPLATE_NAMES' => (count($template_names))
+						? true
+						: false,
 					'TEMPLATE_NAMES'   => implode($this->language->lang('COMMA_SEPARATOR'), $template_names),
 				]);
 			}
@@ -542,8 +579,27 @@ class template_permissions_module
 				'S_SETTING_PERMISSIONS' => true,
 			]);
 
-			$hold_ary = $this->auth_admin_helper->get_mask('set', (count($user_id)) ? $user_id : false, (count($group_id)) ? $group_id : false, (count($template_id)) ? $template_id : false, $permission_type, $permission_scope, ACL_NO);
-			$this->auth_admin_helper->display_mask('set', $permission_type, $hold_ary, ((count($user_id)) ? 'user' : 'group'), (($permission_scope == 'local') ? true : false));
+			$hold_ary = $this->auth_admin_helper->get_mask('set', (
+					(count($user_id))
+					? $user_id
+					: false
+				), ((count($group_id))
+					? $group_id
+					: false
+				), ((count($template_id))
+					? $template_id
+					: false
+				), $permission_type, $permission_scope, ACL_NO
+			);
+			$this->auth_admin_helper->display_mask('set', $permission_type, $hold_ary, (
+					(count($user_id))
+					? 'user'
+					: 'group'
+				), (($permission_scope == 'local')
+					? true
+					: false
+				)
+			);
 		}
 		else
 		{
@@ -551,8 +607,26 @@ class template_permissions_module
 				'S_VIEWING_PERMISSIONS' => true,
 			]);
 
-			$hold_ary = $this->auth_admin_helper->get_mask('view', (count($user_id)) ? $user_id : false, (count($group_id)) ? $group_id : false, (count($template_id)) ? $template_id : false, $permission_type, $permission_scope, ACL_NEVER);
-			$this->auth_admin_helper->display_mask('view', $permission_type, $hold_ary, ((count($user_id)) ? 'user' : 'group'), (($permission_scope == 'local') ? true : false));
+			$hold_ary = $this->auth_admin_helper->get_mask('view', (
+					(count($user_id))
+					? $user_id
+					: false
+				), ((count($group_id))
+					? $group_id
+					: false
+				), ((count($template_id))
+					? $template_id
+					: false
+				), $permission_type, $permission_scope, ACL_NEVER);
+				$this->auth_admin_helper->display_mask('view', $permission_type, $hold_ary, (
+					(count($user_id))
+					? 'user'
+					: 'group'
+				), (($permission_scope == 'local')
+					? true
+					: false
+				)
+			);
 		}
 	}
 
@@ -571,7 +645,9 @@ class template_permissions_module
 		$psubmit = $this->request->variable('psubmit', [0 => [0 => 0]]);
 
 		// User or group to be set?
-		$ug_type = (count($user_id)) ? 'user' : 'group';
+		$ug_type = (count($user_id))
+			? 'user'
+			: 'group';
 
 		// Check the permission setting again
 		if (!$this->auth->acl_get('a_' . str_replace('_', '', $permission_type) . 'auth') || !$this->auth->acl_get('a_auth' . $ug_type . 's'))
@@ -594,7 +670,9 @@ class template_permissions_module
 
 		// Do we have a role we want to set?
 		$roles = $this->request->variable('role', [0 => [0 => 0]], false, \phpbb\request\request_interface::POST);
-		$assigned_role = (isset($roles[$ug_id][$template_id])) ? (int) $roles[$ug_id][$template_id] : 0;
+		$assigned_role = (isset($roles[$ug_id][$template_id]))
+			? (int) $roles[$ug_id][$template_id]
+			: 0;
 
 		// Do the admin want to set these permissions to other items too?
 		$inherit = $this->request->variable('inherit', [0 => [0]]);
@@ -668,7 +746,9 @@ class template_permissions_module
 		$auth_admin = new \auth_admin();
 
 		// User or group to be set?
-		$ug_type = (count($user_id)) ? 'user' : 'group';
+		$ug_type = (count($user_id))
+			? 'user'
+			: 'group';
 
 		// Check the permission setting again
 		if (!$this->auth->acl_get('a_' . str_replace('_', '', $permission_type) . 'auth') || !$this->auth->acl_get('a_auth' . $ug_type . 's'))
@@ -693,7 +773,9 @@ class template_permissions_module
 				$template_ids[] = $template_id;
 
 				// Check role...
-				$assigned_role = (isset($auth_roles[$ug_id][$template_id])) ? (int) $auth_roles[$ug_id][$template_id] : 0;
+				$assigned_role = (isset($auth_roles[$ug_id][$template_id]))
+					? (int) $auth_roles[$ug_id][$template_id]
+					: 0;
 
 				// If the auth settings differ from the assigned role, then do not set a role...
 				if ($assigned_role)
@@ -743,7 +825,9 @@ class template_permissions_module
 	function remove_permissions($mode, $permission_type, $auth_admin, &$user_id, &$group_id, &$template_id)
 	{
 		// User or group to be set?
-		$ug_type = (count($user_id)) ? 'user' : 'group';
+		$ug_type = (count($user_id))
+			? 'user'
+			: 'group';
 
 		// Check the permission setting again
 		if (!$this->auth->acl_get('a_' . str_replace('_', '', $permission_type) . 'auth') || !$this->auth->acl_get('a_auth' . $ug_type . 's'))
@@ -752,7 +836,15 @@ class template_permissions_module
 			trigger_error($this->language->lang('NO_AUTH_OPERATION') . adm_back_link($this->u_action), E_USER_WARNING);
 		}
 
-		$auth_admin->acl_delete($ug_type, (($ug_type == 'user') ? $user_id : $group_id), (count($template_id) ? $template_id : false), $permission_type);
+		$auth_admin->acl_delete($ug_type, (
+				($ug_type == 'user')
+				? $user_id
+				: $group_id
+			), (count($template_id)
+				? $template_id
+				: false
+			), $permission_type
+		);
 
 		// Do we need to recache the moderator lists?
 		if ($permission_type == 'm_')
@@ -760,7 +852,15 @@ class template_permissions_module
 			phpbb_cache_moderators($this->db, $this->cache, $this->auth);
 		}
 
-		$this->log_action($mode, 'del', $permission_type, $ug_type, (($ug_type == 'user') ? $user_id : $group_id), (count($template_id) ? $template_id : [0 => 0]));
+		$this->log_action($mode, 'del', $permission_type, $ug_type, (
+				($ug_type == 'user')
+				? $user_id
+				: $group_id
+			), (count($template_id)
+				? $template_id
+				: [0 => 0]
+			)
+		);
 
 		if ($mode == 'setting_template_local' || $mode == 'setting_mod_local')
 		{
@@ -790,15 +890,27 @@ class template_permissions_module
 		}
 
 		// Logging ... first grab user or groupnames ...
-		$sql = ($ug_type == 'group') ? 'SELECT group_name as name, group_type FROM ' . GROUPS_TABLE . ' WHERE ' : 'SELECT username as name FROM ' . USERS_TABLE . ' WHERE ';
-		$sql .= $this->db->sql_in_set(($ug_type == 'group') ? 'group_id' : 'user_id', array_map('intval', $ug_id));
+		$sql = ($ug_type == 'group')
+			? 'SELECT group_name as name, group_type FROM ' . GROUPS_TABLE . ' WHERE '
+			: 'SELECT username as name FROM ' . USERS_TABLE . ' WHERE ';
+		$sql .= $this->db->sql_in_set(($ug_type == 'group')
+			? 'group_id'
+			: 'user_id', array_map('intval', $ug_id)
+		);
 		$result = $this->db->sql_query($sql);
 
 		$l_ug_list = '';
 		while ($row = $this->db->sql_fetchrow($result))
 		{
 			$group_name = $this->group_helper->get_name($row['name']);
-			$l_ug_list .= (($l_ug_list != '') ? ', ' : '') . ((isset($row['group_type']) && $row['group_type'] == GROUP_SPECIAL) ? '<span class="sep">' . $group_name . '</span>' : $group_name);
+			$l_ug_list .= ((($l_ug_list != '')
+					? ', '
+					: ''
+				) . ((isset($row['group_type']) && $row['group_type'] == GROUP_SPECIAL)
+					? '<span class="sep">' . $group_name . '</span>'
+					: $group_name
+				)
+			);
 		}
 		$this->db->sql_freeresult($result);
 
@@ -819,7 +931,10 @@ class template_permissions_module
 			$l_template_list = '';
 			while ($row = $this->db->sql_fetchrow($result))
 			{
-				$l_template_list .= (($l_template_list != '') ? ', ' : '') . $row['template_name'];
+				$l_template_list .= (($l_template_list != '')
+					? ', '
+					: ''
+				) . $row['template_name'];
 			}
 			$this->db->sql_freeresult($result);
 
@@ -864,9 +979,13 @@ class template_permissions_module
 			'PERMISSION_USERNAME' => $userdata['username'],
 			'template_name'       => $template_name,
 
-			'S_GLOBAL_TRACE' => ($template_id) ? false : true,
+			'S_GLOBAL_TRACE' => ($template_id)
+				? false
+				: true,
 
-			'U_BACK' => ($back) ? build_url(['f', 'back']) . "&amp;f=$back" : '',
+			'U_BACK' => ($back)
+				? build_url(['f', 'back']) . "&amp;f=$back"
+				: '',
 		]);
 
 		$this->template->assign_block_vars('trace', [
@@ -897,7 +1016,9 @@ class template_permissions_module
 		$this->db->sql_freeresult($result);
 
 		$total = ACL_NO;
-		$add_key = (($template_id) ? '_LOCAL' : '');
+		$add_key = (($template_id)
+			? '_LOCAL'
+			: '');
 
 		if (count($groups))
 		{
@@ -919,12 +1040,26 @@ class template_permissions_module
 					break;
 
 					case ACL_YES:
-						$information = ($total == ACL_YES) ? $this->language->lang('TRACE_GROUP_YES_TOTAL_YES' . $add_key) : (($total == ACL_NEVER) ? $this->language->lang('TRACE_GROUP_YES_TOTAL_NEVER' . $add_key) : $this->language->lang('TRACE_GROUP_YES_TOTAL_NO' . $add_key));
-						$total = ($total == ACL_NO) ? ACL_YES : $total;
+						$information = (($total == ACL_YES)
+							? $this->language->lang('TRACE_GROUP_YES_TOTAL_YES' . $add_key)
+							: (($total == ACL_NEVER)
+								? $this->language->lang('TRACE_GROUP_YES_TOTAL_NEVER' . $add_key)
+								: $this->language->lang('TRACE_GROUP_YES_TOTAL_NO' . $add_key)
+							)
+						);
+						$total = ($total == ACL_NO)
+							? ACL_YES
+							: $total;
 					break;
 
 					case ACL_NEVER:
-						$information = ($total == ACL_YES) ? $this->language->lang('TRACE_GROUP_NEVER_TOTAL_YES' . $add_key) : (($total == ACL_NEVER) ? $this->language->lang('TRACE_GROUP_NEVER_TOTAL_NEVER' . $add_key) : $this->language->lang('TRACE_GROUP_NEVER_TOTAL_NO' . $add_key));
+						$information = (($total == ACL_YES)
+							? $this->language->lang('TRACE_GROUP_NEVER_TOTAL_YES' . $add_key)
+							: (($total == ACL_NEVER)
+								? $this->language->lang('TRACE_GROUP_NEVER_TOTAL_NEVER' . $add_key)
+								: $this->language->lang('TRACE_GROUP_NEVER_TOTAL_NO' . $add_key)
+							)
+						);
 						$total = ACL_NEVER;
 					break;
 				}
@@ -933,34 +1068,66 @@ class template_permissions_module
 					'WHO'         => $row['group_name'],
 					'INFORMATION' => $information,
 
-					'S_SETTING_NO'    => ($row['auth_setting'] == ACL_NO) ? true : false,
-					'S_SETTING_YES'   => ($row['auth_setting'] == ACL_YES) ? true : false,
-					'S_SETTING_NEVER' => ($row['auth_setting'] == ACL_NEVER) ? true : false,
-					'S_TOTAL_NO'      => ($total == ACL_NO) ? true : false,
-					'S_TOTAL_YES'     => ($total == ACL_YES) ? true : false,
-					'S_TOTAL_NEVER'   => ($total == ACL_NEVER) ? true : false,
+					'S_SETTING_NO'    => ($row['auth_setting'] == ACL_NO)
+						? true
+						: false,
+					'S_SETTING_YES'   => ($row['auth_setting'] == ACL_YES)
+						? true
+						: false,
+					'S_SETTING_NEVER' => ($row['auth_setting'] == ACL_NEVER)
+						? true
+						: false,
+					'S_TOTAL_NO'      => ($total == ACL_NO)
+						? true
+						: false,
+					'S_TOTAL_YES'     => ($total == ACL_YES)
+						? true
+						: false,
+					'S_TOTAL_NEVER'   => ($total == ACL_NEVER)
+						? true
+						: false,
 				]);
 			}
 		}
 
 		// Get user specific permission... globally or for this template_
 		$hold_ary = $this->auth_admin_helper->acl_user_raw_data($user_id, $permission, $template_id);
-		$auth_setting = (!count($hold_ary)) ? ACL_NO : $hold_ary[$user_id][$template_id][$permission];
+		$auth_setting = (!count($hold_ary))
+			? ACL_NO
+			: $hold_ary[$user_id][$template_id][$permission];
 
 		switch ($auth_setting)
 		{
 			case ACL_NO:
-				$information = ($total == ACL_NO) ? $this->language->lang('TRACE_USER_NO_TOTAL_NO' . $add_key) : $this->language->lang('TRACE_USER_KEPT' . $add_key);
-				$total = ($total == ACL_NO) ? ACL_NEVER : $total;
+				$information = ($total == ACL_NO)
+					? $this->language->lang('TRACE_USER_NO_TOTAL_NO' . $add_key)
+					: $this->language->lang('TRACE_USER_KEPT' . $add_key);
+				$total = ($total == ACL_NO)
+					? ACL_NEVER
+					: $total;
 			break;
 
 			case ACL_YES:
-				$information = ($total == ACL_YES) ? $this->language->lang('TRACE_USER_YES_TOTAL_YES' . $add_key) : (($total == ACL_NEVER) ? $this->language->lang('TRACE_USER_YES_TOTAL_NEVER' . $add_key) : $this->language->lang('TRACE_USER_YES_TOTAL_NO' . $add_key));
-				$total = ($total == ACL_NO) ? ACL_YES : $total;
+				$information = (($total == ACL_YES)
+					? $this->language->lang('TRACE_USER_YES_TOTAL_YES' . $add_key)
+					: (($total == ACL_NEVER)
+						? $this->language->lang('TRACE_USER_YES_TOTAL_NEVER' . $add_key)
+						: $this->language->lang('TRACE_USER_YES_TOTAL_NO' . $add_key)
+					)
+				);
+				$total = ($total == ACL_NO)
+					? ACL_YES
+					: $total;
 			break;
 
 			case ACL_NEVER:
-				$information = ($total == ACL_YES) ? $this->language->lang('TRACE_USER_NEVER_TOTAL_YES' . $add_key) : (($total == ACL_NEVER) ? $this->language->lang('TRACE_USER_NEVER_TOTAL_NEVER' . $add_key) : $this->language->lang('TRACE_USER_NEVER_TOTAL_NO' . $add_key));
+				$information = (($total == ACL_YES)
+					? $this->language->lang('TRACE_USER_NEVER_TOTAL_YES' . $add_key)
+					: (($total == ACL_NEVER)
+						? $this->language->lang('TRACE_USER_NEVER_TOTAL_NEVER' . $add_key)
+						: $this->language->lang('TRACE_USER_NEVER_TOTAL_NO' . $add_key)
+					)
+				);
 				$total = ACL_NEVER;
 			break;
 		}
@@ -969,12 +1136,22 @@ class template_permissions_module
 			'WHO'         => $userdata['username'],
 			'INFORMATION' => $information,
 
-			'S_SETTING_NO'    => ($auth_setting == ACL_NO) ? true : false,
-			'S_SETTING_YES'   => ($auth_setting == ACL_YES) ? true : false,
-			'S_SETTING_NEVER' => ($auth_setting == ACL_NEVER) ? true : false,
+			'S_SETTING_NO'    => ($auth_setting == ACL_NO)
+				? true
+				: false,
+			'S_SETTING_YES'   => ($auth_setting == ACL_YES)
+				? true
+				: false,
+			'S_SETTING_NEVER' => ($auth_setting == ACL_NEVER)
+				? true
+				: false,
 			'S_TOTAL_NO'      => false,
-			'S_TOTAL_YES'     => ($total == ACL_YES) ? true : false,
-			'S_TOTAL_NEVER'   => ($total == ACL_NEVER) ? true : false,
+			'S_TOTAL_YES'     => ($total == ACL_YES)
+				? true
+				: false,
+			'S_TOTAL_NEVER'   => ($total == ACL_NEVER)
+				? true
+				: false,
 		]);
 
 		if ($template_id != 0 && isset($this->auth->acl_options['global'][$permission]))
@@ -992,7 +1169,9 @@ class template_permissions_module
 
 			if ($auth_setting)
 			{
-				$information = ($total == ACL_YES) ? $this->language->lang('TRACE_USER_GLOBAL_YES_TOTAL_YES') : $this->language->lang('TRACE_USER_GLOBAL_YES_TOTAL_NEVER');
+				$information = ($total == ACL_YES)
+					? $this->language->lang('TRACE_USER_GLOBAL_YES_TOTAL_YES')
+					: $this->language->lang('TRACE_USER_GLOBAL_YES_TOTAL_NEVER');
 				$total = ACL_YES;
 			}
 			else
@@ -1011,8 +1190,12 @@ class template_permissions_module
 					'S_SETTING_YES'   => $auth_setting,
 					'S_SETTING_NEVER' => !$auth_setting,
 					'S_TOTAL_NO'      => false,
-					'S_TOTAL_YES'     => ($total == ACL_YES) ? true : false,
-					'S_TOTAL_NEVER'   => ($total == ACL_NEVER) ? true : false,
+					'S_TOTAL_YES'     => ($total == ACL_YES)
+						? true
+						: false,
+					'S_TOTAL_NEVER'   => ($total == ACL_NEVER)
+						? true
+						: false,
 				]);
 			}
 		}
@@ -1024,9 +1207,15 @@ class template_permissions_module
 				'WHO'         => $userdata['username'],
 				'INFORMATION' => $this->language->lang('TRACE_USER_FOUNDER'),
 
-				'S_SETTING_NO'    => ($auth_setting == ACL_NO) ? true : false,
-				'S_SETTING_YES'   => ($auth_setting == ACL_YES) ? true : false,
-				'S_SETTING_NEVER' => ($auth_setting == ACL_NEVER) ? true : false,
+				'S_SETTING_NO'    => ($auth_setting == ACL_NO)
+					? true
+					: false,
+				'S_SETTING_YES'   => ($auth_setting == ACL_YES)
+					? true
+					: false,
+				'S_SETTING_NEVER' => ($auth_setting == ACL_NEVER)
+					? true
+					: false,
 				'S_TOTAL_NO'      => false,
 				'S_TOTAL_YES'     => true,
 				'S_TOTAL_NEVER'   => false,
@@ -1037,9 +1226,15 @@ class template_permissions_module
 
 		// Total value...
 		$this->template->assign_vars([
-			'S_RESULT_NO'    => ($total == ACL_NO) ? true : false,
-			'S_RESULT_YES'   => ($total == ACL_YES) ? true : false,
-			'S_RESULT_NEVER' => ($total == ACL_NEVER) ? true : false,
+			'S_RESULT_NO'    => ($total == ACL_NO)
+				? true
+				: false,
+			'S_RESULT_YES'   => ($total == ACL_YES)
+				? true
+				: false,
+			'S_RESULT_NEVER' => ($total == ACL_NEVER)
+				? true
+				: false,
 		]);
 	}
 }

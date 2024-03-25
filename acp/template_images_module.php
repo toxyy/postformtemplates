@@ -81,8 +81,12 @@ class template_images_module
 
 		// Set up general vars
 		$action = $this->request->variable('action', '');
-		$action = (isset($_POST['add'])) ? 'add' : $action;
-		$action = (isset($_POST['edit'])) ? 'edit' : $action;
+		$action = (isset($_POST['add']))
+			? 'add'
+			: $action;
+		$action = (isset($_POST['edit']))
+			? 'edit'
+			: $action;
 		$image_id = $this->request->variable('id', 0);
 
 		$form_key = 'acp_icons';
@@ -136,7 +140,6 @@ class template_images_module
 			// no break;
 
 			case 'add':
-
 				$images = $default_row = [];
 				$image_options = '';
 
@@ -167,7 +170,11 @@ class template_images_module
 								$selected = true;
 								$default_row = $row;
 							}
-							$image_options .= '<option value="' . $row['image_url'] . '"' . (($selected) ? ' selected="selected"' : '') . '>' . $row['image_url'] . '</option>';
+							$image_options .= '<option value="' . $row['image_url'] . '"' . (
+								($selected)
+								? ' selected="selected"'
+								: ''
+							) . '>' . $row['image_url'] . '</option>';
 
 							$this->template->assign_block_vars('image', [
 								'IMAGE_URL' => addslashes($row['image_url']),
@@ -179,7 +186,9 @@ class template_images_module
 
 				$sql = "SELECT *
 					FROM $table
-					ORDER BY {$fields}_order " . (($image_id || $action == 'add') ? 'DESC' : 'ASC');
+					ORDER BY {$fields}_order " . (($image_id || $action == 'add')
+						? 'DESC'
+						: 'ASC');
 				$result = $this->db->sql_query($sql);
 
 				$data = [];
@@ -219,13 +228,21 @@ class template_images_module
 
 						if (!empty($default_row))
 						{
-							$add_order_lists[1] = '<option value="' . ($row[$fields . '_order'] + 1) . '"' . (($row[$fields . '_id'] == $default_row['image_id']) ? ' selected="selected"' : '') . '>' . sprintf($this->language->lang('AFTER_' . $lang), ' -&gt; ' . $after_txt) . '</option>' . $order_lists[1];
+							$add_order_lists[1] = '<option value="' . ($row[$fields . '_order'] + 1) . '"' . (
+								($row[$fields . '_id'] == $default_row['image_id'])
+								? ' selected="selected"'
+								: ''
+							) . '>' . sprintf($this->language->lang('AFTER_' . $lang), ' -&gt; ' . $after_txt) . '</option>' . $order_lists[1];
 						}
 					}
 				}
 				$this->db->sql_freeresult($result);
 
-				$order_list = '<option value="1"' . ((!isset($after)) ? ' selected="selected"' : '') . '>' . $this->language->lang('FIRST') . '</option>';
+				$order_list = '<option value="1"' . (
+					(!isset($after))
+					? ' selected="selected"'
+					: ''
+				) . '>' . $this->language->lang('FIRST') . '</option>';
 				$add_order_list = '<option value="1">' . $this->language->lang('FIRST') . '</option>';
 
 				if ($action == 'add')
@@ -233,14 +250,24 @@ class template_images_module
 					$data = $_images;
 				}
 
-				$colspan = (($mode == 'manage_images') ? 7 : 6);
-				$colspan += ($image_id) ? 1 : 0;
-				$colspan += ($action == 'add') ? 2 : 0;
+				$colspan = (($mode == 'manage_images')
+					? 7
+					: 6);
+				$colspan += ($image_id)
+					? 1
+					: 0;
+				$colspan += ($action == 'add')
+					? 2
+					: 0;
 
 				$this->template->assign_vars([
 					'S_EDIT'    => true,
-					'S_SMILIES' => ($mode == 'manage_images') ? true : false,
-					'S_ADD'     => ($action == 'add') ? true : false,
+					'S_SMILIES' => ($mode == 'manage_images')
+						? true
+						: false,
+					'S_ADD'     => ($action == 'add')
+						? true
+						: false,
 
 					'S_ORDER_LIST_DISPLAY'       => $order_list . $order_lists[1],
 					'S_ORDER_LIST_UNDISPLAY'     => $order_list . $order_lists[1],
@@ -258,7 +285,9 @@ class template_images_module
 					'ID'      => $image_id,
 
 					'U_BACK'   => $this->u_action,
-					'U_ACTION' => $this->u_action . '&amp;action=' . (($action == 'add') ? 'create' : 'modify'),
+					'U_ACTION' => $this->u_action . '&amp;action=' . (($action == 'add')
+						? 'create'
+						: 'modify'),
 				]);
 
 				foreach ($data as $img => $img_row)
@@ -268,11 +297,17 @@ class template_images_module
 						'A_IMG'   => addslashes($img),
 						'IMG_SRC' => $this->phpbb_root_path . $img_path . '/' . $img,
 
-						'S_ID'            => (isset($img_row[$fields . '_id'])) ? true : false,
-						'ID'              => (isset($img_row[$fields . '_id'])) ? $img_row[$fields . '_id'] : 0,
+						'S_ID'            => (isset($img_row[$fields . '_id']))
+							? true
+							: false,
+						'ID'              => (isset($img_row[$fields . '_id']))
+							? $img_row[$fields . '_id']
+							: 0,
 						'TEXT_ALT'        => $img,
 						'ALT'             => '',
-						'POSTING_CHECKED' => ($action == 'add') ? ' checked="checked"' : '',
+						'POSTING_CHECKED' => ($action == 'add')
+							? ' checked="checked"'
+							: '',
 					]);
 				}
 
@@ -293,24 +328,30 @@ class template_images_module
 				}
 
 				return;
-
 			break;
 
 			case 'create':
 			case 'modify':
-
 				if (!check_form_key($form_key))
 				{
 					trigger_error($this->language->lang('FORM_INVALID') . adm_back_link($this->u_action), E_USER_WARNING);
 				}
 
 				// Get items to create/modify
-				$images = (isset($_POST['image'])) ? array_keys($this->request->variable('image', ['' => 0])) : [];
+				$images = (isset($_POST['image']))
+					? array_keys($this->request->variable('image', ['' => 0]))
+					: [];
 
 				// Now really get the items
-				$image_id = (isset($_POST['id'])) ? $this->request->variable('id', ['' => 0]) : [];
-				$image_order = (isset($_POST['order'])) ? $this->request->variable('order', ['' => 0]) : [];
-				$image_add = (isset($_POST['add_img'])) ? $this->request->variable('add_img', ['' => 0]) : [];
+				$image_id = (isset($_POST['id']))
+					? $this->request->variable('id', ['' => 0])
+					: [];
+				$image_order = (isset($_POST['order']))
+					? $this->request->variable('order', ['' => 0])
+					: [];
+				$image_add = (isset($_POST['add_img']))
+					? $this->request->variable('add_img', ['' => 0])
+					: [];
 
 				// Ok, add the relevant bits if we are adding new images that already exist...
 				if ($this->request->variable('add_additional_image', false, false, \phpbb\request\request_interface::POST))
@@ -413,7 +454,9 @@ class template_images_module
 
 				$this->cache->destroy('sql', $table);
 
-				$level = ($images_updated) ? E_USER_NOTICE : E_USER_WARNING;
+				$level = ($images_updated)
+					? E_USER_NOTICE
+					: E_USER_WARNING;
 				$errormsgs = '';
 				foreach ($errors as $img => $error)
 				{
@@ -427,11 +470,9 @@ class template_images_module
 				{
 					trigger_error($this->language->lang($lang . '_ADDED', $images_updated) . $errormsgs . adm_back_link($this->u_action), $level);
 				}
-
 			break;
 
 			case 'delete':
-
 				if (confirm_box(true))
 				{
 					$sql = "DELETE FROM $table
@@ -483,12 +524,10 @@ class template_images_module
 						'action' => 'delete',
 					]));
 				}
-
 			break;
 
 			case 'move_up':
 			case 'move_down':
-
 				if (!check_link_hash($this->request->variable('hash', ''), 'acp_icons'))
 				{
 					trigger_error($this->language->lang('FORM_INVALID') . adm_back_link($this->u_action), E_USER_WARNING);
@@ -509,7 +548,9 @@ class template_images_module
 
 				// on move_down, switch position with next order_id...
 				// on move_up, switch position with previous order_id...
-				$switch_order_id = ($action == 'move_down') ? $current_order + 1 : $current_order - 1;
+				$switch_order_id = ($action == 'move_down')
+					? $current_order + 1
+					: $current_order - 1;
 
 				$sql = "SELECT {$fields}_id as image_id
 					FROM $table
@@ -586,7 +627,6 @@ class template_images_module
 						'success' => $move_executed,
 					]);
 				}
-
 			break;
 		}
 
@@ -622,9 +662,13 @@ class template_images_module
 			'L_ICON_EDIT'     => $this->language->lang('EDIT_' . $lang),
 
 			'NOTICE'  => $notice,
-			'COLSPAN' => ($mode == 'manage_images') ? 5 : 3,
+			'COLSPAN' => ($mode == 'manage_images')
+				? 5
+				: 3,
 
-			'S_SMILIES' => ($mode == 'manage_images') ? true : false,
+			'S_SMILIES' => ($mode == 'manage_images')
+				? true
+				: false,
 
 			'U_ACTION' => $this->u_action,
 		]);

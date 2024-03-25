@@ -100,7 +100,11 @@ class template_permissions_helper
 				continue;
 			}
 
-			$s_options .= '<option value="' . $row['template_id'] . '"' . (($row['selected']) ? ' selected="selected"' : '') . '>' . $row['padding'] . $row['template_name'];
+			$s_options .= '<option value="' . $row['template_id'] . '"' . (
+				($row['selected'])
+				? ' selected="selected"'
+				: ''
+			) . '>' . $row['padding'] . $row['template_name'];
 
 			// We check if a branch is there...
 			$branch_there = false;
@@ -175,7 +179,13 @@ class template_permissions_helper
 	 */
 	function retrieve_defined_user_groups($permission_scope, $template_id, $permission_type)
 	{
-		$sql_template_id = ($permission_scope == 'global') ? 'AND a.template_id = 0' : ((count($template_id)) ? 'AND ' . $this->db->sql_in_set('a.template_id', $template_id) : 'AND a.template_id <> 0');
+		$sql_template_id = (($permission_scope == 'global')
+			? 'AND a.template_id = 0'
+			: ((count($template_id))
+				? 'AND ' . $this->db->sql_in_set('a.template_id', $template_id)
+				: 'AND a.template_id <> 0'
+			)
+		);
 
 		// Permission options are only able to be a permission set... therefore we will pre-fetch the possible options and also the possible roles
 		$option_ids = $role_ids = [];
@@ -248,7 +258,11 @@ class template_permissions_helper
 		$defined_group_ids = [];
 		while ($row = $this->db->sql_fetchrow($result))
 		{
-			$s_defined_group_options .= '<option' . (($row['group_type'] == GROUP_SPECIAL) ? ' class="sep"' : '') . ' value="' . $row['group_id'] . '">' . $this->group_helper->get_name($row['group_name']) . '</option>';
+			$s_defined_group_options .= '<option' .
+				(($row['group_type'] == GROUP_SPECIAL)
+					? ' class="sep"'
+					: ''
+				) . ' value="' . $row['group_id'] . '">' . $this->group_helper->get_name($row['group_name']) . '</option>';
 			$defined_group_ids[] = $row['group_id'];
 		}
 		$this->db->sql_freeresult($result);

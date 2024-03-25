@@ -169,7 +169,11 @@ class manage_templates_helper
 		$sql = 'SELECT template_id, template_name, left_id, right_id
 			FROM ' . PFT_TEMPLATES_TABLE . "
 			WHERE parent_id = {$template_row['parent_id']}
-				AND " . (($action == 'move_up') ? "right_id < {$template_row['right_id']} ORDER BY right_id DESC" : "left_id > {$template_row['left_id']} ORDER BY left_id ASC");
+				AND " . (
+					($action == 'move_up')
+					? "right_id < {$template_row['right_id']} ORDER BY right_id DESC"
+					: "left_id > {$template_row['left_id']} ORDER BY left_id ASC"
+				);
 		$result = $this->db->sql_query_limit($sql, $steps);
 
 		$target = [];
@@ -262,7 +266,11 @@ class manage_templates_helper
             FROM ' . PFT_TEMPLATES_TABLE . ' t1
             LEFT JOIN ' . PFT_TEMPLATES_TABLE . " t2 ON ($condition)
             WHERE t1.template_id = $template_id
-            ORDER BY t2.template_id " . (($order == 'descending') ? 'ASC' : 'DESC');
+            ORDER BY t2.template_id " . (
+				($order == 'descending')
+				? 'ASC'
+				: 'DESC'
+			);
 		$result = $this->db->sql_query($sql);
 
 		while ($row = $this->db->sql_fetchrow($result))
@@ -302,7 +310,9 @@ class manage_templates_helper
 		$right = 0;
 		$padding_store = ['0' => ''];
 		$padding = '';
-		$template_list = ($return_array) ? [] : '';
+		$template_list = ($return_array)
+			? []
+			: '';
 
 		// Sometimes it could happen that templates will be displayed here not be displayed within the index page
 		// This is the result of templates not displayed at index, having list permissions and a parent of a template with no permissions.
@@ -317,7 +327,9 @@ class manage_templates_helper
 			}
 			else if ($row['left_id'] > $right + 1)
 			{
-				$padding = (isset($padding_store[$row['parent_id']])) ? $padding_store[$row['parent_id']] : '';
+				$padding = (isset($padding_store[$row['parent_id']]))
+					? $padding_store[$row['parent_id']]
+					: '';
 			}
 
 			$right = $row['right_id'];
@@ -352,13 +364,35 @@ class manage_templates_helper
 			if ($return_array)
 			{
 				// Include some more information...
-				$selected = (is_array($select_id)) ? ((in_array($row['template_id'], $select_id)) ? true : false) : (($row['template_id'] == $select_id) ? true : false);
+				$selected = ((is_array($select_id))
+					? ((in_array($row['template_id'], $select_id))
+						? true
+						: false
+					)
+					: (($row['template_id'] == $select_id)
+						? true
+						: false
+					)
+				);
 				$template_list[$row['template_id']] = array_merge(['padding' => $padding, 'selected' => ($selected && !$disabled), 'disabled' => $disabled], $row);
 			}
 			else
 			{
-				$selected = (is_array($select_id)) ? ((in_array($row['template_id'], $select_id)) ? ' selected="selected"' : '') : (($row['template_id'] == $select_id) ? ' selected="selected"' : '');
-				$template_list .= '<option value="' . $row['template_id'] . '"' . (($disabled) ? ' disabled="disabled" class="disabled-option"' : $selected) . '>' . $padding . $row['template_name'] . '</option>';
+				$selected = ((is_array($select_id))
+					? ((in_array($row['template_id'], $select_id))
+						? ' selected="selected"'
+						: ''
+					)
+					: (($row['template_id'] == $select_id)
+						? ' selected="selected"'
+						: ''
+					)
+				);
+				$template_list .= '<option value="' . $row['template_id'] . '"' . (
+					($disabled)
+					? ' disabled="disabled" class="disabled-option"'
+					: $selected
+				) . '>' . $padding . $row['template_name'] . '</option>';
 			}
 		}
 		unset($padding_store, $rowset);
@@ -386,7 +420,9 @@ class manage_templates_helper
 		}
 		$this->db->sql_freeresult($result);
 
-		$image_list = ($return_array) ? [] : '';
+		$image_list = ($return_array)
+			? []
+			: '';
 
 		// Sometimes it could happen that templates will be displayed here not be displayed within the index page
 		// This is the result of templates not displayed at index, having list permissions and a parent of a template with no permissions.
@@ -416,13 +452,35 @@ class manage_templates_helper
 			if ($return_array)
 			{
 				// Include some more information...
-				$selected = (is_array($select_id)) ? ((in_array($row['image_id'], $select_id)) ? true : false) : (($row['image_id'] == $select_id) ? true : false);
+				$selected = ((is_array($select_id))
+					? ((in_array($row['image_id'], $select_id))
+						? true
+						: false
+					)
+					: (($row['image_id'] == $select_id)
+						? true
+						: false
+					)
+				);
 				$image_list[$row['image_id']] = array_merge(['selected' => ($selected && !$disabled), 'disabled' => $disabled], $row);
 			}
 			else
 			{
-				$selected = (is_array($select_id)) ? ((in_array($row['image_id'], $select_id)) ? ' selected="selected"' : '') : (($row['image_id'] == $select_id) ? ' selected="selected"' : '');
-				$image_list .= '<option value="' . $row['image_id'] . '"' . (($disabled) ? ' disabled="disabled" class="disabled-option"' : $selected) . '>' . $row['image_url'] . '</option>';
+				$selected = ((is_array($select_id))
+					? ((in_array($row['image_id'], $select_id))
+						? ' selected="selected"'
+						: ''
+					)
+					: (($row['image_id'] == $select_id)
+						? ' selected="selected"'
+						: ''
+					)
+				);
+				$image_list .= '<option value="' . $row['image_id'] . '"' . (
+					($disabled)
+					? ' disabled="disabled" class="disabled-option"'
+					: $selected
+				) . '>' . $row['image_url'] . '</option>';
 			}
 		}
 		unset($rowset);
@@ -592,7 +650,7 @@ class manage_templates_helper
 			$sql = 'INSERT INTO ' . PFT_TEMPLATES_TABLE . ' ' . $this->db->sql_build_array('INSERT', $template_data_sql);
 			$this->db->sql_query($sql);
 
-			$template_data_ary['template_id'] = $this->db->sql_nextid();
+			$template_data_ary['template_id'] = $this->db->sql_last_inserted_id();
 
 			if ($add_log)
 			{
@@ -707,7 +765,13 @@ class manage_templates_helper
 			// Add it back
 			$template_data_ary['template_id'] = $template_id;
 
-			$delete_forum_data_sql = (empty($template_forum_ids)) ? '' : ($template_forum_ids[0] == 0 ? '' : 'AND forum_id NOT IN (' . implode($template_forum_ids) . ')');
+			$delete_forum_data_sql = (empty($template_forum_ids)
+				? ''
+				: ($template_forum_ids[0] == 0
+					? ''
+					: 'AND forum_id NOT IN (' . implode($template_forum_ids) . ')'
+				)
+			);
 			$sql = 'DELETE FROM ' . PFT_TEMPLATE_FORUMS_TABLE . "
 				WHERE template_id = $template_id
 				$delete_forum_data_sql";
@@ -1192,7 +1256,6 @@ class manage_templates_helper
 		switch ($this->db->get_sql_layer())
 		{
 			case 'mysqli':
-
 				// Delete everything else and thank MySQL for offering multi-table deletion
 				$tables_ary = [
 					PFT_TEMPLATE_FORUMS_TABLE => 'template_id',
@@ -1210,11 +1273,9 @@ class manage_templates_helper
 				}
 
 				$this->db->sql_query($sql . $sql_using . $sql_where);
-
 			break;
 
 			default:
-
 				// Delete everything else and curse your DB for not offering multi-table deletion
 				$tables_ary = [
 					'template_id' => [
@@ -1255,7 +1316,6 @@ class manage_templates_helper
 					} while (count($ids) == $batch_size);
 				}
 				unset($ids);
-
 			break;
 		}
 
@@ -1334,7 +1394,9 @@ class manage_templates_helper
 	 */
 	function copy_template_permissions($u_action)
 	{
-		$submit = isset($_POST['submit']) ? true : false;
+		$submit = isset($_POST['submit'])
+			? true
+			: false;
 
 		if ($submit)
 		{
@@ -1466,7 +1528,7 @@ class manage_templates_helper
 			$sql = 'INSERT INTO ' . PFT_TEMPLATE_ENTRIES_TABLE . ' ' . $this->db->sql_build_array('INSERT', $entries_sql_ary[$i]);
 			$this->db->sql_query($sql);
 
-			$entry_id = $this->db->sql_nextid();
+			$entry_id = $this->db->sql_last_inserted_id();
 
 			// update subentry parent ids
 			if ($entries_sql_ary[$i]['parent_id'] == 0 && $i + 1 < $count)
@@ -1768,7 +1830,9 @@ class manage_templates_helper
 		}
 
 		$template_row = $this->get_template_info($src_template_id);
-		$template_row['parent_id'] = ($parent_id == 'copy') ? (int) $template_row['parent_id'] : $parent_id;
+		$template_row['parent_id'] = ($parent_id == 'copy')
+			? (int) $template_row['parent_id']
+			: $parent_id;
 
 		if (isset($template_data['template_id']))
 		{
