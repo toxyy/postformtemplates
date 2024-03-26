@@ -664,7 +664,10 @@ class manage_templates_module
 						? [0]
 						: unserialize($template_data['template_images']);
 				}
-				list($date_data['image_day'], $date_data['image_month'], $date_data['image_year']) = explode('-', $template_data['template_image_date']);
+				if (!empty($template_data['template_image_date']))
+				{
+					list($date_data['image_day'], $date_data['image_month'], $date_data['image_year']) = explode('-', $template_data['template_image_date']);
+				}
 
 				$template_options_no_select = $this->manage_templates_helper->make_template_select(false, $options_no_select_ignore_ids, false, false, false);
 

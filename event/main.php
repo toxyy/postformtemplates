@@ -369,7 +369,7 @@ class main implements EventSubscriberInterface
 	public function posting_modify_message_text($event)
 	{
 		$message_parser = $event['message_parser'];
-		if($event['submit'])
+		if ($event['submit'])
 		{
 			decode_message($message_parser->message);
 		}
