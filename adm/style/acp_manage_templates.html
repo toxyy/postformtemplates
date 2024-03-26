@@ -171,7 +171,6 @@
 {% endif %}
 
 <form id="templateedit" method="post" action="{{ U_EDIT_ACTION }}">
-
 	<fieldset>
 		<legend>{{ lang('ACP_PFT_TEMPLATE_SETTINGS') }}</legend>
 		<dl id="type">
@@ -359,7 +358,6 @@
 {% endif %}
 
 <form id="acp_template" method="post" action="{{ U_ACTION }}">
-
 	<fieldset>
 		<legend>{{ lang('ACP_PFT_TEMPLATE_DELETE') }}</legend>
 		<dl>
@@ -424,9 +422,6 @@
 	<tr>
 		<td class="folder">{{ templates.FOLDER_IMAGE }}</td>
 		<td class="forum-desc">
-			{% if templates.TEMPLATE_IMAGE %}
-			<div style="float: {{ S_CONTENT_FLOW_BEGIN }}; margin-right: 5px;">{{ templates.TEMPLATE_IMAGE }}</div>
-			{% endif %}
 			<strong><a href="{{ templates.U_TEMPLATE }}">{{ templates.TEMPLATE_NAME }}</a></strong>
 			{% if templates.TEMPLATE_DESCRIPTION %}<br/><span>{{ templates.TEMPLATE_DESCRIPTION }}</span>{% endif %}
 		</td>

@@ -93,20 +93,19 @@
 			<div class="permissions-category">
 				<ul>
 					{% endif %}
-
 					{% if category.S_YES %}
 					<li class="permissions-preset-yes{% if p_mask.S_FIRST_ROW and t_mask.S_FIRST_ROW and category.S_FIRST_ROW %} activetab{% endif %}"
 						id="tab{{ p_mask.S_ROW_COUNT }}{{ t_mask.S_ROW_COUNT }}{{ category.S_ROW_COUNT }}">
-						{% elseif category.S_NEVER %}
+					{% elseif category.S_NEVER %}
 					<li class="permissions-preset-never{% if p_mask.S_FIRST_ROW and t_mask.S_FIRST_ROW and category.S_FIRST_ROW %} activetab{% endif %}"
 						id="tab{{ p_mask.S_ROW_COUNT }}{{ t_mask.S_ROW_COUNT }}{{ category.S_ROW_COUNT }}">
-						{% elseif category.S_NO %}
+					{% elseif category.S_NO %}
 					<li class="permissions-preset-no{% if p_mask.S_FIRST_ROW and t_mask.S_FIRST_ROW and category.S_FIRST_ROW %} activetab{% endif %}"
 						id="tab{{ p_mask.S_ROW_COUNT }}{{ t_mask.S_ROW_COUNT }}{{ category.S_ROW_COUNT }}">
-						{% else %}
+					{% else %}
 					<li class="permissions-preset-custom{% if p_mask.S_FIRST_ROW and t_mask.S_FIRST_ROW and category.S_FIRST_ROW %} activetab{% endif %}"
 						id="tab{{ p_mask.S_ROW_COUNT }}{{ t_mask.S_ROW_COUNT }}{{ category.S_ROW_COUNT }}">
-						{% endif %}
+					{% endif %}
 						<a href="#"
 						   onclick="swap_options('{{ p_mask.S_ROW_COUNT }}', '{{ t_mask.S_ROW_COUNT }}', '{{ category.S_ROW_COUNT }}', false{% if p_mask.S_VIEW %}, true{% endif %}); return false;"><span
 								class="tabbg"><span class="colour"></span>{{ category.CAT_NAME }}</span></a></li>
@@ -116,9 +115,8 @@
 
 			{% for category in t_mask.category %}
 			<div class="permissions-panel"
-				 id="options{{ p_mask.S_ROW_COUNT }}{{ t_mask.S_ROW_COUNT }}{{ category.S_ROW_COUNT }}" {% if
-				 p_mask.S_FIRST_ROW and t_mask.S_FIRST_ROW and category.S_FIRST_ROW %}{% else %} style="display: none;"
-				 {% endif %}>
+				 id="options{{ p_mask.S_ROW_COUNT }}{{ t_mask.S_ROW_COUNT }}{{ category.S_ROW_COUNT }}"
+				 {% if p_mask.S_FIRST_ROW and t_mask.S_FIRST_ROW and category.S_FIRST_ROW %}{% else %} style="display: none;"{% endif %}>
 				<div class="tablewrap">
 					<table id="table{{ p_mask.S_ROW_COUNT }}{{ t_mask.S_ROW_COUNT }}{{ category.S_ROW_COUNT }}"
 						   class="table1 not-responsive">
@@ -152,8 +150,10 @@
 						<tbody>
 						{% for mask in category.mask %}
 						{% if mask.S_ROW_COUNT is even %}
-						<tr class="row4">{% else %}
-						<tr class="row3">{% endif %}
+						<tr class="row4">
+						{% else %}
+						<tr class="row3">
+						{% endif %}
 							<th class="permissions-name{% if mask.S_ROW_COUNT is even %} row4{% else %} row3{% endif %}">
 								{% if mask.U_TRACE %}<a href="{{ mask.U_TRACE }}" class="trace"
 														onclick="popup(this.href, 750, 515, '_trace'); return false;"
@@ -162,10 +162,8 @@
 								mask.PERMISSION }}
 							</th>
 							{% if p_mask.S_VIEW %}
-							<td
-							{% if mask.S_YES %} class="yes"{% endif %}>&nbsp;</td>
-							<td
-							{% if mask.S_NEVER %} class="never"{% endif %}></td>
+							<td{% if mask.S_YES %} class="yes"{% endif %}>&nbsp;</td>
+							<td{% if mask.S_NEVER %} class="never"{% endif %}></td>
 							{% else %}
 							<td class="permissions-yes"><label for="{{ mask.S_FIELD_NAME }}_y"><input
 									onclick="reset_role('role{{ p_mask.S_ROW_COUNT }}{{ t_mask.S_ROW_COUNT }}'); set_colours('{{ p_mask.S_ROW_COUNT }}{{ t_mask.S_ROW_COUNT }}{{ category.S_ROW_COUNT }}', false)"

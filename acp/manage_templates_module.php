@@ -1001,12 +1001,6 @@ class manage_templates_module
 
 				$this->template->assign_block_vars('templates', [
 					'FOLDER_IMAGE'         => $folder_image,
-					'TEMPLATE_IMAGE'       => ($row['template_images'])
-						? '<img src="' . $this->phpbb_root_path . $row['template_images'] . '" alt="" />'
-						: '',
-					'TEMPLATE_IMAGE_SRC'   => ($row['template_images'])
-						? $this->phpbb_root_path . $row['template_images']
-						: '',
 					'TEMPLATE_NAME'        => $row['template_name'],
 					'TEMPLATE_DESCRIPTION' => generate_text_for_display($row['template_desc'], $row['template_desc_uid'], $row['template_desc_bitfield'], $row['template_desc_options']),
 
