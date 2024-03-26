@@ -363,6 +363,13 @@ class template_entries
 					generate_text_for_storage($entry_tag, $entry_tag_uid, $entry_tag_bitfield, $entry_tag_flags, true, true, true);
 				}
 
+				$entry_type_match_array = explode(PHP_EOL, $entry_type_match);
+				$entry_type_match_array_newline = explode("\n", $entry_type_match);
+				if (sizeof($entry_type_match_array_newline) > sizeof($entry_type_match_array))
+				{
+					$entry_type_match_array = $entry_type_match_array_newline;
+				}
+
 				$sql_ary = array_merge($sql_ary, [
 					'entry_tag'          => $entry_tag,
 					'entry_tag_bitfield' => $entry_tag_bitfield,
@@ -371,7 +378,7 @@ class template_entries
 					'display_on_posting' => $display_on_posting,
 					'entry_helpline'     => $entry_helpline,
 					'entry_type'         => $entry_type,
-					'entry_type_match'   => serialize(explode(PHP_EOL, $entry_type_match)),
+					'entry_type_match'   => serialize($entry_type_match_array_newline),
 					'entry_rows'         => $entry_rows,
 				]);
 
