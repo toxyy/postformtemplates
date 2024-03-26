@@ -212,8 +212,8 @@ class main implements EventSubscriberInterface
 		$forum_id = $event['forum_id'];
 		$s_action = $event['s_action'];
 
-		$template_id = $this->request->variable('pft_template_id', 0);
-		$parent_id = $this->request->variable('pft_parent_id', 0);
+		$template_id =  $this->request->variable('pft_template_id', 0);
+		$parent_id =    $this->request->variable('pft_parent_id', 0);
 
 		$length_dropdown = $length_cat_dropdown = 0;
 		$selected_length = strlen($this->language->lang('PFT_NO_TEMPLATE'));

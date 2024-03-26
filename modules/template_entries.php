@@ -136,10 +136,11 @@ class template_entries
 		$this->language->add_lang('acp/posting');
 
 		// Set up general vars
-		$action = $this->request->variable('action', '');
-		$entry_id = $this->request->variable('entry', 0);
-		$template_id = $this->request->variable('parent_id', 0);
-		$parent_entry_id = $this->request->variable('parent_entry_id', 0);
+		$action =           $this->request->variable('action', '');
+		$entry_id =         $this->request->variable('entry', 0);
+		$template_id =      $this->request->variable('parent_id', 0);
+		$parent_entry_id =  $this->request->variable('parent_entry_id', 0);
+
 		$u_action = append_sid("{$this->phpbb_admin_path}index.{$this->phpEx}", "i=$id&amp;mode=manage_templates&amp;parent_id=$template_id");
 
 		//$this->tpl_name = 'acp_bbcodes';
@@ -178,7 +179,8 @@ class template_entries
 				$entry_type = (int) $row['entry_type'];
 				$entry_type_match = (empty($row['entry_type_match'])
 					? ''
-					: implode(PHP_EOL, unserialize($row['entry_type_match'])));
+					: implode(PHP_EOL, unserialize($row['entry_type_match']))
+				);
 				$entry_rows = (int) $row['entry_rows'];
 				$this->template->assign_vars([
 					'S_ENTRY_ID'        => $entry_id,
@@ -202,14 +204,14 @@ class template_entries
 			// No break here
 
 			case 'create_entry':
-				$display_on_posting = $this->request->variable('display_on_posting', 0);
-				$entry_type = $this->request->variable('entry_type', 0);
+				$display_on_posting =   $this->request->variable('display_on_posting', 0);
+				$entry_type =           $this->request->variable('entry_type', 0);
 
-				$entry_tag = $this->request->untrimmed_variable('entry_tag', '', true);
-				$entry_match = $this->request->untrimmed_variable('entry_match', '', true);
-				$entry_helpline = $this->request->variable('entry_helpline', '', true);
-				$entry_type_match = $this->request->variable('entry_type_match', '', true);
-				$entry_rows = $this->request->variable('entry_rows', 1);
+				$entry_tag =            $this->request->untrimmed_variable('entry_tag', '', true);
+				$entry_match =          $this->request->untrimmed_variable('entry_match', '', true);
+				$entry_helpline =       $this->request->variable('entry_helpline', '', true);
+				$entry_type_match =     $this->request->variable('entry_type_match', '', true);
+				$entry_rows =           $this->request->variable('entry_rows', 1);
 			break;
 		}
 

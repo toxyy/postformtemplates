@@ -127,9 +127,9 @@ class template_permissions_module
 		// Trace has other vars
 		if ($mode == 'trace')
 		{
-			$user_id = $this->request->variable('u', 0);
-			$template_id = $this->request->variable('t', 0);
-			$permission = $this->request->variable('auth', '');
+			$user_id =      $this->request->variable('u', 0);
+			$template_id =  $this->request->variable('t', 0);
+			$permission =   $this->request->variable('auth', '');
 
 			$this->tpl_name = 'permission_trace';
 
@@ -158,22 +158,22 @@ class template_permissions_module
 		}
 
 		// Set some vars
-		$action = $this->request->variable('action', ['' => 0]);
+		$all_templates =        $this->request->variable('all_templates', 0);
+		$subtemplate_id =       $this->request->variable('subtemplate_id', 0);
+		$template_id =          $this->request->variable('template_id', [0]);
+
+		$username =             $this->request->variable('username', [''], true);
+		$usernames =            $this->request->variable('usernames', '', true);
+		$user_id =              $this->request->variable('user_id', [0]);
+
+		$group_id =             $this->request->variable('group_id', [0]);
+		$select_all_groups =    $this->request->variable('select_all_groups', 0);
+
+		$action =               $this->request->variable('action', ['' => 0]);
 		$action = key($action);
 		$action = (isset($_POST['psubmit']))
 			? 'apply_permissions'
 			: $action;
-
-		$all_templates = $this->request->variable('all_templates', 0);
-		$subtemplate_id = $this->request->variable('subtemplate_id', 0);
-		$template_id = $this->request->variable('template_id', [0]);
-
-		$username = $this->request->variable('username', [''], true);
-		$usernames = $this->request->variable('usernames', '', true);
-		$user_id = $this->request->variable('user_id', [0]);
-
-		$group_id = $this->request->variable('group_id', [0]);
-		$select_all_groups = $this->request->variable('select_all_groups', 0);
 
 		$form_name = 'acp_permissions';
 		add_form_key($form_name);

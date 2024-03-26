@@ -1400,7 +1400,7 @@ class manage_templates_helper
 
 		if ($submit)
 		{
-			$src = $this->request->variable('src_template_id', 0);
+			$src =  $this->request->variable('src_template_id', 0);
 			$dest = $this->request->variable('dest_template_ids', [0]);
 
 			if (confirm_box(true))
@@ -1480,7 +1480,7 @@ class manage_templates_helper
 		}
 
 		// Query pft template entries table for source entry data
-		$sql = 'SELECT entry_id, left_id, right_id, parent_id, entry_tag, entry_tag_bitfield, entry_tag_uid, entry_match, entry_helpline, entry_type_match, entry_type, display_on_posting
+		$sql = 'SELECT entry_id, left_id, right_id, parent_id, entry_tag, entry_tag_bitfield, entry_tag_uid, entry_match, entry_helpline, entry_type_match, entry_type, entry_rows, display_on_posting
 			FROM ' . PFT_TEMPLATE_ENTRIES_TABLE . '
 			WHERE template_id = ' . $src_template_id;
 		$result = $this->db->sql_query($sql);
@@ -1499,6 +1499,7 @@ class manage_templates_helper
 				'entry_helpline'     => $row['entry_helpline'],
 				'entry_type_match'   => $row['entry_type_match'],
 				'entry_type'         => (int) $row['entry_type'],
+				'entry_rows'         => (int) $row['entry_rows'],
 				'display_on_posting' => (int) $row['display_on_posting'],
 			];
 

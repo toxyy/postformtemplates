@@ -112,13 +112,13 @@ class manage_templates_module
 		$form_key = 'acp_pfm_templates';
 		add_form_key($form_key);
 
-		$action = $this->request->variable('action', '');
 		$update = (isset($_POST['update']))
 			? true
 			: false;
-		$template_id = $this->request->variable('t', 0);
+		$action =           $this->request->variable('action', '');
+		$template_id =      $this->request->variable('t', 0);
+		$this->parent_id =  $this->request->variable('parent_id', 0);
 
-		$this->parent_id = $this->request->variable('parent_id', 0);
 		$template_data = $errors = [];
 		if ($update && !check_form_key($form_key))
 		{

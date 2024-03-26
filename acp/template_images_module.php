@@ -80,14 +80,14 @@ class template_images_module
 		$this->language->add_lang('acp/posting');
 
 		// Set up general vars
-		$action = $this->request->variable('action', '');
+		$image_id = $this->request->variable('id', 0);
+		$action =   $this->request->variable('action', '');
 		$action = (isset($_POST['add']))
 			? 'add'
 			: $action;
 		$action = (isset($_POST['edit']))
 			? 'edit'
 			: $action;
-		$image_id = $this->request->variable('id', 0);
 
 		$form_key = 'acp_icons';
 		add_form_key($form_key);
