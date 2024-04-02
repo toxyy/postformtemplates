@@ -945,7 +945,8 @@ class manage_templates_helper
 
 					$sql = 'SELECT template_id
 						FROM ' . PFT_TEMPLATES_TABLE . "
-						WHERE parent_id = $from_id";
+						WHERE parent_id = $from_id
+						ORDER BY left_id";
 					$result = $this->db->sql_query($sql);
 
 					while ($row = $this->db->sql_fetchrow($result))
@@ -1587,8 +1588,9 @@ class manage_templates_helper
 
 		// Query pft template entries table for source entry data
 		$sql = 'SELECT template_id, template_parents, template_name, template_desc, template_desc_bitfield, template_desc_options, template_desc_uid, template_images, template_image_type, template_image_date, template_type, template_status
-			FROM ' . PFT_TEMPLATES_TABLE . '
-			WHERE parent_id = ' . $src_template_id;
+			FROM ' . PFT_TEMPLATES_TABLE . "
+			WHERE parent_id = $src_template_id
+			ORDER BY left_id";
 		$result = $this->db->sql_query($sql);
 
 		while ($row = $this->db->sql_fetchrow($result))

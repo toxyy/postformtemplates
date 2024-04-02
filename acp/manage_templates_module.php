@@ -177,7 +177,6 @@ class manage_templates_module
 				// No break here
 
 				case 'add':
-
 					$template_data += [
 						'parent_id'              => $this->request->variable('template_parent_id', $this->parent_id),
 						'forum_id'               => $this->request->variable('forum_id', [0]),
